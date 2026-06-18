@@ -1,22 +1,11 @@
-# RouteRefund demo
+# RouteRefund MVP demo
 
-Local files:
-- Customer page: `index.html`
-- Owner dashboard: `owner.html`
+Files to upload to GitHub Pages:
+- `index.html` customer page
+- `owner.html` owner dashboard
+- `config.js` points the static site to the temporary demo API
 
-Run locally:
+Temporary API for MVP testing:
+- `https://corps-shot-reported-com.trycloudflare.com`
 
-```bash
-cd /Users/tomo/flight_savings_ai_demo
-python3 -m http.server 8765
-```
-
-Open:
-- http://127.0.0.1:8765/index.html
-- http://127.0.0.1:8765/owner.html
-
-Demo notes:
-- Customer page uses RouteRefund.com branding.
-- No upfront fee language; success-fee commission only.
-- Security copy says Stripe handles cards and customer approval is required before account-impacting actions.
-- Owner dashboard buttons are clickable: approve, block, create Stripe link, add demo trip, run scan, open runbook, tabs, toggles, drawers.
+Important: this API runs from Tomo's Mac through a temporary Cloudflare tunnel. It is good for demo testing, not production. Production should use Supabase/Firebase/Cloudflare Workers + D1 or a real backend with Stripe webhooks.
