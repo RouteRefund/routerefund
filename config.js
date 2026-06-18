@@ -1,1 +1,4 @@
-window.ROUTEREFUND_API = 'https://corps-shot-reported-com.trycloudflare.com';
+window.ROUTEREFUND_CONFIG = {
+  SUPABASE_URL: "https://laraafuvhsrkjjkceopx.supabase.co",
+  SUPABASE_ANON_KEY: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxhcmFhZnV2aHNya2pqa2Nlb3B4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE3OTQzMjAsImV4cCI6MjA5NzM3MDMyMH0.TN8PAlzlL5mo6ZIP24PZqWFN2FZAGI9cTQj7erkkzMs"
+};
