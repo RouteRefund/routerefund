@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>RouteRefund Owner Dashboard</title>
+  <style>
+    :root{
+      --ink:#10231f;--muted:#697a75;--bg:#f5f8f3;--card:#fffdf8;--line:#dce8df;
+      --green:#0f7b4c;--green2:#0a5d3a;--navy:#123943;--gold:#e8b44f;--red:#c84b42;--blue:#3178c6;
+      --shadow:0 20px 60px rgba(18,57,67,.13);--r:22px;
+    }
+    *{box-sizing:border-box} body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:linear-gradient(120deg,#eef7ed,#fffdf8 44%,#edf6f4);color:var(--ink)}
+    button,input,select{font:inherit} button{cursor:pointer} a{color:inherit;text-decoration:none}
+    .shell{display:grid;grid-template-columns:255px 1fr;min-height:100vh}.side{background:#10231f;color:white;padding:24px;position:sticky;top:0;height:100vh}.brand{display:flex;align-items:center;gap:11px;font-size:21px;font-weight:950;letter-spacing:-.04em}.logo{width:40px;height:40px;border-radius:14px;background:linear-gradient(135deg,#0f7b4c,#88dfa1);display:grid;place-items:center;box-shadow:0 10px 30px rgba(127,220,156,.2)}
+    .nav{display:grid;gap:8px;margin-top:32px}.nav button,.nav a{border:0;background:transparent;color:#cfe0dc;text-align:left;border-radius:14px;padding:12px 13px}.nav button.active,.nav button:hover,.nav a:hover{background:rgba(255,255,255,.11);color:white}.fine{font-size:12px;color:#a9bfba;margin-top:28px;line-height:1.5}.main{padding:26px 30px 48px}.top{display:flex;justify-content:space-between;align-items:flex-start;gap:18px;margin-bottom:22px}.top h1{font-size:38px;letter-spacing:-.055em;margin:0}.sub{color:var(--muted);margin:7px 0 0}.btn{border:0;border-radius:999px;padding:11px 15px;font-weight:850;display:inline-flex;gap:8px;align-items:center;transition:.15s}.btn:hover{transform:translateY(-1px);filter:brightness(.98)}.primary{background:var(--green);color:white}.dark{background:var(--navy);color:white}.ghost{background:white;border:1px solid var(--line);color:var(--ink)}.danger{background:#ffeceb;color:var(--red)}.gold{background:#fff4d6;color:#8b5d00}.blue{background:#e9f2ff;color:#1b5fa3}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px}.stat{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:18px;box-shadow:0 8px 25px rgba(18,57,67,.06)}.stat span{display:block;color:var(--muted);font-size:13px;font-weight:750}.stat b{font-size:28px;letter-spacing:-.045em}.grid{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(330px,.7fr);gap:16px}.panel{background:rgba(255,253,248,.88);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:18px}.panel h2{margin:0 0 14px;font-size:20px;letter-spacing:-.035em}.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}.chip{border:1px solid var(--line);background:white;border-radius:999px;padding:8px 11px;font-weight:800;color:var(--muted)}.chip.active{background:#10231f;color:white;border-color:#10231f}.case{border:1px solid var(--line);background:white;border-radius:19px;padding:16px;margin:12px 0}.caseHead{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}.route{font-weight:950;font-size:19px;letter-spacing:-.035em}.meta{color:var(--muted);font-size:13px;line-height:1.45}.badge{border-radius:999px;padding:6px 10px;background:#fff4d6;color:#8b5d00;font-size:12px;font-weight:900;text-transform:uppercase;white-space:nowrap}.badge.green{background:#e6f6ed;color:#0f7b4c}.badge.red{background:#ffeceb;color:#c84b42}.money{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:13px 0}.money div{border:1px solid var(--line);border-radius:15px;padding:10px;background:#fbfdf9}.money span{display:block;color:var(--muted);font-size:12px}.money b{font-size:18px}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:13px}.switch{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:13px;border:1px solid var(--line);border-radius:17px;background:white;margin-bottom:10px}.toggle{width:50px;height:29px;background:#cfd9d5;border-radius:99px;position:relative;flex:none}.toggle:before{content:"";position:absolute;width:23px;height:23px;left:3px;top:3px;border-radius:50%;background:white;box-shadow:0 2px 8px rgba(0,0,0,.18);transition:.18s}.toggle.on{background:var(--green)}.toggle.on:before{left:24px}.timeline{display:grid;gap:10px;margin-top:10px}.step{display:grid;grid-template-columns:30px 1fr;gap:10px}.dot{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:#e6f6ed;color:var(--green);font-weight:950}.row{display:flex;justify-content:space-between;gap:12px;padding:12px;border-bottom:1px solid var(--line)}.row:last-child{border-bottom:0}.hidden{display:none!important}.toast{position:fixed;right:24px;bottom:24px;background:#10231f;color:white;border-radius:16px;padding:13px 15px;box-shadow:var(--shadow);opacity:0;transform:translateY(8px);transition:.2s;z-index:20}.toast.show{opacity:1;transform:translateY(0)}.modal{position:fixed;inset:0;background:rgba(16,35,31,.45);display:none;align-items:center;justify-content:center;padding:18px;z-index:30}.modal.show{display:flex}.modalCard{width:min(620px,100%);background:white;border-radius:24px;padding:22px;box-shadow:var(--shadow)}.modalCard h3{margin:0 0 8px;font-size:24px}.pill{display:inline-flex;border-radius:999px;padding:5px 9px;background:#eef6ec;color:#0f7b4c;font-weight:850;font-size:12px;margin-right:6px}.form{display:grid;gap:10px}.form input,.form select{border:1px solid var(--line);border-radius:14px;padding:12px;background:white}.cards{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}.empty{padding:24px;border:1px dashed var(--line);border-radius:18px;text-align:center;color:var(--muted);background:white}@media(max-width:900px){.shell{grid-template-columns:1fr}.side{height:auto;position:static}.nav{grid-template-columns:repeat(2,1fr)}.grid,.stats,.cards{grid-template-columns:1fr}.top{display:block}.top .actionsTop{margin-top:14px}.money{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+<div class="shell">
+  <aside class="side">
+    <a class="brand" href="index.html"><span class="logo">↘</span><span>RouteRefund</span></a>
+    <div class="nav">
+      <button type="button" class="active" data-tab="queue">Savings queue</button>
+      <button type="button" data-tab="customers">Customers</button>
+      <button type="button" data-tab="billing">Billing</button>
+      <button type="button" data-tab="settings">Settings</button>
+      <a href="index.html">Customer site →</a>
+    </div>
+    <p class="fine">Demo dashboard. Buttons are clickable and change state locally — no real customer alerts, payments, or bookings happen.</p>
+  </aside>
+
+  <main class="main">
+    <div class="top">
+      <div><h1>Owner dashboard</h1><p class="sub">Human-in-the-loop control center for RouteRefund.com.</p></div>
+      <div class="actionsTop"><button type="button" class="btn ghost" data-action="add-case">+ Add demo trip</button> <button type="button" class="btn primary" data-action="run-scan">Run fare scan</button></div>
+    </div>
+
+    <section class="stats">
+      <div class="stat"><span>Active trips</span><b id="activeTrips">47</b></div>
+      <div class="stat"><span>Flagged savings</span><b id="flagged">0</b></div>
+      <div class="stat"><span>Potential customer savings</span><b id="savings">$0</b></div>
+      <div class="stat"><span>Potential commission</span><b id="commission">$0</b></div>
+    </section>
+
+    <section id="tab-queue" class="tab">
+      <div class="grid">
+        <div class="panel">
+          <h2>Savings review queue</h2>
+          <div class="toolbar">
+            <button type="button" class="chip active" data-filter="all">All</button>
+            <button type="button" class="chip" data-filter="review">Needs review</button>
+            <button type="button" class="chip" data-filter="approved">Approved</button>
+            <button type="button" class="chip" data-filter="blocked">Blocked</button>
+          </div>
+          <div id="cases"></div>
+        </div>
+        <div class="panel">
+          <h2>Tomo agent status</h2>
+          <div class="switch"><div><b>Background fare monitor</b><div class="meta">Software checks routes every few minutes.</div></div><button type="button" class="toggle on" aria-label="Toggle monitor" data-action="toggle"></button></div>
+          <div class="switch"><div><b>Require human approval</b><div class="meta">No refund/rebooking instructions go out unchecked.</div></div><button type="button" class="toggle on" aria-label="Toggle approval" data-action="toggle"></button></div>
+          <div class="switch"><div><b>Stripe success-fee mode</b><div class="meta">Card is saved; fee charges only after verified savings.</div></div><button type="button" class="toggle on" aria-label="Toggle Stripe" data-action="toggle"></button></div>
+          <h2 style="margin-top:18px">Workflow</h2>
+          <div class="timeline"><div class="step"><div class="dot">1</div><div><b>Customer submits trip</b><div class="meta">Flight, price paid, email, and card authorization.</div></div></div><div class="step"><div class="dot">2</div><div><b>Monitor watches fare</b><div class="meta">Cheap API/software checks price drops — not manual tokens all day.</div></div></div><div class="step"><div class="dot">3</div><div><b>Owner approves action</b><div class="meta">You verify restrictions before sending instructions.</div></div></div><div class="step"><div class="dot">4</div><div><b>RouteRefund earns commission</b><div class="meta">Charge a percentage of confirmed customer savings.</div></div></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="tab-customers" class="tab hidden"><div class="panel"><h2>Customers</h2><div class="cards"><div class="case"><div class="route">Maddie R.</div><p class="meta">2 active trips · $125 possible savings · card authorized</p><button type="button" class="btn ghost" data-action="customer-note">Add note</button></div><div class="case"><div class="route">Andrew P.</div><p class="meta">1 active trip · one blocked alert due fare restrictions</p><button type="button" class="btn ghost" data-action="customer-note">Add note</button></div></div></div></section>
+    <section id="tab-billing" class="tab hidden"><div class="panel"><h2>Billing</h2><div class="row"><b>Pending Stripe success fees</b><span id="pendingFees">$0</span></div><div class="row"><b>This month collected</b><span>$286</span></div><div class="row"><b>Commission model</b><span>25% of verified savings</span></div><br><button type="button" class="btn primary" data-action="stripe-dashboard">Open Stripe dashboard mock</button></div></section>
+    <section id="tab-settings" class="tab hidden"><div class="panel"><h2>Settings</h2><div class="form"><select id="commissionRate"><option value="20">20% commission</option><option value="25" selected>25% commission</option><option value="30">30% commission</option></select><input value="support@routerefund.com" /><button type="button" class="btn primary" data-action="save-settings">Save settings</button></div></div></section>
+  </main>
+</div>
+
+<div class="modal" id="modal"><div class="modalCard"><h3 id="modalTitle">Case details</h3><p id="modalBody" class="meta"></p><div id="modalTags" style="margin:14px 0"></div><button type="button" class="btn primary" data-action="close-modal">Done</button></div></div>
+<div class="toast" id="toast">Saved</div>
+
+<script>
+(() => {
+  const state = {
+    filter: 'all',
+    cases: [
+      {id:1,status:'review',route:'ORD → MIA',flight:'United 1842',customer:'Maddie R.',paid:412,newp:287,fee:31.25,risk:'Same cabin and same dates. Likely airline credit opportunity.'},
+      {id:2,status:'blocked',route:'DFW → LGA',flight:'AA 1467',customer:'Andrew P.',paid:438,newp:361,fee:19.25,risk:'Blocked: lower fare is basic economy with worse bag rules.'},
+      {id:3,status:'approved',route:'ATL → LAS',flight:'Delta 902',customer:'Max B.',paid:522,newp:438,fee:21,risk:'Approved: send customer rebooking instructions.'}
+    ]
+  };
+  const $ = (id) => document.getElementById(id);
+  const money = (n) => '$' + Number(n).toLocaleString(undefined,{maximumFractionDigits:2});
+  function toast(msg){ const t=$('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),1800); }
+  function badgeClass(status){ return status==='blocked'?'red':status==='approved'?'green':''; }
+  function render(){
+    const list = $('cases'); list.innerHTML = '';
+    const filtered = state.cases.filter(c => state.filter === 'all' || c.status === state.filter);
+    if(!filtered.length){ list.innerHTML = '<div class="empty">No cases in this filter.</div>'; }
+    filtered.forEach(c => {
+      const save = c.paid - c.newp;
+      list.insertAdjacentHTML('beforeend', `
+        <div class="case" data-id="${c.id}">
+          <div class="caseHead"><div><div class="route">${c.route}</div><div class="meta">${c.customer} • ${c.flight}</div></div><span class="badge ${badgeClass(c.status)}">${c.status.replace('review','needs review')}</span></div>
+          <div class="money"><div><span>Paid</span><b>${money(c.paid)}</b></div><div><span>New fare</span><b>${money(c.newp)}</b></div><div><span>Est. fee</span><b>${money(save*.25)}</b></div></div>
+          <p class="meta">${c.risk}</p>
+          <div class="actions">
+            <button type="button" class="btn primary" data-action="approve" data-id="${c.id}">Approve alert</button>
+            <button type="button" class="btn ghost" data-action="details" data-id="${c.id}">Review details</button>
+            <button type="button" class="btn gold" data-action="stripe" data-id="${c.id}">Create Stripe link</button>
+            <button type="button" class="btn danger" data-action="block" data-id="${c.id}">Block</button>
+          </div>
+        </div>`);
+    });
+    updateStats();
+  }
+  function updateStats(){
+    $('activeTrips').textContent = 44 + state.cases.length;
+    const usable = state.cases.filter(c => c.status !== 'blocked');
+    $('flagged').textContent = usable.length;
+    const savings = usable.reduce((a,c)=>a + (c.paid-c.newp),0);
+    $('savings').textContent = money(savings);
+    $('commission').textContent = money(savings * .25);
+    $('pendingFees').textContent = money(savings * .25);
+  }
+  function setTab(name, btn){
+    document.querySelectorAll('.tab').forEach(x=>x.classList.add('hidden'));
+    $('tab-'+name).classList.remove('hidden');
+    document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('active'));
+    if(btn) btn.classList.add('active');
+  }
+  function openModal(title, body, tags=[]){
+    $('modalTitle').textContent = title; $('modalBody').textContent = body;
+    $('modalTags').innerHTML = tags.map(x=>`<span class="pill">${x}</span>`).join('');
+    $('modal').classList.add('show');
+  }
+  document.addEventListener('click', (e) => {
+    const tabBtn = e.target.closest('[data-tab]');
+    if(tabBtn){ setTab(tabBtn.dataset.tab, tabBtn); return; }
+    const filterBtn = e.target.closest('[data-filter]');
+    if(filterBtn){ document.querySelectorAll('.chip').forEach(x=>x.classList.remove('active')); filterBtn.classList.add('active'); state.filter = filterBtn.dataset.filter; render(); return; }
+    const btn = e.target.closest('[data-action]');
+    if(!btn) return;
+    const action = btn.dataset.action; const id = Number(btn.dataset.id); const c = state.cases.find(x=>x.id===id);
+    if(action==='approve' && c){ c.status='approved'; c.risk='Approved by owner. Customer alert ready to send.'; toast('Approved — alert ready.'); render(); }
+    if(action==='block' && c){ c.status='blocked'; c.risk='Blocked by owner. Customer will not receive this alert.'; toast('Blocked for customer safety.'); render(); }
+    if(action==='stripe' && c){ c.status='approved'; c.risk='Stripe success-fee link created. Awaiting customer confirmation.'; toast('Stripe link created.'); render(); }
+    if(action==='details' && c){ openModal(c.route, `${c.customer} paid ${money(c.paid)} for ${c.flight}. Current comparable fare is ${money(c.newp)}. Estimated customer savings: ${money(c.paid-c.newp)}.`, ['same date check','bag rules check','human approval required']); }
+    if(action==='run-scan'){ const n=state.cases.length+1; state.cases.unshift({id:Date.now(),status:'review',route:'BNA → DEN',flight:'Southwest 381',customer:'New Demo Customer',paid:356,newp:244,fee:28,risk:'New fare drop found by scan. Needs owner review.'}); toast('Scan complete — 1 new drop found.'); render(); }
+    if(action==='add-case'){ state.cases.unshift({id:Date.now(),status:'review',route:'JFK → PHX',flight:'JetBlue 615',customer:'Demo Traveler',paid:389,newp:305,fee:21,risk:'Manual demo trip added. Needs review.'}); toast('Demo trip added.'); render(); }
+    if(action==='toggle'){ btn.classList.toggle('on'); toast(btn.classList.contains('on')?'Setting enabled.':'Setting disabled.'); }
+    if(action==='close-modal'){ $('modal').classList.remove('show'); }
+    if(action==='save-settings'){ toast('Settings saved.'); }
+    if(action==='customer-note'){ toast('Note added to customer profile.'); }
+    if(action==='stripe-dashboard'){ openModal('Stripe dashboard mock', 'This would open Stripe to see saved payment methods, authorization status, and success-fee charges.', ['test mode','no real charges']); }
+  });
+  $('modal').addEventListener('click', (e)=>{ if(e.target.id==='modal') $('modal').classList.remove('show'); });
+  render();
+})();
+</script>
+</body>
+</html>
