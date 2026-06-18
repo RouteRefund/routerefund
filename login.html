@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Log in | RouteRefund</title><link rel="stylesheet" href="styles.css"></head>
+<body data-page="login">
+  <main class="authWrap">
+    <a class="brand center" href="index.html"><span class="logo">↘</span>RouteRefund</a>
+    <form id="loginForm" class="panel authCard">
+      <h1>Log in</h1>
+      <p class="muted">Access your saved trips.</p>
+      <label>Email<input id="email" type="email" autocomplete="email" required></label>
+      <label>Password<input id="password" type="password" autocomplete="current-password" required></label>
+      <button class="btn primary full" type="submit">Log in</button>
+      <p class="mini center"><a href="reset-password.html">Forgot password?</a></p>
+      <p class="mini center">No account? <a href="signup.html">Create one</a></p>
+    </form>
+  </main>
+  <div id="toast" class="toast"></div>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="config.js"></script><script src="app.js"></script>
+</body></html>
