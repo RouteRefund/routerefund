@@ -11,9 +11,27 @@ function toast(message){
 function escapeHtml(value=''){return String(value).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
 function safeLines(value=''){return escapeHtml(value||'').split('\n').join('<br>')}
 function normalizeConfirmation(value=''){return String(value).trim().toUpperCase().replace(/\s+/g,'')}
-function validConfirmation(value=''){return /^[A-Z0-9]{6}$/.test(normalizeConfirmation(value))}
+const INACTIVITY_LIMIT_MS=1000*60*60*4;
+const LOCATOR_RULES={
+  default:{min:5,max:13,hint:'Enter the airline record locator/confirmation code from the booking email, usually 5–13 letters or numbers.'},
+  'American Airlines':{min:6,max:6,hint:'American record locators are usually 6 letters/numbers.'},
+  'Delta Air Lines':{min:6,max:6,hint:'Delta confirmation numbers are usually 6 letters/numbers.'},
+  'United Airlines':{min:6,max:6,hint:'United confirmation numbers are usually 6 letters/numbers.'},
+  'Southwest Airlines':{min:6,max:6,hint:'Southwest confirmation numbers are usually 6 letters/numbers.'},
+  'JetBlue':{min:6,max:6,hint:'JetBlue confirmation codes are usually 6 letters/numbers.'},
+  'Alaska Airlines':{min:6,max:6,hint:'Alaska confirmation codes are usually 6 letters/numbers.'},
+  'Spirit Airlines':{min:6,max:6,hint:'Spirit confirmation codes are usually 6 letters/numbers.'},
+  'Frontier Airlines':{min:6,max:6,hint:'Frontier confirmation codes are usually 6 letters/numbers.'},
+  'Hawaiian Airlines':{min:6,max:6,hint:'Hawaiian confirmation codes are usually 6 letters/numbers.'},
+  Other:{min:5,max:13,hint:'Use the booking confirmation/record locator exactly as shown. We accept 5–13 letters/numbers for other carriers.'}
+};
+function locatorRule(airline=''){return LOCATOR_RULES[airline]||LOCATOR_RULES.default}
+function validConfirmation(value='',airline=''){const v=normalizeConfirmation(value),r=locatorRule(airline);return /^[A-Z0-9]+$/.test(v)&&v.length>=r.min&&v.length<=r.max}
+function updateLocatorHint(){const airline=$('airlineSelect')?.value||'',hint=$('locatorHint'),input=$('confirmationNo'),r=locatorRule(airline);if(hint)hint.textContent=r.hint;if(input){input.minLength=r.min;input.maxLength=r.max;input.pattern=`[A-Za-z0-9]{${r.min},${r.max}}`}}
+function touchActivity(){localStorage.setItem('rr_last_activity',String(Date.now()))}
+async function enforceInactivity(){const last=Number(localStorage.getItem('rr_last_activity')||Date.now());if(Date.now()-last>INACTIVITY_LIMIT_MS){await supabaseClient.auth.signOut();localStorage.removeItem('rr_last_activity');location.href='login.html?reason=inactive';return false}touchActivity();return true}
 
-async function getUser(){if(!supabaseClient)return null;const {data}=await supabaseClient.auth.getUser();return data?.user||null}
+async function getUser(){if(!supabaseClient)return null;const {data:{session}}=await supabaseClient.auth.getSession();if(!session)return null;const ok=await enforceInactivity();if(!ok)return null;const {data}=await supabaseClient.auth.getUser();return data?.user||null}
 async function ensureProfile(user){if(!user)return;const m=user.user_metadata||{};if(m.name||m.date_of_birth){await supabaseClient.from('profiles').upsert({user_id:user.id,full_name:m.name||'',date_of_birth:m.date_of_birth||null},{onConflict:'user_id'})}}
 async function requireLogin(next='trips.html'){const user=await getUser();if(!user){location.href=`login.html?next=${encodeURIComponent(next)}`;return null}await ensureProfile(user);return user}
 async function logout(){await supabaseClient.auth.signOut();location.href='index.html'}
@@ -33,7 +51,7 @@ async function signup(e){
   if(data?.session){toast('Account created');location.href='trips.html'}
   else{location.href=`check-email.html?email=${encodeURIComponent(email)}`}
 }
-async function login(e){e.preventDefault();const email=$('email').value.trim().toLowerCase(),password=$('password').value;const {data,error}=await supabaseClient.auth.signInWithPassword({email,password});if(error)return toast(error.message);if(data?.user)await ensureProfile(data.user);const next=new URLSearchParams(location.search).get('next')||($('ownerMode')?'owner.html':'trips.html');location.href=next}
+async function login(e){e.preventDefault();const email=$('email').value.trim().toLowerCase(),password=$('password').value;const {data,error}=await supabaseClient.auth.signInWithPassword({email,password});if(error)return toast(error.message);touchActivity();if(data?.user)await ensureProfile(data.user);const next=new URLSearchParams(location.search).get('next')||($('ownerMode')?'owner.html':'trips.html');location.href=next}
 async function forgotEmail(e){e.preventDefault();const payload={full_name:$('recoveryName').value.trim(),date_of_birth:$('recoveryDob').value,status:'New'};if(!payload.full_name||!payload.date_of_birth)return toast('Fill out all required fields');const {error}=await supabaseClient.from('account_recovery_requests').insert(payload);if(error)return toast('Recovery request could not be saved. Run the latest Supabase SQL.');e.target.reset();toast('If we find a match, recovery instructions will be sent to the account email.')}
 async function resetPassword(e){e.preventDefault();const email=$('email').value.trim().toLowerCase();const redirectTo=`${location.origin}/update-password.html`;const {error}=await supabaseClient.auth.resetPasswordForEmail(email,{redirectTo});if(error)return toast(error.message);toast('Reset email sent')}
 async function updatePassword(e){e.preventDefault();const password=$('password').value,password2=$('password2').value;if(password.length<8)return toast('Use at least 8 characters');if(password!==password2)return toast('Passwords do not match');const {error}=await supabaseClient.auth.updateUser({password});if(error)return toast(error.message);toast('Password updated');setTimeout(()=>location.href='trips.html',600)}
@@ -46,12 +64,12 @@ async function addTrip(e){
   const confirmation=normalizeConfirmation($('confirmationNo').value);
   const route=$('route')?.value?.trim().toUpperCase()||'';
   const travelDate=$('travelDate')?.value||'';
-  if(!validConfirmation(confirmation))return toast('Enter the 6-character airline record locator from the booking email.');
-  if(!airline)return toast('Select the airline.');
-  if(!route||!travelDate)return toast('Enter the route and departure date so monitoring can run.');
+  if(!airline)return toast('Select the airline first.');
+  if(!validConfirmation(confirmation,airline)){const r=locatorRule(airline);return toast(`For ${airline}, enter ${r.min===r.max?r.min:`${r.min}-${r.max}`} letters/numbers from the booking email.`)}
+  if(!travelDate)return toast('Enter the departure date so monitoring can run.');
   const rawNotes=$('notes').value.trim();
   const notes=[rawNotes].filter(Boolean).join('\n');
-  const trip={user_id:user.id,passenger_first:$('passengerFirst').value.trim(),passenger_last:$('passengerLast').value.trim(),date_of_birth:$('dateOfBirth').value,confirmation_no:confirmation,airline,route,travel_date:travelDate,paid:Number($('paid').value),notes,change_consent:true,status:'Monitoring'};
+  const trip={user_id:user.id,passenger_first:$('passengerFirst').value.trim(),passenger_last:$('passengerLast').value.trim(),date_of_birth:$('dateOfBirth').value,confirmation_no:confirmation,airline,route:route||null,travel_date:travelDate,paid:Number($('paid').value),notes,change_consent:true,status:'Monitoring'};
   const {error}=await supabaseClient.from('trips').insert(trip);
   if(error)return toast(error.message);
   e.target.reset();toast('Flight saved');await renderTrips()
@@ -66,6 +84,15 @@ async function renderTrips(){
     const savings=tripSavings(r);
     return `<div class="trip"><div class="row"><div><h3>${escapeHtml(r.airline||'Airline')} ${escapeHtml(r.confirmation_no||'')}</h3><p>${escapeHtml(r.route||'Route pending')} • ${escapeHtml(r.travel_date||'Date pending')} • Paid ${money(r.paid)}</p><p>Passenger: ${escapeHtml(r.passenger_first||'')} ${escapeHtml(r.passenger_last||'')}</p></div><span class="tag">${escapeHtml(r.status||'Monitoring')}</span></div><div class="miniTimeline"><span class="done">Received</span><span class="${['Monitoring','Savings found','Closed'].includes(r.status)?'done':''}">Watching</span><span class="${r.status==='Savings found'||r.status==='Closed'?'done':''}">Savings</span><span class="${r.status==='Closed'?'done':''}">Closed</span></div>${r.current_price?`<p><b>Potential savings:</b> ${money(savings)} • New price ${money(r.current_price)}</p>`:'<p>No price drop found yet. RouteRefund is watching this trip.</p>'}${r.notes?`<p><b>Your note:</b> ${safeLines(r.notes)}</p>`:''}<div class="actions"><a class="btn primary" href="trip-detail.html?id=${encodeURIComponent(r.id)}">View trip</a><button class="btn ghost" data-action="note" data-id="${r.id}">Add note</button><button class="btn danger" data-action="remove" data-id="${r.id}">Remove</button></div></div>`
   }).join(''):`<div class="empty"><h3>No trips yet</h3><p>Forward your confirmation email or add your first booked flight above.</p></div>`
+}
+
+
+async function renderAccount(){
+  const panel=$('accountPanel');if(!panel)return;
+  const user=await requireLogin('account.html');if(!user)return;
+  if($('accountWelcome'))$('accountWelcome').textContent=user.email;
+  const {data:profile}=await supabaseClient.from('profiles').select('*').eq('user_id',user.id).maybeSingle();
+  panel.innerHTML=`<h2>Signed in</h2><p><b>Email:</b> ${escapeHtml(user.email||'')}</p><p><b>Name:</b> ${escapeHtml(profile?.full_name||user.user_metadata?.name||'Not set')}</p><p><b>Date of birth:</b> ${escapeHtml(profile?.date_of_birth||user.user_metadata?.date_of_birth||'Not set')}</p><p class="muted">For security, RouteRefund keeps you logged in on this device unless you log out or are inactive for about 4 hours.</p><div class="actions"><a class="btn primary" href="trips.html">Back to My trips</a><button class="btn ghost" data-action="logout">Log out</button></div>`
 }
 
 async function renderTripDetail(){
@@ -163,13 +190,15 @@ function syncPublicNav(){const publicPages=new Set(['home','info']);const page=d
 window.addEventListener('DOMContentLoaded',async()=>{
   syncPublicNav();
   if(!supabaseClient)return toast('Missing Supabase config');
+  ['click','keydown','touchstart','scroll'].forEach(ev=>document.addEventListener(ev,touchActivity,{passive:true}));
   if($('modal'))$('modal').addEventListener('click',e=>{if(e.target.id==='modal')$('modal').classList.remove('open')});
   if(document.body.dataset.page==='signup')$('signupForm').addEventListener('submit',signup);
   if(document.body.dataset.page==='login')$('loginForm').addEventListener('submit',login);
   if(document.body.dataset.page==='reset')$('resetForm').addEventListener('submit',resetPassword);
   if(document.body.dataset.page==='forgot-email')$('forgotEmailForm').addEventListener('submit',forgotEmail);
   if(document.body.dataset.page==='update-password')$('updatePasswordForm').addEventListener('submit',updatePassword);
-  if(document.body.dataset.page==='dashboard'){const user=await requireLogin('trips.html');if(!user)return;$('welcome').textContent=user.email;$('tripForm').addEventListener('submit',addTrip);await renderTrips()}
+  if(document.body.dataset.page==='dashboard'){const user=await requireLogin('trips.html');if(!user)return;$('welcome').textContent=user.email;$('tripForm').addEventListener('submit',addTrip);$('airlineSelect')?.addEventListener('change',updateLocatorHint);updateLocatorHint();await renderTrips()}
+  if(document.body.dataset.page==='account'){await renderAccount()}
   if(document.body.dataset.page==='trip-detail'){await renderTripDetail()}
   if(document.body.dataset.page==='owner'){const user=await requireLogin('owner.html');if(!user)return;$('ownerWelcome').textContent=user.email;await renderOwner()}
   if(document.body.dataset.page==='owner-trip'){await renderOwnerTrip()}

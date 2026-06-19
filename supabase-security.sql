@@ -60,7 +60,7 @@ alter table public.trips add column if not exists next_check_at timestamptz not 
 
 alter table public.trips drop constraint if exists trips_confirmation_no_format;
 alter table public.trips add constraint trips_confirmation_no_format
-  check (confirmation_no ~ '^[A-Z0-9]{6}$');
+  check (confirmation_no ~ '^[A-Z0-9]{5,13}$');
 
 alter table public.trips drop constraint if exists trips_paid_positive;
 alter table public.trips add constraint trips_paid_positive

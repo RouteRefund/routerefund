@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>My trips | RouteRefund</title>
-  <link rel="stylesheet" href="styles.css?v=real-flight-1" />
+  <link rel="stylesheet" href="styles.css?v=session-locator-1" />
   <link rel="icon" href="/favicon.ico?v=logo-a-1" sizes="any" />
   <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png?v=logo-a-1" />
   <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16.png?v=logo-a-1" />
@@ -49,7 +49,23 @@
       <form id="tripForm" class="panel formPanel">
         <span class="eyebrow">Backup option</span>
         <h2>Enter manually</h2>
-        <div class="notice smallNotice"><b>Use a real booked flight.</b> Have the airline, 6-character record locator, route, departure date, passenger info, and price paid from your confirmation email. The record locator is not the flight number.</div>
+        <div class="notice smallNotice"><b>Use a real booked flight.</b> Choose the airline first, then enter the record locator/confirmation code exactly as shown in the booking email. The record locator is not always the same as the flight number, and length can vary by airline.</div>
+        <label>Airline
+          <select id="airlineSelect" required>
+            <option value="" disabled selected>Select airline</option>
+            <option>American Airlines</option>
+            <option>Delta Air Lines</option>
+            <option>United Airlines</option>
+            <option>Southwest Airlines</option>
+            <option>JetBlue</option>
+            <option>Alaska Airlines</option>
+            <option>Spirit Airlines</option>
+            <option>Frontier Airlines</option>
+            <option>Hawaiian Airlines</option>
+            <option>Other</option>
+          </select>
+          <span id="locatorHint" class="formHint">Select the airline first so we can check the expected record locator format.</span>
+        </label>
         <div class="grid two compactFields">
           <label>Passenger first name
             <input id="passengerFirst" autocomplete="given-name" placeholder="Andrew" required>
@@ -62,26 +78,12 @@
           <input id="dateOfBirth" type="date" required>
         </label>
         <label>Confirmation / record locator
-          <input id="confirmationNo" placeholder="ABC123" maxlength="6" pattern="[A-Za-z0-9]{6}" autocomplete="off" required>
-          <span class="formHint">Use the 6-character airline record locator from your booking confirmation.</span>
-        </label>
-        <label>Airline
-          <select id="airlineSelect" required>
-            <option value="" disabled selected>Select airline</option>
-            <option>American Airlines</option>
-            <option>Delta Air Lines</option>
-            <option>United Airlines</option>
-            <option>Southwest Airlines</option>
-            <option>JetBlue</option>
-            <option>Alaska Airlines</option>
-            <option>Spirit Airlines</option>
-            <option>Frontier Airlines</option>
-            <option>Other</option>
-          </select>
+          <input id="confirmationNo" placeholder="ABC123" maxlength="13" pattern="[A-Za-z0-9]{5,13}" autocomplete="off" required>
+          <span class="formHint">Usually 6 characters, but some airlines/booking sources use 5–13 letters/numbers.</span>
         </label>
         <div class="grid two compactFields">
-          <label>Route
-            <input id="route" placeholder="DFW → LAX" required>
+          <label>Route <span class="optional">optional</span>
+            <input id="route" placeholder="DFW → LAX, if shown">
           </label>
           <label>Departure date
             <input id="travelDate" type="date" required>
@@ -117,6 +119,6 @@
   <div id="modal" class="modal"><div id="modalCard" class="modalCard"></div></div>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="config.js"></script>
-  <script src="app.js?v=real-flight-1"></script>
+  <script src="app.js?v=session-locator-1"></script>
 </body>
 </html>
