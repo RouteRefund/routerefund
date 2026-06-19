@@ -168,8 +168,8 @@ def record_result(cur, trip: Trip, result: dict) -> str:
 
     observed = result["price"]
     savings = trip.paid - observed
-    status = "Savings found" if savings > 0 else "Monitoring"
-    outcome = "Lower price found" if savings > 0 else "No savings"
+    status = "Review needed" if savings > 0 else "Monitoring"
+    outcome = "Lower price needs review" if savings > 0 else "No savings"
     note = f"{result['provider']} {result['route']} observed ${observed}; paid ${trip.paid}; savings ${savings}. Airline match: {result['airline_match']}"
     cur.execute(
         """
@@ -203,7 +203,7 @@ def main() -> int:
         print("RouteRefund fare API is ready but SERPAPI_API_KEY is not installed yet.")
         print("Trips still due; no database rows were changed:")
         for trip in trips:
-            print(f"- {trip.airline or 'Airline?'} {trip.confirmation_no} | {trip.route or 'route missing'} | {trip.travel_date or 'date missing'} | https://routerefund.com/owner-trip.html?id={trip.id}")
+            print(f"- {trip.airline or 'Airline?'} {trip.confirmation_no} | {trip.route or 'route missing'} | {trip.travel_date or 'date missing'} | https://routerefund.com/partner-ops-trip.html?id={trip.id}")
         cur.close(); conn.close()
         return 0
     messages = []
@@ -214,7 +214,7 @@ def main() -> int:
                 messages.append(f"DRY RUN {trip.confirmation_no}: {result}")
                 continue
             outcome = record_result(cur, trip, result)
-            messages.append(f"{trip.airline or 'Airline?'} {trip.confirmation_no}: {outcome}\n  Owner: https://routerefund.com/owner-trip.html?id={trip.id}")
+            messages.append(f"{trip.airline or 'Airline?'} {trip.confirmation_no}: {outcome}\n  Partner ops: https://routerefund.com/partner-ops-trip.html?id={trip.id}")
         if DRY_RUN:
             conn.rollback()
         else:
