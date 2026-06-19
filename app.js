@@ -207,7 +207,7 @@ window.addEventListener('DOMContentLoaded',async()=>{
   ['click','keydown','touchstart','scroll'].forEach(ev=>document.addEventListener(ev,touchActivity,{passive:true}));
   if($('modal'))$('modal').addEventListener('click',e=>{if(e.target.id==='modal')$('modal').classList.remove('open')});
   if(document.body.dataset.page==='signup')$('signupForm').addEventListener('submit',signup);
-  if(document.body.dataset.page==='login')$('loginForm').addEventListener('submit',login);
+  if(document.body.dataset.page==='login'||document.body.dataset.page==='partner-login')$('loginForm').addEventListener('submit',login);
   if(document.body.dataset.page==='reset')$('resetForm').addEventListener('submit',resetPassword);
   if(document.body.dataset.page==='forgot-email')$('forgotEmailForm').addEventListener('submit',forgotEmail);
   if(document.body.dataset.page==='update-password')$('updatePasswordForm').addEventListener('submit',updatePassword);
