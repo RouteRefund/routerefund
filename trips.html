@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>My trips | RouteRefund</title>
-  <link rel="stylesheet" href="styles.css?v=owner-workflow-1" />
+  <link rel="stylesheet" href="styles.css?v=automation-1" />
   <link rel="icon" href="/favicon.ico?v=logo-a-1" sizes="any" />
   <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png?v=logo-a-1" />
   <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16.png?v=logo-a-1" />
@@ -61,7 +61,8 @@
           <input id="dateOfBirth" type="date" required>
         </label>
         <label>Confirmation / record locator
-          <input id="confirmationNo" placeholder="ABC123" required>
+          <input id="confirmationNo" placeholder="ABC123" maxlength="6" pattern="[A-Za-z0-9]{6}" autocomplete="off" required>
+          <span class="formHint">Use the 6-character airline record locator from your booking confirmation.</span>
         </label>
         <label>Airline
           <select id="airlineSelect" required>
@@ -77,6 +78,14 @@
             <option>Other</option>
           </select>
         </label>
+        <div class="grid two compactFields">
+          <label>Route
+            <input id="route" placeholder="DFW → LAX" required>
+          </label>
+          <label>Departure date
+            <input id="travelDate" type="date" required>
+          </label>
+        </div>
         <label>Price paid
           <input id="paid" type="number" min="0" step="0.01" inputmode="decimal" placeholder="325.00" required>
         </label>
@@ -107,6 +116,6 @@
   <div id="modal" class="modal"><div id="modalCard" class="modalCard"></div></div>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="config.js"></script>
-  <script src="app.js?v=owner-workflow-1"></script>
+  <script src="app.js?v=automation-1"></script>
 </body>
 </html>

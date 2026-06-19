@@ -49,12 +49,22 @@ alter table public.trips add column if not exists flight_no text;
 alter table public.trips alter column flight_no drop not null;
 alter table public.trips add column if not exists confirmation_no text;
 alter table public.trips alter column confirmation_no set not null;
+alter table public.trips add column if not exists airline text;
 alter table public.trips add column if not exists route text;
-alter table public.trips alter column route drop not null;
 alter table public.trips add column if not exists travel_date date;
-alter table public.trips alter column travel_date drop not null;
 alter table public.trips drop column if exists owner_notes;
 alter table public.trips add column if not exists payment_status text not null default 'Not billed';
+alter table public.trips add column if not exists monitoring_frequency_hours integer not null default 6;
+alter table public.trips add column if not exists last_checked_at timestamptz;
+alter table public.trips add column if not exists next_check_at timestamptz not null default now();
+
+alter table public.trips drop constraint if exists trips_confirmation_no_format;
+alter table public.trips add constraint trips_confirmation_no_format
+  check (confirmation_no ~ '^[A-Z0-9]{6}$');
+
+alter table public.trips drop constraint if exists trips_paid_positive;
+alter table public.trips add constraint trips_paid_positive
+  check (paid > 0);
 
 create table if not exists public.owner_trip_notes (
   trip_id uuid primary key references public.trips(id) on delete cascade,
@@ -63,6 +73,37 @@ create table if not exists public.owner_trip_notes (
 );
 alter table public.owner_trip_notes enable row level security;
 
+create table if not exists public.monitoring_checks (
+  id uuid primary key default gen_random_uuid(),
+  trip_id uuid not null references public.trips(id) on delete cascade,
+  check_due_at timestamptz not null default now(),
+  checked_at timestamptz,
+  source text,
+  observed_price numeric,
+  result text not null default 'Due',
+  notes text,
+  created_at timestamptz default now()
+);
+alter table public.monitoring_checks enable row level security;
+
+create or replace function public.queue_initial_monitoring_check()
+returns trigger
+language plpgsql
+security definer
+set search_path = public
+as $$
+begin
+  insert into public.monitoring_checks(trip_id, check_due_at, source, result, notes)
+  values (new.id, now(), 'Initial review', 'Due', 'Initial verification and fare-baseline check');
+  return new;
+end;
+$$;
+
+drop trigger if exists trips_queue_initial_monitoring_check on public.trips;
+create trigger trips_queue_initial_monitoring_check
+after insert on public.trips
+for each row execute function public.queue_initial_monitoring_check();
+
 -- Supabase PostgREST still needs table privileges; RLS policies decide which rows are visible/editable.
 -- Reset broad/default grants first so anon/authenticated do not keep stale TRUNCATE/extra privileges from earlier attempts.
 revoke all privileges on public.profiles from anon, authenticated;
@@ -70,6 +111,7 @@ revoke all privileges on public.trips from anon, authenticated;
 revoke all privileges on public.owner_emails from anon, authenticated;
 revoke all privileges on public.account_recovery_requests from anon, authenticated;
 revoke all privileges on public.owner_trip_notes from anon, authenticated;
+revoke all privileges on public.monitoring_checks from anon, authenticated;
 
 grant usage on schema public to anon, authenticated;
 grant select, insert, update, delete on public.profiles to authenticated;
@@ -78,6 +120,7 @@ grant select on public.owner_emails to authenticated;
 grant insert on public.account_recovery_requests to anon, authenticated;
 grant select, update, delete on public.account_recovery_requests to authenticated;
 grant select, insert, update, delete on public.owner_trip_notes to authenticated;
+grant select, insert, update, delete on public.monitoring_checks to authenticated;
 
 create or replace function public.is_owner()
 returns boolean
@@ -139,6 +182,10 @@ for select using (public.is_owner());
 
 drop policy if exists "owner_trip_notes_owner_all" on public.owner_trip_notes;
 create policy "owner_trip_notes_owner_all" on public.owner_trip_notes
+for all using (public.is_owner()) with check (public.is_owner());
+
+drop policy if exists "monitoring_checks_owner_all" on public.monitoring_checks;
+create policy "monitoring_checks_owner_all" on public.monitoring_checks
 for all using (public.is_owner()) with check (public.is_owner());
 
 drop policy if exists "recovery_insert_anyone" on public.account_recovery_requests;
