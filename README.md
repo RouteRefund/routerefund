@@ -1,29 +1,21 @@
-# Latest RouteRefund upload
+# RouteRefund
 
-Upload/replace all root website files except local-only backend files. Keep CNAME if GitHub has it.
+Static front-end for RouteRefund.com using GitHub Pages + Supabase.
 
-# RouteRefund website
-
-Upload these files to the GitHub repository root for RouteRefund.com:
-
-- CNAME
+Upload these files to GitHub Pages:
 - index.html
 - signup.html
 - login.html
+- trips.html
+- forgot-email.html
 - reset-password.html
 - update-password.html
-- dashboard.html
 - owner-login.html
 - owner.html
+- dashboard.html
 - styles.css
-- config.js
 - app.js
-- README.md
+- config.js
+- CNAME
 
-Do not upload api_server.py or submissions.json.
-
-Security notes:
-- Customers sign up/log in through Supabase Auth.
-- Customer trip access is controlled by Supabase Row Level Security.
-- Owner dashboard only works safely after running `supabase-setup.sql` in Supabase and adding approved owner emails.
-- Do not store card numbers in RouteRefund forms. Use Stripe for payment later.
+Run `supabase-setup.sql` in Supabase SQL Editor after changes to database fields or security policies.

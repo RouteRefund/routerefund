@@ -1,7 +1,9 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Owner log in | RouteRefund</title><link rel="stylesheet" href="styles.css"></head>
-<body data-page="login">
-  <main class="authWrap"><a class="brand center" href="index.html"><span class="logo">↘</span>RouteRefund</a>
-    <form id="loginForm" class="panel authCard"><span class="eyebrow">Private owner area</span><h1>Owner log in</h1><p class="muted">For RouteRefund partners only. Access is controlled in Supabase by approved owner emails.</p><label>Email<input id="email" type="email" required></label><label>Password<input id="password" type="password" required></label><button class="btn primary full" type="submit">Log in to owner dashboard</button><p class="mini center"><a href="index.html">Back to site</a></p></form>
-  </main><div id="toast" class="toast"></div><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="config.js"></script><script src="app.js"></script>
-</body></html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Owner login | RouteRefund</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body data-page="login"><main class="authShell"><section class="authBrandPanel"><a class="brand authBrand" href="index.html"><span class="logo">↘</span>RouteRefund</a><div><span class="eyebrow light">Restricted</span><h1>Owner dashboard login.</h1><p>For authorized RouteRefund partners only.</p></div></section><section class="authFormPanel"><form id="loginForm" class="panel authCard modernAuth"><h2>Owner log in</h2><input type="hidden" id="ownerMode" value="1"><label>Email<input id="email" type="email" autocomplete="email" required></label><label>Password<input id="password" type="password" autocomplete="current-password" required></label><button class="btn primary full" type="submit">Log in to owner dashboard</button><p class="mini center"><a href="index.html">Back to public site</a></p></form></section></main><div id="toast" class="toast"></div><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="config.js"></script><script src="app.js"></script></body></html>
