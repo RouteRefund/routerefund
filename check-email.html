@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Check your email | RouteRefund</title>
+  <link rel="stylesheet" href="styles.css?v=check-email-1" />
+  <link rel="icon" href="/favicon.ico?v=logo-a-1" sizes="any" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png?v=logo-a-1" />
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png?v=logo-a-1" />
+  <meta name="theme-color" content="#0f7b4c" />
+</head>
+<body data-page="info">
+  <nav class="nav"><div class="wrap navin"><a class="brand" href="index.html"><span class="logo"><img src="/assets/favicon-32.png?v=logo-a-1" alt="" /></span>RouteRefund</a><div class="links"><a class="hide-sm" href="how-it-works.html">How it works</a><a class="hide-sm" href="supported-airlines.html">Airlines</a><a class="hide-sm" href="trust-center.html">Trust</a><a class="hide-sm" href="faq.html">FAQ</a><a class="btn ghost" href="login.html">Log in</a><a class="btn primary" href="add-trip.html">Start tracking</a><button class="btn ghost mobileMenuBtn" data-action="mobile-menu">Menu</button></div></div></nav>
+  <main class="wrap narrowPage">
+    <section class="section centerPanel">
+      <span class="eyebrow">One more step</span>
+      <h1>Check your email to activate RouteRefund.</h1>
+      <p class="lead small">We sent a confirmation link to your inbox. Open that link, then log in to add your trip.</p>
+      <div class="panel actionPanel">
+        <h2>After confirming</h2>
+        <ol class="stepsList">
+          <li>Return to RouteRefund.</li>
+          <li>Log in with your email and password.</li>
+          <li>Forward your confirmation or add the trip manually.</li>
+        </ol>
+        <div class="actions"><a class="btn primary" href="login.html">Log in</a><a class="btn ghost" href="add-trip.html">Back to Start tracking</a></div>
+      </div>
+      <p class="mini muted">If you do not see the email, check spam/promotions and confirm you used the correct address.</p>
+    </section>
+  </main>
+  <div id="toast" class="toast"></div>
+  <div id="modal" class="modal"><div id="modalCard" class="modalCard"></div></div>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="config.js"></script>
+  <script src="app.js?v=check-email-1"></script>
+</body>
+</html>
