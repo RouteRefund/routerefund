@@ -51,6 +51,12 @@ alter table public.trips add column if not exists confirmation_no text;
 alter table public.trips alter column confirmation_no set not null;
 
 -- Supabase PostgREST still needs table privileges; RLS policies decide which rows are visible/editable.
+-- Reset broad/default grants first so anon/authenticated do not keep stale TRUNCATE/extra privileges from earlier attempts.
+revoke all privileges on public.profiles from anon, authenticated;
+revoke all privileges on public.trips from anon, authenticated;
+revoke all privileges on public.owner_emails from anon, authenticated;
+revoke all privileges on public.account_recovery_requests from anon, authenticated;
+
 grant usage on schema public to anon, authenticated;
 grant select, insert, update, delete on public.profiles to authenticated;
 grant select, insert, update, delete on public.trips to authenticated;
@@ -71,38 +77,53 @@ as $$
 $$;
 
 drop policy if exists "profiles_select_own_or_owner" on public.profiles;
+drop policy if exists "customers can read their profile" on public.profiles;
 create policy "profiles_select_own_or_owner" on public.profiles
 for select using (auth.uid() = user_id or public.is_owner());
 
 drop policy if exists "profiles_insert_own" on public.profiles;
+drop policy if exists "customers can insert their profile" on public.profiles;
 create policy "profiles_insert_own" on public.profiles
 for insert with check (auth.uid() = user_id);
 
 drop policy if exists "profiles_update_own" on public.profiles;
+drop policy if exists "customers can update their profile" on public.profiles;
 create policy "profiles_update_own" on public.profiles
 for update using (auth.uid() = user_id) with check (auth.uid() = user_id);
 
 drop policy if exists "trips_select_own_or_owner" on public.trips;
+drop policy if exists "Customers can read their own trips" on public.trips;
+drop policy if exists "customers can read their trips" on public.trips;
+drop policy if exists "owners can read all trips" on public.trips;
 create policy "trips_select_own_or_owner" on public.trips
 for select using (auth.uid() = user_id or public.is_owner());
 
 drop policy if exists "trips_insert_own" on public.trips;
+drop policy if exists "Customers can insert their own trips" on public.trips;
+drop policy if exists "customers can insert their trips" on public.trips;
 create policy "trips_insert_own" on public.trips
 for insert with check (auth.uid() = user_id);
 
 drop policy if exists "trips_update_own_or_owner" on public.trips;
+drop policy if exists "Customers can update their own trip notes" on public.trips;
+drop policy if exists "customers can update their trips" on public.trips;
+drop policy if exists "owners can update all trips" on public.trips;
 create policy "trips_update_own_or_owner" on public.trips
 for update using (auth.uid() = user_id or public.is_owner()) with check (auth.uid() = user_id or public.is_owner());
 
 drop policy if exists "trips_delete_own_or_owner" on public.trips;
+drop policy if exists "Customers can delete their own trips" on public.trips;
+drop policy if exists "customers can delete their trips" on public.trips;
 create policy "trips_delete_own_or_owner" on public.trips
 for delete using (auth.uid() = user_id or public.is_owner());
 
 drop policy if exists "owner_emails_select_owner" on public.owner_emails;
+drop policy if exists "owners can read owner list" on public.owner_emails;
 create policy "owner_emails_select_owner" on public.owner_emails
 for select using (public.is_owner());
 
 drop policy if exists "recovery_insert_anyone" on public.account_recovery_requests;
+drop policy if exists "anyone can submit recovery request" on public.account_recovery_requests;
 create policy "recovery_insert_anyone" on public.account_recovery_requests
 for insert with check (true);
 
