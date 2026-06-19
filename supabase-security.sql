@@ -104,6 +104,38 @@ create trigger trips_queue_initial_monitoring_check
 after insert on public.trips
 for each row execute function public.queue_initial_monitoring_check();
 
+-- Customers may update their own customer-facing notes, but owner-controlled workflow fields
+-- must not be editable from a customer browser session even though the row is customer-owned.
+create or replace function public.protect_owner_trip_fields()
+returns trigger
+language plpgsql
+security definer
+set search_path = public
+as $$
+begin
+  if public.is_owner() then
+    return new;
+  end if;
+
+  if new.status is distinct from old.status
+    or new.current_price is distinct from old.current_price
+    or new.payment_status is distinct from old.payment_status
+    or new.last_checked_at is distinct from old.last_checked_at
+    or new.next_check_at is distinct from old.next_check_at
+    or new.monitoring_frequency_hours is distinct from old.monitoring_frequency_hours
+  then
+    raise exception 'Owner-only trip fields cannot be changed by customers';
+  end if;
+
+  return new;
+end;
+$$;
+
+drop trigger if exists trips_protect_owner_fields on public.trips;
+create trigger trips_protect_owner_fields
+before update on public.trips
+for each row execute function public.protect_owner_trip_fields();
+
 -- Supabase PostgREST still needs table privileges; RLS policies decide which rows are visible/editable.
 -- Reset broad/default grants first so anon/authenticated do not keep stale TRUNCATE/extra privileges from earlier attempts.
 revoke all privileges on public.profiles from anon, authenticated;
