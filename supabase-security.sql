@@ -43,6 +43,14 @@ alter table public.trips enable row level security;
 alter table public.owner_emails enable row level security;
 alter table public.account_recovery_requests enable row level security;
 
+-- Supabase PostgREST still needs table privileges; RLS policies decide which rows are visible/editable.
+grant usage on schema public to anon, authenticated;
+grant select, insert, update, delete on public.profiles to authenticated;
+grant select, insert, update, delete on public.trips to authenticated;
+grant select on public.owner_emails to authenticated;
+grant insert on public.account_recovery_requests to anon, authenticated;
+grant select, update, delete on public.account_recovery_requests to authenticated;
+
 create or replace function public.is_owner()
 returns boolean
 language sql
