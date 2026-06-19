@@ -1,0 +1,13 @@
+{
+  "name": "RouteRefund",
+  "short_name": "RouteRefund",
+  "description": "You book the flight. We make sure you get the cheapest rate.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f7f8f3",
+  "theme_color": "#0f7b4c",
+  "icons": [
+    { "src": "/assets/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/assets/icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}
