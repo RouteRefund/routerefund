@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>RouteRefund | We watch booked flights for savings</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body data-page="home">
+  <nav class="nav">
+    <div class="wrap navin">
+      <a class="brand" href="index.html"><span class="logo">↘</span>RouteRefund</a>
+      <div class="links">
+        <a class="hide-sm" href="#how">How it works</a>
+        <a class="hide-sm" href="#trust">Trust</a>
+        <a class="btn ghost" href="login.html">Log in</a>
+        <a class="btn primary" href="signup.html">Create account</a>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <section class="hero wrap">
+      <div class="grid two">
+        <div>
+          <span class="eyebrow">Post-booking airfare savings</span>
+          <h1>Already booked your flight? We keep watching the price.</h1>
+          <p class="lead">RouteRefund monitors flights you already bought and looks for eligible same-passenger, same-cabin savings. If we help capture money back or flight credit, we earn a commission from the savings.</p>
+          <div class="actions">
+            <a class="btn primary big" href="signup.html">Create account</a>
+            <a class="btn ghost big" href="login.html">Log in</a>
+          </div>
+          <p class="mini">No eligible savings captured? No commission fee.</p>
+        </div>
+        <div class="panel heroPanel">
+          <h2>What RouteRefund does</h2>
+          <ul class="checklist">
+            <li>Stores your booked trip details in your account</li>
+            <li>Watches for fare-drop and credit opportunities</li>
+            <li>Uses your trip authorization to protect speed when prices move</li>
+            <li>Focuses on same passenger, same cabin, same or acceptable itinerary changes</li>
+            <li>Only gets paid from savings we help capture</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="how" class="wrap section">
+      <h2>How it works</h2>
+      <div class="cards four">
+        <div class="card"><span class="num">1</span><h3>Create account</h3><p>Sign up with your name, email, and password.</p></div>
+        <div class="card"><span class="num">2</span><h3>Add your trip</h3><p>Enter the details needed to identify your booking: confirmation number, passenger last name, date of birth, flight number, route, date, and price paid.</p></div>
+        <div class="card"><span class="num">3</span><h3>We monitor</h3><p>RouteRefund tracks opportunities in the background and flags savings for owner review.</p></div>
+        <div class="card"><span class="num">4</span><h3>We act under your trip terms</h3><p>When eligible, our team can pursue same-cabin savings under the authorization you accepted when adding the trip.</p></div>
+      </div>
+    </section>
+
+    <section class="wrap section split" id="trust">
+      <div>
+        <h2>Security-first by design</h2>
+        <p>Flight details and passenger info are sensitive. RouteRefund should collect only what is needed, keep owner access restricted, and use Stripe-hosted payment flows instead of storing card numbers.</p>
+      </div>
+      <div class="panel">
+        <ul class="checklist compact">
+          <li>No credit card numbers entered into RouteRefund forms</li>
+          <li>Payments should be handled through Stripe Checkout</li>
+          <li>Customers only see their own trips</li>
+          <li>Owner dashboard access is separated and restricted in Supabase</li>
+          <li>Trip authorization is captured before monitoring starts</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="wrap section cta">
+      <h2>Start with one booked flight.</h2>
+      <p>Create an account, add your trip, and let RouteRefund watch for savings.</p>
+      <a class="btn primary big" href="signup.html">Create account</a>
+    </section>
+  </main>
+</body>
+</html>

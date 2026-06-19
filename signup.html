@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Create account | RouteRefund</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body data-page="signup">
+  <main class="authShell">
+    <section class="authBrandPanel">
+      <a class="brand authBrand" href="index.html"><span class="logo">↘</span>RouteRefund</a>
+      <div>
+        <span class="eyebrow light">Get started</span>
+        <h1>Create your RouteRefund account.</h1>
+        <p>Save your booked trips, authorize monitoring, and let RouteRefund look for eligible airfare savings.</p>
+      </div>
+      <ul class="checklist lightList">
+        <li>No commission unless savings are captured</li>
+        <li>Private customer dashboard</li>
+        <li>No card numbers stored on this page</li>
+      </ul>
+    </section>
+
+    <section class="authFormPanel">
+      <form id="signupForm" class="panel authCard modernAuth">
+        <h2>Create account</h2>
+        <p class="muted">Use an email you can access for password resets.</p>
+        <label>Full name<input id="name" autocomplete="name" placeholder="Andrew Pacanowski" required /></label>
+        <label>Email<input id="email" type="email" autocomplete="email" placeholder="you@email.com" required /></label>
+        <label>Password<input id="password" type="password" autocomplete="new-password" minlength="8" placeholder="At least 8 characters" required /></label>
+        <label>Re-type password<input id="password2" type="password" autocomplete="new-password" minlength="8" placeholder="Re-enter password" required /></label>
+        <button class="btn primary full" type="submit">Create account</button>
+        <p class="mini center">Already have an account? <a href="login.html">Log in</a></p>
+      </form>
+    </section>
+  </main>
+  <div id="toast" class="toast"></div>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="config.js"></script><script src="app.js"></script>
+</body>
+</html>

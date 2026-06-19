@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Forgot email | RouteRefund</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body data-page="forgot-email">
+  <main class="authShell">
+    <section class="authBrandPanel">
+      <a class="brand authBrand" href="index.html"><span class="logo">↘</span>RouteRefund</a>
+      <div>
+        <span class="eyebrow light">Account help</span>
+        <h1>Forgot which email you used?</h1>
+        <p>For privacy, RouteRefund will not reveal account emails automatically. Submit a recovery request and our team can verify it manually.</p>
+      </div>
+      <ul class="checklist lightList">
+        <li>We never display someone’s email from name/DOB alone</li>
+        <li>Manual verification protects customer accounts</li>
+        <li>Use your confirmation code if you already added a trip</li>
+      </ul>
+    </section>
+
+    <section class="authFormPanel">
+      <form id="forgotEmailForm" class="panel authCard modernAuth">
+        <h2>Recover account email</h2>
+        <p class="muted">Tell us enough to verify you. We’ll follow up after review.</p>
+        <label>Full name<input id="recoveryName" autocomplete="name" placeholder="Full legal name" required /></label>
+        <label>Date of birth<input id="recoveryDob" type="date" required /></label>
+        <label>Flight confirmation code, if known<input id="recoveryConfirmation" placeholder="ABC123" /></label>
+        <label>Contact email for reply<input id="recoveryReplyEmail" type="email" autocomplete="email" placeholder="where we should contact you" required /></label>
+        <button class="btn primary full" type="submit">Submit recovery request</button>
+        <p class="mini center"><a href="login.html">Back to log in</a></p>
+      </form>
+    </section>
+  </main>
+  <div id="toast" class="toast"></div>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="config.js"></script><script src="app.js"></script>
+</body>
+</html>
