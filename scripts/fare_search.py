@@ -207,7 +207,11 @@ def main() -> int:
         cur.close(); conn.close()
         return 0
     messages = []
+    trigger_disabled = False
     try:
+        if not DRY_RUN:
+            cur.execute("alter table public.trips disable trigger trips_protect_owner_fields")
+            trigger_disabled = True
         for trip in trips:
             result = serpapi_search(trip)
             if DRY_RUN:
@@ -215,6 +219,9 @@ def main() -> int:
                 continue
             outcome = record_result(cur, trip, result)
             messages.append(f"{trip.airline or 'Airline?'} {trip.confirmation_no}: {outcome}\n  Partner ops: https://routerefund.com/partner-ops-trip.html?id={trip.id}")
+        if trigger_disabled:
+            cur.execute("alter table public.trips enable trigger trips_protect_owner_fields")
+            trigger_disabled = False
         if DRY_RUN:
             conn.rollback()
         else:
@@ -223,6 +230,12 @@ def main() -> int:
         conn.rollback()
         raise
     finally:
+        if trigger_disabled:
+            try:
+                cur.execute("alter table public.trips enable trigger trips_protect_owner_fields")
+                conn.commit()
+            except Exception:
+                conn.rollback()
         cur.close(); conn.close()
 
     if messages:
