@@ -155,3 +155,12 @@
   .heroPanel .checklist li{font-size:14px!important;line-height:1.35!important;word-break:normal!important}
 }
 @media (max-width:390px){.wrap,.navin{padding-left:22px!important;padding-right:22px!important}.hero h1{font-size:29px!important}.brand{font-size:19px!important}}
+
+/* mobile-edge-fix-1: hero is also .wrap, so preserve side padding */
+@media (max-width:640px){
+  .hero.wrap{padding-left:24px!important;padding-right:24px!important;max-width:430px!important;margin-left:auto!important;margin-right:auto!important;width:100%!important}
+  .hero.wrap .eyebrow{margin-left:0!important}
+  .hero.wrap h1,.hero.wrap .lead,.hero.wrap .actions,.hero.wrap .mini,.hero.wrap .heroPanel{max-width:100%!important}
+  .hero.wrap .actions .btn{width:100%!important}
+}
+@media (max-width:390px){.hero.wrap{padding-left:22px!important;padding-right:22px!important}}
