@@ -202,3 +202,5 @@
 .ownerNav .brand,.ownerNav .links,.ownerNav .links a{color:#fff}
 .ownerOnlyPanel{background:linear-gradient(145deg,#10231f,#0b5d3b)!important}
 .ownerAuthShell .authFormPanel{background:#f7f8f3}
+
+.qrBox{display:flex;justify-content:center;padding:14px;background:#fff;border:1px solid rgba(15,123,76,.18);border-radius:18px;margin:12px 0}.qrBox img{width:min(220px,70vw);height:auto}.modernAuth code{word-break:break-all}

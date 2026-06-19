@@ -53,9 +53,27 @@ async function signup(e){
   if(data?.session){toast('Account created');location.href='trips.html'}
   else{location.href=`check-email.html?email=${encodeURIComponent(email)}`}
 }
-const PARTNER_EMAIL_ALLOWLIST=new Set(['andrew.ops@routerefund.com','caleb.ops@routerefund.com','max.ops@routerefund.com']);
+const PARTNER_ADMIN_USERS={andrew_admin:'andrew.ops@routerefund.com',caleb_admin:'caleb.ops@routerefund.com',max_admin:'max.ops@routerefund.com'};
+const PARTNER_EMAIL_ALLOWLIST=new Set(Object.values(PARTNER_ADMIN_USERS));
 function isPartnerLoginPage(){return document.body.dataset.page==='partner-login'||!!$('ownerMode')||location.pathname.includes('partner-ops-login')}
-async function login(e){e.preventDefault();const email=$('email').value.trim().toLowerCase(),password=$('password').value;const partnerLogin=isPartnerLoginPage();if(partnerLogin&&!PARTNER_EMAIL_ALLOWLIST.has(email))return toast('Partner portal is restricted to approved RouteRefund partner emails. Use the customer login for your trips.');const {data,error}=await supabaseClient.auth.signInWithPassword({email,password});if(error)return toast(error.message);touchActivity();if(partnerLogin){const signedInEmail=(data?.user?.email||email).trim().toLowerCase();if(!PARTNER_EMAIL_ALLOWLIST.has(signedInEmail)){await supabaseClient.auth.signOut();return toast('Partner access denied for this email.')}}if(data?.user)await ensureProfile(data.user);const next=new URLSearchParams(location.search).get('next')||(partnerLogin?'partner-ops-dashboard.html':'trips.html');location.href=next}
+function partnerEmailForLogin(value=''){return PARTNER_ADMIN_USERS[String(value).trim().toLowerCase()]||''}
+async function partnerAal2(){const {data}=await supabaseClient.auth.mfa.getAuthenticatorAssuranceLevel();return data?.currentLevel==='aal2'}
+function partnerMfaCard(title,body){const form=$('loginForm');if(form)form.innerHTML=`<h2>${title}</h2>${body}<p class="mini center muted">Use Google Authenticator, 1Password, iCloud Passwords, Authy, or another authenticator app.</p>`}
+async function showPartnerMfaChallenge(next='partner-ops-dashboard.html'){
+  const {data,error}=await supabaseClient.auth.mfa.listFactors();if(error)return toast(error.message);
+  const factor=(data?.totp||[]).find(f=>f.status==='verified')||(data?.all||[]).find(f=>f.factor_type==='totp'&&f.status==='verified');
+  if(!factor)return showPartnerMfaSetup(next);
+  partnerMfaCard('Enter 2FA code',`<label>Authenticator code<input id="mfaCode" inputmode="numeric" autocomplete="one-time-code" maxlength="6" required></label><button id="mfaVerifyBtn" class="btn primary full" type="button">Verify and open ops</button>`);
+  $('mfaVerifyBtn').addEventListener('click',async()=>{const code=$('mfaCode').value.trim();if(!code)return toast('Enter your 6-digit code');const {data:challenge,error:challengeError}=await supabaseClient.auth.mfa.challenge({factorId:factor.id});if(challengeError)return toast(challengeError.message);const {error:verifyError}=await supabaseClient.auth.mfa.verify({factorId:factor.id,challengeId:challenge.id,code});if(verifyError)return toast(verifyError.message);touchActivity();location.href=next});
+}
+async function showPartnerMfaSetup(next='partner-ops-dashboard.html'){
+  const {data,error}=await supabaseClient.auth.mfa.enroll({factorType:'totp',friendlyName:'RouteRefund partner'});if(error)return toast(error.message);
+  const qr=data?.totp?.qr_code||'',secret=data?.totp?.secret||'';
+  partnerMfaCard('Set up 2FA',`<p>Scan this in your authenticator app, then enter the 6-digit code.</p>${qr?`<div class="qrBox"><img alt="2FA QR code" src="${escapeHtml(qr)}"></div>`:''}${secret?`<p class="mini"><b>Manual key:</b> <code>${escapeHtml(secret)}</code></p>`:''}<label>Authenticator code<input id="mfaCode" inputmode="numeric" autocomplete="one-time-code" maxlength="6" required></label><button id="mfaVerifyBtn" class="btn primary full" type="button">Enable 2FA and open ops</button>`);
+  $('mfaVerifyBtn').addEventListener('click',async()=>{const code=$('mfaCode').value.trim();if(!code)return toast('Enter your 6-digit code');const {data:challenge,error:challengeError}=await supabaseClient.auth.mfa.challenge({factorId:data.id});if(challengeError)return toast(challengeError.message);const {error:verifyError}=await supabaseClient.auth.mfa.verify({factorId:data.id,challengeId:challenge.id,code});if(verifyError)return toast(verifyError.message);touchActivity();location.href=next});
+}
+async function requirePartnerMfa(next='partner-ops-dashboard.html'){if(await partnerAal2()){location.href=next;return}await showPartnerMfaChallenge(next)}
+async function login(e){e.preventDefault();const loginId=$('email').value.trim().toLowerCase(),password=$('password').value,partnerLogin=isPartnerLoginPage();const email=partnerLogin?partnerEmailForLogin(loginId):loginId;if(partnerLogin&&!email)return toast('Use your assigned admin username, not an email address.');const {data,error}=await supabaseClient.auth.signInWithPassword({email,password});if(error)return toast(error.message);touchActivity();if(partnerLogin){const signedInEmail=(data?.user?.email||email).trim().toLowerCase();if(!PARTNER_EMAIL_ALLOWLIST.has(signedInEmail)){await supabaseClient.auth.signOut();return toast('Partner access denied for this account.')}return requirePartnerMfa(new URLSearchParams(location.search).get('next')||'partner-ops-dashboard.html')}if(data?.user)await ensureProfile(data.user);const next=new URLSearchParams(location.search).get('next')||'trips.html';location.href=next}
 async function forgotEmail(e){e.preventDefault();const payload={full_name:$('recoveryName').value.trim(),date_of_birth:$('recoveryDob').value,status:'New'};if(!payload.full_name||!payload.date_of_birth)return toast('Fill out all required fields');const {error}=await supabaseClient.from('account_recovery_requests').insert(payload);if(error)return toast('Recovery request could not be saved. Run the latest Supabase SQL.');e.target.reset();toast('If we find a match, recovery instructions will be sent to the account email.')}
 async function resetPassword(e){e.preventDefault();const email=$('email').value.trim().toLowerCase();const redirectTo=`${location.origin}/update-password.html`;const {error}=await supabaseClient.auth.resetPasswordForEmail(email,{redirectTo});if(error)return toast(error.message);toast('Reset email sent')}
 async function updatePassword(e){e.preventDefault();const password=$('password').value,password2=$('password2').value;if(password.length<8)return toast('Use at least 8 characters');if(password!==password2)return toast('Passwords do not match');const {error}=await supabaseClient.auth.updateUser({password});if(error)return toast(error.message);toast('Password updated');setTimeout(()=>location.href='trips.html',600)}
@@ -134,6 +152,9 @@ async function saveOwnerNote(id,note){const {error}=await supabaseClient.from('o
 async function dueChecksByTrip(){const {data,error}=await supabaseClient.from('monitoring_checks').select('trip_id,check_due_at,result,observed_price,notes').eq('result','Due').order('check_due_at',{ascending:true});if(error)return {};return (data||[]).reduce((acc,c)=>{(acc[c.trip_id] ||= []).push(c);return acc},{})}
 async function requireOwner(next='partner-ops-dashboard.html'){
   const user=await requireLogin(next);if(!user)return null;
+  const email=(user.email||'').trim().toLowerCase();
+  if(!PARTNER_EMAIL_ALLOWLIST.has(email)){await supabaseClient.auth.signOut();location.href='partner-ops-login.html';return null;}
+  if(!(await partnerAal2())){location.href=`partner-ops-login.html?next=${encodeURIComponent(next)}&mfa=required`;return null;}
   const {data,error}=await supabaseClient.rpc('current_user_is_owner');
   if(error||data!==true){
     await supabaseClient.auth.signOut();
@@ -208,6 +229,7 @@ window.addEventListener('DOMContentLoaded',async()=>{
   if($('modal'))$('modal').addEventListener('click',e=>{if(e.target.id==='modal')$('modal').classList.remove('open')});
   if(document.body.dataset.page==='signup')$('signupForm').addEventListener('submit',signup);
   if(document.body.dataset.page==='login'||document.body.dataset.page==='partner-login')$('loginForm').addEventListener('submit',login);
+  if(document.body.dataset.page==='partner-login'){const user=await getUser();if(user&&PARTNER_EMAIL_ALLOWLIST.has((user.email||'').toLowerCase()))await requirePartnerMfa(new URLSearchParams(location.search).get('next')||'partner-ops-dashboard.html')}
   if(document.body.dataset.page==='reset')$('resetForm').addEventListener('submit',resetPassword);
   if(document.body.dataset.page==='forgot-email')$('forgotEmailForm').addEventListener('submit',forgotEmail);
   if(document.body.dataset.page==='update-password')$('updatePasswordForm').addEventListener('submit',updatePassword);

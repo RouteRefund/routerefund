@@ -187,7 +187,8 @@ language sql
 security definer
 set search_path = public
 as $$
-  select exists (
+  select coalesce(auth.jwt() ->> 'aal', '') = 'aal2'
+  and exists (
     select 1 from public.owner_emails
     where lower(email) = lower(coalesce(auth.jwt() ->> 'email', ''))
   );
