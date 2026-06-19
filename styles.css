@@ -22,3 +22,7 @@
   .actions{display:grid;grid-template-columns:1fr 1fr}
   .btn.big{padding:14px 12px}
 }
+
+
+/* Expanded site pages */
+.pageMain{padding-bottom:50px}.legal{max-width:850px}.legal h2{margin-top:28px}.faqList{display:grid;gap:16px;padding-bottom:44px}.airlineGrid{padding-top:12px}.airlineCard p{margin-bottom:0}.wideEmail{max-width:520px}.timeline{display:grid;gap:14px}.timeline div{display:flex;gap:12px;align-items:center;padding:12px;border-radius:16px;background:#f3f8f1;border:1px solid #dbe9d7}.timeline b{width:30px;height:30px;border-radius:50%;background:var(--green);color:#fff;display:grid;place-items:center}.pageMain .card:hover,.pageMain .panel[href]:hover{transform:translateY(-2px);transition:.15s}
