@@ -63,3 +63,24 @@
   .actions{grid-template-columns:1fr;gap:10px}
   .links .btn{font-size:15px;padding:10px 14px}
 }
+
+
+/* Chosen iPhone layout: app-like C */
+.mobileMenuBtn{display:none}.mobileMenuList{display:grid;gap:10px}.mobileMenuList a{display:block;padding:14px 16px;border:1px solid var(--line);border-radius:16px;background:#fff;font-weight:950;color:var(--ink)}
+@media (max-width:640px){
+  .navin{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;min-height:64px}
+  .brand{font-size:20px;letter-spacing:-.04em}.logo{width:32px;height:32px;border-radius:11px}
+  .nav .links a.hide-sm,.nav .links .primary{display:none!important}
+  .mobileMenuBtn{display:inline-flex!important;padding:9px 13px!important;font-size:14px!important;min-height:40px!important}
+  .hero{padding:22px 0 24px}.hero .grid.two{gap:16px}
+  .hero .eyebrow{font-size:12px;padding:6px 10px;text-align:left}
+  .hero h1{font-size:32px!important;line-height:1.1!important;letter-spacing:-.035em!important;margin:18px 0 12px!important}
+  .hero .lead{font-size:16px!important;line-height:1.45!important}
+  .hero .actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:18px 0}
+  .hero .actions .btn{font-size:14px!important;min-height:48px!important;padding:13px 10px!important}
+  .hero .mini{display:block;background:#eef7eb;border:1px solid #d9ead7;border-radius:18px;padding:14px;margin-top:16px;font-size:14px!important;font-weight:850;color:#245f3e}
+  .heroPanel{padding:18px!important;margin-top:16px!important;border-radius:20px!important}
+  .heroPanel h2{font-size:24px!important;margin:0 0 12px!important}
+  .heroPanel .checklist{gap:9px}.heroPanel .checklist li{font-size:14px!important;line-height:1.32!important;padding-left:30px!important}
+}
+@media (max-width:390px){.hero .actions{grid-template-columns:1fr}.hero h1{font-size:30px!important}}
