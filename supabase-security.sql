@@ -49,6 +49,10 @@ alter table public.trips add column if not exists flight_no text;
 alter table public.trips alter column flight_no drop not null;
 alter table public.trips add column if not exists confirmation_no text;
 alter table public.trips alter column confirmation_no set not null;
+alter table public.trips add column if not exists route text;
+alter table public.trips alter column route drop not null;
+alter table public.trips add column if not exists travel_date date;
+alter table public.trips alter column travel_date drop not null;
 
 -- Supabase PostgREST still needs table privileges; RLS policies decide which rows are visible/editable.
 -- Reset broad/default grants first so anon/authenticated do not keep stale TRUNCATE/extra privileges from earlier attempts.
