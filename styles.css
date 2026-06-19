@@ -100,3 +100,6 @@
   .heroPanel h2{font-size:24px!important}
 }
 @media (min-width:391px) and (max-width:640px){.hero h1{font-size:32px!important}}
+
+/* App dashboard polish */
+.miniTimeline{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:14px 0}.miniTimeline span{font-size:12px;font-weight:900;color:#78908a;background:#f2f5ef;border:1px solid var(--line);border-radius:999px;padding:7px 8px;text-align:center}.miniTimeline span.done{background:#e8f5e5;color:#245f3e;border-color:#d9ead7}.detailTimeline{display:grid;gap:12px;margin:22px 0}.detailTimeline div{display:flex;align-items:center;gap:12px;padding:14px;border-radius:18px;background:#f3f5f0;border:1px solid var(--line);color:var(--muted);font-weight:850}.detailTimeline div.done{background:#e8f5e5;border-color:#d9ead7;color:#245f3e}.detailTimeline b{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;background:#dfe7dc;color:#5f746e}.detailTimeline .done b{background:var(--green);color:#fff}.savingsBox{background:#fff8e6;border:1px solid #f0d79a;border-radius:20px;padding:18px;margin:18px 0}.tripDetailCard{max-width:860px}.trip .actions .btn{min-height:44px}@media(max-width:640px){.miniTimeline{grid-template-columns:1fr 1fr}.trip .actions{display:grid;grid-template-columns:1fr}.trip .actions .btn{width:100%}.detailTimeline div{padding:12px}.tripDetailCard{padding:20px!important}}
