@@ -95,5 +95,9 @@ drop policy if exists "recovery_select_owner" on public.account_recovery_request
 create policy "recovery_select_owner" on public.account_recovery_requests
 for select using (public.is_owner());
 
--- After running, add owner emails like this:
--- insert into public.owner_emails(email) values ('you@example.com') on conflict do nothing;
+-- Owner emails for RouteRefund partners.
+insert into public.owner_emails(email) values
+  ('caleb@routerefund.com'),
+  ('max@routerefund.com'),
+  ('andrew@routerefund.com')
+on conflict do nothing;
