@@ -193,6 +193,15 @@ as $$
   );
 $$;
 
+create or replace function public.current_user_is_owner()
+returns boolean
+language sql
+security definer
+set search_path = public
+as $$
+  select public.is_owner();
+$$;
+
 drop policy if exists "profiles_select_own_or_owner" on public.profiles;
 drop policy if exists "customers can read their profile" on public.profiles;
 create policy "profiles_select_own_or_owner" on public.profiles

@@ -130,6 +130,16 @@ function ownerControls(){return `<div class="ownerControls"><button class="btn g
 async function ownerNotesByTrip(){const {data,error}=await supabaseClient.from('owner_trip_notes').select('trip_id,owner_notes');if(error)return {};return Object.fromEntries((data||[]).map(n=>[n.trip_id,n.owner_notes||'']))}
 async function saveOwnerNote(id,note){const {error}=await supabaseClient.from('owner_trip_notes').upsert({trip_id:id,owner_notes:note,updated_at:new Date().toISOString()},{onConflict:'trip_id'});if(error)return toast(error.message);await renderOwner();await renderOwnerTrip();toast('Owner note saved')}
 async function dueChecksByTrip(){const {data,error}=await supabaseClient.from('monitoring_checks').select('trip_id,check_due_at,result,observed_price,notes').eq('result','Due').order('check_due_at',{ascending:true});if(error)return {};return (data||[]).reduce((acc,c)=>{(acc[c.trip_id] ||= []).push(c);return acc},{})}
+async function requireOwner(next='partner-ops-dashboard.html'){
+  const user=await requireLogin(next);if(!user)return null;
+  const {data,error}=await supabaseClient.rpc('current_user_is_owner');
+  if(error||data!==true){
+    await supabaseClient.auth.signOut();
+    document.body.innerHTML='<main class="wrap pageMain"><section class="panel"><h1>Partner access only</h1><p>This private operations portal is restricted to approved RouteRefund partner emails.</p><a class="btn primary" href="login.html">Log in with partner email</a><a class="btn ghost" href="trips.html">Customer dashboard</a></section></main>';
+    return null;
+  }
+  return user;
+}
 function ownerTripCard(r){
   const savings=tripSavings(r);
   const due=r.due_checks?.length||0;
@@ -149,7 +159,7 @@ async function renderOwner(){
 }
 async function renderOwnerTrip(){
   const box=$('ownerTripDetail');if(!box)return;
-  const user=await requireLogin(`partner-ops-trip.html${location.search}`);if(!user)return;if($('ownerWelcome'))$('ownerWelcome').textContent=user.email;
+  const user=await requireOwner(`partner-ops-trip.html${location.search}`);if(!user)return;if($('ownerWelcome'))$('ownerWelcome').textContent=user.email;
   const id=new URLSearchParams(location.search).get('id');
   if(!id){box.innerHTML='<div class="empty"><h3>No trip selected</h3><a class="btn primary" href="partner-ops-dashboard.html">Owner dashboard</a></div>';return}
   const {data:r,error}=await supabaseClient.from('trips').select('*').eq('id',id).single();
@@ -202,6 +212,6 @@ window.addEventListener('DOMContentLoaded',async()=>{
   if(document.body.dataset.page==='dashboard'){const user=await requireLogin('trips.html');if(!user)return;$('welcome').textContent=user.email;$('tripForm').addEventListener('submit',addTrip);$('airlineSelect')?.addEventListener('change',updateLocatorHint);updateLocatorHint();await renderTrips()}
   if(document.body.dataset.page==='account'){await renderAccount()}
   if(document.body.dataset.page==='trip-detail'){await renderTripDetail()}
-  if(document.body.dataset.page==='owner'){const user=await requireLogin('partner-ops-dashboard.html');if(!user)return;$('ownerWelcome').textContent=user.email;await renderOwner()}
+  if(document.body.dataset.page==='owner'){const user=await requireOwner('partner-ops-dashboard.html');if(!user)return;$('ownerWelcome').textContent=user.email;await renderOwner()}
   if(document.body.dataset.page==='owner-trip'){await renderOwnerTrip()}
 });
