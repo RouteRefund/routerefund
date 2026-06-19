@@ -84,3 +84,19 @@
   .heroPanel .checklist{gap:9px}.heroPanel .checklist li{font-size:14px!important;line-height:1.32!important;padding-left:30px!important}
 }
 @media (max-width:390px){.hero .actions{grid-template-columns:1fr}.hero h1{font-size:30px!important}}
+
+
+/* mobile-tight-2: tighter mobile viewport and CTA correction */
+@media (max-width:640px){
+  html,body{width:100%;max-width:100%;overflow-x:hidden}
+  .wrap{width:100%;max-width:100%;padding-left:24px!important;padding-right:24px!important}
+  .hero{padding-top:22px!important}
+  .hero h1{font-size:30px!important;line-height:1.12!important;letter-spacing:-.025em!important;margin:18px 0 12px!important;max-width:100%!important;overflow-wrap:normal!important}
+  .hero .lead{font-size:16px!important;line-height:1.45!important;max-width:100%!important}
+  .hero .actions{grid-template-columns:1fr!important;gap:10px!important}
+  .hero .actions .primary{font-size:16px!important}
+  .hero .actions .ghost{display:none!important}
+  .heroPanel .checklist li{font-size:13.5px!important;line-height:1.35!important}
+  .heroPanel h2{font-size:24px!important}
+}
+@media (min-width:391px) and (max-width:640px){.hero h1{font-size:32px!important}}
