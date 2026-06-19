@@ -55,6 +55,6 @@ print(f"RouteRefund: {len(rows)} trip(s) due for fare monitoring as of {datetime
 for r in rows:
     trip_id, airline, confirmation, route, travel_date, paid, current_price, status, next_check_at, first, last, owner_notes = r
     print(f"- {airline or 'Airline?'} {confirmation} | {route or 'route missing'} | {travel_date or 'date missing'} | paid ${paid} | {first or ''} {last or ''} | status {status}")
-    print(f"  Owner workspace: https://routerefund.com/owner-trip.html?id={trip_id}")
+    print(f"  Owner workspace: https://routerefund.com/partner-ops-trip.html?id={trip_id}")
     if owner_notes:
         print(f"  Note: {owner_notes[:180]}")

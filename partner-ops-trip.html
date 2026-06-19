@@ -3,23 +3,18 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Account | RouteRefund</title>
+  <title>Partner trip workspace | RouteRefund</title>
   <link rel="stylesheet" href="styles.css?v=owner-separate-1" />
   <link rel="icon" href="/favicon.ico?v=logo-a-1" sizes="any" />
   <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png?v=logo-a-1" />
   <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png?v=logo-a-1" />
   <meta name="theme-color" content="#0f7b4c" />
+  <meta name="robots" content="noindex,nofollow" />
 </head>
-<body data-page="account">
-  <nav class="nav">
-    <div class="wrap navin">
-      <a class="brand" href="trips.html"><span class="logo"><img src="/assets/favicon-32.png?v=logo-a-1" alt="" /></span>RouteRefund</a>
-      <div class="links"><span id="accountWelcome" class="hide-sm muted"></span><a class="btn ghost" href="trips.html">My trips</a><button class="btn ghost" data-action="logout">Log out</button></div>
-    </div>
-  </nav>
+<body data-page="owner-trip">
+  <nav class="nav ownerNav"><div class="wrap navin"><a class="brand" href="partner-ops-dashboard.html"><span class="logo"><img src="/assets/favicon-32.png?v=logo-a-1" alt="" /></span>RouteRefund Ops</a><div class="links"><a class="btn ghost" href="partner-ops-dashboard.html">Ops dashboard</a><span id="ownerWelcome" class="hide-sm muted"></span><button class="btn ghost" data-action="logout">Log out</button></div></div></nav>
   <main class="wrap pageMain">
-    <section class="section"><span class="eyebrow">Account</span><h1>Account settings</h1><p class="lead small">You stay signed in on this device unless you log out or are inactive for a while.</p></section>
-    <section id="accountPanel" class="panel"><h2>Loading account...</h2></section>
+    <section id="ownerTripDetail"><div class="empty"><h3>Loading owner trip...</h3></div></section>
   </main>
   <div id="toast" class="toast"></div>
   <div id="modal" class="modal"><div id="modalCard" class="modalCard"></div></div>

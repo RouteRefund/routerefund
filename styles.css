@@ -195,3 +195,10 @@
 .checkRow{display:flex!important;align-items:flex-start;gap:10px;margin:10px 0;font-weight:750;line-height:1.35}
 .checkRow input{width:auto;margin-top:3px;flex:0 0 auto}
 .checkRow a{text-decoration:underline;color:var(--green)}
+
+
+/* Separate partner ops portal */
+.ownerNav{background:#10231f;color:#fff;border-bottom-color:#1b3b34}
+.ownerNav .brand,.ownerNav .links,.ownerNav .links a{color:#fff}
+.ownerOnlyPanel{background:linear-gradient(145deg,#10231f,#0b5d3b)!important}
+.ownerAuthShell .authFormPanel{background:#f7f8f3}

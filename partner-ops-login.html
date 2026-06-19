@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex,nofollow" />
+  <title>Partner ops login | RouteRefund</title>
+  <link rel="stylesheet" href="styles.css?v=owner-separate-1" />
+  <link rel="icon" href="/favicon.ico?v=logo-a-1" sizes="any" />
+  <meta name="theme-color" content="#0f7b4c" />
+</head>
+<body data-page="login">
+  <main class="authShell ownerAuthShell">
+    <section class="authBrandPanel ownerOnlyPanel">
+      <a class="brand authBrand" href="partner-ops-login.html"><span class="logo"><img src="/assets/favicon-32.png?v=logo-a-1" alt="" /></span>RouteRefund Ops</a>
+      <div><span class="eyebrow light">Private partner portal</span><h1>Partner operations login.</h1><p>For approved RouteRefund partners only. This portal is intentionally separate from the public customer site.</p></div>
+    </section>
+    <section class="authFormPanel">
+      <form id="loginForm" class="panel authCard modernAuth">
+        <h2>Partner log in</h2>
+        <input type="hidden" id="ownerMode" value="1">
+        <label>Email<input id="email" type="email" autocomplete="email" required></label>
+        <label>Password<input id="password" type="password" autocomplete="current-password" required></label>
+        <button class="btn primary full" type="submit">Open partner ops</button>
+        <p class="mini center muted">No customer account access here.</p>
+      </form>
+    </section>
+  </main>
+  <div id="toast" class="toast"></div>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="config.js"></script><script src="app.js?v=owner-separate-1"></script>
+</body>
+</html>
