@@ -6,4 +6,101 @@
   <title>My trips | RouteRefund</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
-<body data-page="dashboard"><nav class="nav"><div class="wrap navin"><a class="brand" href="index.html"><span class="logo">↘</span>RouteRefund</a><div class="links"><span id="welcome" class="hide-sm muted"></span><button class="btn ghost" data-action="logout">Log out</button></div></div></nav><main class="wrap"><section class="section dashHead"><div><span class="eyebrow">Customer dashboard</span><h1>My tracked trips</h1><p class="lead small">Add flights you already booked. If we find a cheaper rate on your route, we rebook you and you get a refund.</p></div></section><section class="grid two align-start"><form id="tripForm" class="panel formPanel"><h2>Add a booked flight</h2><div class="grid two compactFields"><label>Passenger first name<input id="passengerFirst" placeholder="Andrew" required></label><label>Passenger last name<input id="passengerLast" placeholder="Smith" required></label></div><label>Date of birth<input id="dateOfBirth" type="date" required></label><label>Confirmation / record locator<input id="confirmationNo" placeholder="ABC123" required></label><p class="formHint">Example: American uses codes like ABC123. Southwest may use a similar confirmation number.</p><label>Price paid<input id="paid" type="number" min="0" step="0.01" placeholder="325.00" required></label><label>Notes<textarea id="notes" placeholder="Cabin, baggage, seating, schedule limits, or anything we should know."></textarea></label><label class="checkline"><input id="changeConsent" type="checkbox" required> I authorize RouteRefund to monitor this trip and pursue eligible savings within my trip terms, including rebook-then-cancel when it better protects my itinerary.</label><button class="btn primary full" type="submit">Start tracking this flight</button><p class="mini">Do not enter card numbers here. RouteRefund will use secure payment links when savings are captured.</p></form><section><div id="trips"><div class="empty"><h3>Loading trips...</h3></div></div></section></section></main><div id="toast" class="toast"></div><div id="modal" class="modal"><div id="modalCard" class="modalCard"></div></div><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="config.js"></script><script src="app.js"></script></body></html>
+<body data-page="dashboard">
+  <nav class="nav">
+    <div class="wrap navin">
+      <a class="brand" href="index.html"><span class="logo">↘</span>RouteRefund</a>
+      <div class="links">
+        <span id="welcome" class="hide-sm muted"></span>
+        <button class="btn ghost" data-action="logout">Log out</button>
+      </div>
+    </div>
+  </nav>
+
+  <main class="wrap">
+    <section class="section dashHead">
+      <div>
+        <span class="eyebrow">Customer dashboard</span>
+        <h1>Add a trip to watch.</h1>
+        <p class="lead small">Forward your confirmation email or enter the basics manually. If we find a cheaper rate on your route, we rebook you and you get a refund.</p>
+      </div>
+    </section>
+
+    <section class="grid two align-start addTripGrid">
+      <section class="panel formPanel forwardPanel">
+        <span class="eyebrow">Fastest option</span>
+        <h2>Forward your flight confirmation</h2>
+        <p>Send your airline booking email to:</p>
+        <a class="emailBox" href="mailto:trips@routerefund.com">trips@routerefund.com</a>
+        <ul class="checklist compactList">
+          <li>Usually includes airline, route, dates, cabin, and price</li>
+          <li>Reduces typing mistakes</li>
+          <li>We review it and add the trip to your dashboard</li>
+        </ul>
+        <p class="mini">Use this for the cleanest setup. If anything is missing, RouteRefund will follow up.</p>
+      </section>
+
+      <form id="tripForm" class="panel formPanel">
+        <span class="eyebrow">Backup option</span>
+        <h2>Enter manually</h2>
+        <div class="grid two compactFields">
+          <label>Passenger first name
+            <input id="passengerFirst" autocomplete="given-name" placeholder="Andrew" required>
+          </label>
+          <label>Passenger last name
+            <input id="passengerLast" autocomplete="family-name" placeholder="Smith" required>
+          </label>
+        </div>
+        <label>Date of birth
+          <input id="dateOfBirth" type="date" required>
+        </label>
+        <label>Confirmation / record locator
+          <input id="confirmationNo" placeholder="ABC123" required>
+        </label>
+        <label>Airline <span class="optional">optional</span>
+          <select id="airlineSelect">
+            <option value="">I'm not sure</option>
+            <option>American Airlines</option>
+            <option>Delta Air Lines</option>
+            <option>United Airlines</option>
+            <option>Southwest Airlines</option>
+            <option>JetBlue</option>
+            <option>Alaska Airlines</option>
+            <option>Spirit Airlines</option>
+            <option>Frontier Airlines</option>
+            <option>Other</option>
+          </select>
+        </label>
+        <label>Price paid
+          <input id="paid" type="number" min="0" step="0.01" inputmode="decimal" placeholder="325.00" required>
+        </label>
+        <label>Notes <span class="optional">optional</span>
+          <textarea id="notes" placeholder="Cabin, baggage, seating, schedule limits, or anything we should know."></textarea>
+        </label>
+        <label class="checkline">
+          <input id="changeConsent" type="checkbox" required>
+          I authorize RouteRefund to monitor this trip and pursue eligible savings within my trip terms, including rebook-then-cancel when it better protects my itinerary.
+        </label>
+        <button class="btn primary full" type="submit">Start tracking this flight</button>
+        <p class="mini">Do not enter card numbers here. RouteRefund will use secure payment links when savings are captured.</p>
+      </form>
+    </section>
+
+    <section class="section">
+      <div class="row dashboardRow">
+        <div>
+          <span class="eyebrow">Your trips</span>
+          <h2>Tracking status</h2>
+        </div>
+      </div>
+      <div id="trips"><div class="empty"><h3>Loading trips...</h3></div></div>
+    </section>
+  </main>
+
+  <div id="toast" class="toast"></div>
+  <div id="modal" class="modal"><div id="modalCard" class="modalCard"></div></div>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="config.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
