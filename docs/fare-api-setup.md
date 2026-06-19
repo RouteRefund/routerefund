@@ -30,6 +30,8 @@ Script:
 
 Runs every 6 hours. If no SerpAPI key exists, it reports due trips but does not change the database.
 
+Free-plan guard: SerpAPI free plan is 250 searches/month. The job defaults to max 2 SerpAPI checks per run (`ROUTEREFUND_MAX_SERPAPI_CHECKS_PER_RUN=2`), which is about 240 searches/month at the 6-hour schedule. Raise this only after upgrading SerpAPI or slowing the schedule.
+
 ## Current behavior
 
 For each due trip with route/date:

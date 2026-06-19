@@ -23,6 +23,8 @@ import psycopg2
 DB_URL = os.environ.get("ROUTEREFUND_DATABASE_URL")
 SERPAPI_API_KEY = os.environ.get("SERPAPI_API_KEY")
 DRY_RUN = os.environ.get("ROUTEREFUND_DRY_RUN", "0") == "1"
+# Free SerpAPI plan is 250 searches/month. At every 6h, 2 checks/run ~= 240/month max.
+MAX_CHECKS_PER_RUN = int(os.environ.get("ROUTEREFUND_MAX_SERPAPI_CHECKS_PER_RUN", "2"))
 
 ROUTE_RE = re.compile(r"\b([A-Z]{3})\b\s*(?:-|→|to|/|,)\s*\b([A-Z]{3})\b", re.I)
 
@@ -67,11 +69,12 @@ def trip_query(cur) -> list[Trip]:
         select id, airline, confirmation_no, route, travel_date, paid, current_price,
                status, passenger_first, passenger_last
         from public.trips
-        where coalesce(status, 'Monitoring') not in ('Closed')
+        where coalesce(status, 'Monitoring') not in ('Closed', 'Archived')
           and coalesce(next_check_at, now()) <= now()
         order by next_check_at asc nulls first, created_at asc
-        limit 20
-        """
+        limit %s
+        """,
+        (MAX_CHECKS_PER_RUN,),
     )
     return [Trip(*row) for row in cur.fetchall()]
 
