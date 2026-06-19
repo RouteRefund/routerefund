@@ -53,6 +53,15 @@ alter table public.trips add column if not exists route text;
 alter table public.trips alter column route drop not null;
 alter table public.trips add column if not exists travel_date date;
 alter table public.trips alter column travel_date drop not null;
+alter table public.trips drop column if exists owner_notes;
+alter table public.trips add column if not exists payment_status text not null default 'Not billed';
+
+create table if not exists public.owner_trip_notes (
+  trip_id uuid primary key references public.trips(id) on delete cascade,
+  owner_notes text,
+  updated_at timestamptz not null default now()
+);
+alter table public.owner_trip_notes enable row level security;
 
 -- Supabase PostgREST still needs table privileges; RLS policies decide which rows are visible/editable.
 -- Reset broad/default grants first so anon/authenticated do not keep stale TRUNCATE/extra privileges from earlier attempts.
@@ -60,6 +69,7 @@ revoke all privileges on public.profiles from anon, authenticated;
 revoke all privileges on public.trips from anon, authenticated;
 revoke all privileges on public.owner_emails from anon, authenticated;
 revoke all privileges on public.account_recovery_requests from anon, authenticated;
+revoke all privileges on public.owner_trip_notes from anon, authenticated;
 
 grant usage on schema public to anon, authenticated;
 grant select, insert, update, delete on public.profiles to authenticated;
@@ -67,6 +77,7 @@ grant select, insert, update, delete on public.trips to authenticated;
 grant select on public.owner_emails to authenticated;
 grant insert on public.account_recovery_requests to anon, authenticated;
 grant select, update, delete on public.account_recovery_requests to authenticated;
+grant select, insert, update, delete on public.owner_trip_notes to authenticated;
 
 create or replace function public.is_owner()
 returns boolean
@@ -125,6 +136,10 @@ drop policy if exists "owner_emails_select_owner" on public.owner_emails;
 drop policy if exists "owners can read owner list" on public.owner_emails;
 create policy "owner_emails_select_owner" on public.owner_emails
 for select using (public.is_owner());
+
+drop policy if exists "owner_trip_notes_owner_all" on public.owner_trip_notes;
+create policy "owner_trip_notes_owner_all" on public.owner_trip_notes
+for all using (public.is_owner()) with check (public.is_owner());
 
 drop policy if exists "recovery_insert_anyone" on public.account_recovery_requests;
 drop policy if exists "anyone can submit recovery request" on public.account_recovery_requests;
