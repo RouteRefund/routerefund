@@ -9,6 +9,11 @@ create table if not exists public.profiles (
   created_at timestamptz default now()
 );
 
+alter table public.profiles add column if not exists terms_accepted_at timestamptz;
+alter table public.profiles add column if not exists privacy_accepted_at timestamptz;
+alter table public.profiles add column if not exists monitoring_authorized_at timestamptz;
+alter table public.profiles add column if not exists fee_disclosure_accepted_at timestamptz;
+
 create table if not exists public.owner_emails (
   email text primary key,
   created_at timestamptz default now()
@@ -86,6 +91,26 @@ create table if not exists public.monitoring_checks (
 );
 alter table public.monitoring_checks enable row level security;
 
+create table if not exists public.forwarded_confirmations (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid references auth.users(id) on delete set null,
+  from_email text,
+  subject text,
+  raw_text text,
+  parsed_airline text,
+  parsed_confirmation_no text,
+  parsed_passenger_name text,
+  parsed_route text,
+  parsed_travel_date date,
+  parsed_paid numeric,
+  parser_confidence numeric,
+  status text not null default 'Needs review',
+  created_trip_id uuid references public.trips(id) on delete set null,
+  created_at timestamptz not null default now(),
+  reviewed_at timestamptz
+);
+alter table public.forwarded_confirmations enable row level security;
+
 create or replace function public.queue_initial_monitoring_check()
 returns trigger
 language plpgsql
@@ -144,6 +169,7 @@ revoke all privileges on public.owner_emails from anon, authenticated;
 revoke all privileges on public.account_recovery_requests from anon, authenticated;
 revoke all privileges on public.owner_trip_notes from anon, authenticated;
 revoke all privileges on public.monitoring_checks from anon, authenticated;
+revoke all privileges on public.forwarded_confirmations from anon, authenticated;
 
 grant usage on schema public to anon, authenticated;
 grant select, insert, update, delete on public.profiles to authenticated;
@@ -153,6 +179,7 @@ grant insert on public.account_recovery_requests to anon, authenticated;
 grant select, update, delete on public.account_recovery_requests to authenticated;
 grant select, insert, update, delete on public.owner_trip_notes to authenticated;
 grant select, insert, update, delete on public.monitoring_checks to authenticated;
+grant select, insert, update, delete on public.forwarded_confirmations to authenticated;
 
 create or replace function public.is_owner()
 returns boolean
@@ -218,6 +245,10 @@ for all using (public.is_owner()) with check (public.is_owner());
 
 drop policy if exists "monitoring_checks_owner_all" on public.monitoring_checks;
 create policy "monitoring_checks_owner_all" on public.monitoring_checks
+for all using (public.is_owner()) with check (public.is_owner());
+
+drop policy if exists "forwarded_confirmations_owner_all" on public.forwarded_confirmations;
+create policy "forwarded_confirmations_owner_all" on public.forwarded_confirmations
 for all using (public.is_owner()) with check (public.is_owner());
 
 drop policy if exists "recovery_insert_anyone" on public.account_recovery_requests;

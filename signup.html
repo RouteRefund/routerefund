@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Create account | RouteRefund</title>
-  <link rel="stylesheet" href="styles.css?v=session-locator-1" />
+  <link rel="stylesheet" href="styles.css?v=packet-1" />
   <link rel="icon" href="/favicon.ico?v=logo-a-1" sizes="any" />
   <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png?v=logo-a-1" />
   <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16.png?v=logo-a-1" />
@@ -12,4 +12,38 @@
   <link rel="manifest" href="/site.webmanifest" />
   <meta name="theme-color" content="#0f7b4c" />
 </head>
-<body data-page="signup"><main class="authShell"><section class="authBrandPanel"><a class="brand authBrand" href="index.html"><span class="logo"><img src="/assets/favicon-32.png?v=logo-a-1" alt="" /></span>RouteRefund</a><div><span class="eyebrow light">Get started</span><h1>Create your RouteRefund account.</h1><p>Add booked trips, authorize monitoring, and let RouteRefund look for eligible savings.</p></div><ul class="checklist lightList"><li>Private customer dashboard</li><li>Simple trip tracking</li><li>No card numbers stored in trip forms</li></ul></section><section class="authFormPanel"><form id="signupForm" class="panel authCard modernAuth"><h2>Create account</h2><p class="muted">Use the same full name and birthday you would use on flight bookings.</p><label>Full name<input id="name" autocomplete="name" placeholder="Full name" required></label><label>Date of birth<input id="signupDob" type="date" required></label><label>Email<input id="email" type="email" autocomplete="email" placeholder="you@email.com" required></label><label>Password<input id="password" type="password" autocomplete="new-password" minlength="8" placeholder="At least 8 characters" required></label><label>Re-type password<input id="password2" type="password" autocomplete="new-password" minlength="8" placeholder="Re-enter password" required></label><button id="signupSubmit" class="btn primary full" type="submit">Create account</button><p class="mini center">Already have an account? <a href="login.html">Log in</a></p></form></section></main><div id="toast" class="toast"></div><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="config.js"></script><script src="app.js?v=session-locator-1"></script></body></html>
+<body data-page="signup">
+  <main class="authShell">
+    <section class="authBrandPanel">
+      <a class="brand authBrand" href="index.html"><span class="logo"><img src="/assets/favicon-32.png?v=logo-a-1" alt="" /></span>RouteRefund</a>
+      <div><span class="eyebrow light">Get started</span><h1>Create your RouteRefund account.</h1><p>Add booked trips, authorize monitoring, and let RouteRefund look for eligible savings.</p></div>
+      <ul class="checklist lightList"><li>Private customer dashboard</li><li>Simple trip tracking</li><li>No card numbers stored in trip forms</li></ul>
+    </section>
+    <section class="authFormPanel">
+      <form id="signupForm" class="panel authCard modernAuth">
+        <h2>Create account</h2>
+        <p class="muted">Use the same full name and birthday you would use on flight bookings.</p>
+        <label>Full name<input id="name" autocomplete="name" placeholder="Full name" required></label>
+        <label>Date of birth<input id="signupDob" type="date" required></label>
+        <label>Email<input id="email" type="email" autocomplete="email" placeholder="you@email.com" required></label>
+        <label>Password<input id="password" type="password" autocomplete="new-password" minlength="8" placeholder="At least 8 characters" required></label>
+        <label>Re-type password<input id="password2" type="password" autocomplete="new-password" minlength="8" placeholder="Re-enter password" required></label>
+        <div class="packetBox">
+          <h3>RouteRefund account packet</h3>
+          <p class="mini muted">Please review before creating an account. These acknowledgements are stored with your profile.</p>
+          <label class="checkRow"><input id="acceptTerms" type="checkbox" required><span>I agree to the <a href="terms.html" target="_blank" rel="noopener">Terms of Service</a>.</span></label>
+          <label class="checkRow"><input id="acceptPrivacy" type="checkbox" required><span>I acknowledge the <a href="privacy.html" target="_blank" rel="noopener">Privacy Policy</a>.</span></label>
+          <label class="checkRow"><input id="authorizeMonitoring" type="checkbox" required><span>I authorize RouteRefund to monitor eligible trips I add or forward, review fare changes, and contact me about savings opportunities.</span></label>
+          <label class="checkRow"><input id="acceptFee" type="checkbox" required><span>I understand RouteRefund may charge a success fee only when eligible savings are captured, with final payment details shown before billing.</span></label>
+        </div>
+        <button id="signupSubmit" class="btn primary full" type="submit">Create account</button>
+        <p class="mini center">Already have an account? <a href="login.html">Log in</a></p>
+      </form>
+    </section>
+  </main>
+  <div id="toast" class="toast"></div>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="config.js"></script>
+  <script src="app.js?v=packet-1"></script>
+</body>
+</html>

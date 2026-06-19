@@ -32,7 +32,7 @@ function touchActivity(){localStorage.setItem('rr_last_activity',String(Date.now
 async function enforceInactivity(){const last=Number(localStorage.getItem('rr_last_activity')||Date.now());if(Date.now()-last>INACTIVITY_LIMIT_MS){await supabaseClient.auth.signOut();localStorage.removeItem('rr_last_activity');location.href='login.html?reason=inactive';return false}touchActivity();return true}
 
 async function getUser(){if(!supabaseClient)return null;const {data:{session}}=await supabaseClient.auth.getSession();if(!session)return null;const ok=await enforceInactivity();if(!ok)return null;const {data}=await supabaseClient.auth.getUser();return data?.user||null}
-async function ensureProfile(user){if(!user)return;const m=user.user_metadata||{};if(m.name||m.date_of_birth){await supabaseClient.from('profiles').upsert({user_id:user.id,full_name:m.name||'',date_of_birth:m.date_of_birth||null},{onConflict:'user_id'})}}
+async function ensureProfile(user){if(!user)return;const m=user.user_metadata||{};if(m.name||m.date_of_birth||m.terms_accepted_at){await supabaseClient.from('profiles').upsert({user_id:user.id,full_name:m.name||'',date_of_birth:m.date_of_birth||null,terms_accepted_at:m.terms_accepted_at||null,privacy_accepted_at:m.privacy_accepted_at||null,monitoring_authorized_at:m.monitoring_authorized_at||null,fee_disclosure_accepted_at:m.fee_disclosure_accepted_at||null},{onConflict:'user_id'})}}
 async function requireLogin(next='trips.html'){const user=await getUser();if(!user){location.href=`login.html?next=${encodeURIComponent(next)}`;return null}await ensureProfile(user);return user}
 async function logout(){await supabaseClient.auth.signOut();location.href='index.html'}
 
@@ -42,9 +42,11 @@ async function signup(e){
   if(!name||!date_of_birth||!email||!password)return toast('Fill out all fields');
   if(password.length<8)return toast('Use at least 8 characters');
   if(password!==password2)return toast('Passwords do not match');
+  if(!$('acceptTerms').checked||!$('acceptPrivacy').checked||!$('authorizeMonitoring').checked||!$('acceptFee').checked)return toast('Please review and accept the RouteRefund account packet.');
+  const acceptedAt=new Date().toISOString();
   const submit=e.submitter||$('signupSubmit');
   if(submit){submit.disabled=true;submit.textContent='Creating account...'}
-  const {data,error}=await supabaseClient.auth.signUp({email,password,options:{data:{name,date_of_birth},emailRedirectTo:`${location.origin}/trips.html`}});
+  const {data,error}=await supabaseClient.auth.signUp({email,password,options:{data:{name,date_of_birth,terms_accepted_at:acceptedAt,privacy_accepted_at:acceptedAt,monitoring_authorized_at:acceptedAt,fee_disclosure_accepted_at:acceptedAt},emailRedirectTo:`${location.origin}/trips.html`}});
   if(submit){submit.disabled=false;submit.textContent='Create account'}
   if(error)return toast(error.message);
   if(data?.user)await ensureProfile(data.user);

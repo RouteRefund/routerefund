@@ -187,3 +187,11 @@
 @media(max-width:760px){#kpis{grid-template-columns:1fr 1fr}.ownerControls{grid-template-columns:1fr 1fr}.ownerControls input{grid-column:1/-1}}
 
 .smallNotice{margin:12px 0 18px;padding:13px 15px;border-radius:16px}
+
+
+/* Signup packet acknowledgements */
+.packetBox{border:1px solid var(--line);border-radius:20px;background:#f8fbf5;padding:16px;margin:14px 0 18px}
+.packetBox h3{margin:0 0 6px;font-size:18px}
+.checkRow{display:flex!important;align-items:flex-start;gap:10px;margin:10px 0;font-weight:750;line-height:1.35}
+.checkRow input{width:auto;margin-top:3px;flex:0 0 auto}
+.checkRow a{text-decoration:underline;color:var(--green)}
