@@ -185,3 +185,5 @@
 #kpis b{display:block;font-size:24px;color:var(--green)}
 #kpis span{color:var(--muted);font-size:13px;font-weight:850}
 @media(max-width:760px){#kpis{grid-template-columns:1fr 1fr}.ownerControls{grid-template-columns:1fr 1fr}.ownerControls input{grid-column:1/-1}}
+
+.smallNotice{margin:12px 0 18px;padding:13px 15px;border-radius:16px}
