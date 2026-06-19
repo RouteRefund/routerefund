@@ -174,3 +174,14 @@
 .stepsList{display:grid;gap:10px;color:var(--ink);font-weight:750}
 .centerPanel{text-align:center;max-width:820px;margin:0 auto}
 @media (max-width:640px){.ownerControls{display:grid;grid-template-columns:1fr 1fr}.ownerControls input{grid-column:1/-1;min-width:0}.ownerTrip .actions{grid-template-columns:1fr}.centerPanel{text-align:left}}
+
+
+/* Monitoring workflow */
+.dueNotice{border-color:#f1d18a;background:#fff8e6;color:#5f3b00;margin-bottom:18px}
+.ownerTrip[data-due="true"]{border-color:#f1d18a;box-shadow:0 16px 42px rgba(232,180,79,.16)}
+.ownerTrip[data-due="true"] .tag{background:#fff3d0;color:#704400;border:1px solid #f1d18a}
+#kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin:22px 0}
+#kpis div{background:#fff;border:1px solid var(--line);border-radius:18px;padding:16px;box-shadow:0 10px 24px rgba(18,57,67,.06)}
+#kpis b{display:block;font-size:24px;color:var(--green)}
+#kpis span{color:var(--muted);font-size:13px;font-weight:850}
+@media(max-width:760px){#kpis{grid-template-columns:1fr 1fr}.ownerControls{grid-template-columns:1fr 1fr}.ownerControls input{grid-column:1/-1}}
