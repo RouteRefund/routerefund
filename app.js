@@ -12,7 +12,7 @@ function toast(message) {
 }
 function escapeHtml(value='') { return String(value).replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c])); }
 async function getUser() { if (!supabaseClient) return null; const { data } = await supabaseClient.auth.getUser(); return data?.user || null; }
-async function requireLogin(next='dashboard.html') { const user = await getUser(); if (!user) location.href = `login.html?next=${encodeURIComponent(next)}`; return user; }
+async function requireLogin(next='trips.html') { const user = await getUser(); if (!user) location.href = `login.html?next=${encodeURIComponent(next)}`; return user; }
 async function logout() { await supabaseClient.auth.signOut(); location.href = 'index.html'; }
 
 async function signup(e) {
@@ -24,14 +24,14 @@ async function signup(e) {
   const { error } = await supabaseClient.auth.signUp({ email, password, options: { data: { name } } });
   if (error) return toast(error.message);
   toast('Account created');
-  setTimeout(() => location.href = 'dashboard.html', 800);
+  setTimeout(() => location.href = 'trips.html', 800);
 }
 async function login(e) {
   e.preventDefault();
   const email = $('email').value.trim().toLowerCase(), password = $('password').value;
   const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
   if (error) return toast(error.message);
-  const next = new URLSearchParams(location.search).get('next') || (document.title.includes('Owner') ? 'owner.html' : 'dashboard.html');
+  const next = new URLSearchParams(location.search).get('next') || (document.title.includes('Owner') ? 'owner.html' : 'trips.html');
   location.href = next;
 }
 async function forgotEmail(e) {
@@ -66,12 +66,12 @@ async function updatePassword(e) {
   const { error } = await supabaseClient.auth.updateUser({ password });
   if (error) return toast(error.message);
   toast('Password updated');
-  setTimeout(() => location.href = 'dashboard.html', 800);
+  setTimeout(() => location.href = 'trips.html', 800);
 }
 
 async function addTrip(e) {
   e.preventDefault();
-  const user = await requireLogin('dashboard.html'); if (!user) return;
+  const user = await requireLogin('trips.html'); if (!user) return;
   if (!$('changeConsent').checked) return toast('Please accept trip authorization to continue');
   const trip = {
     user_id: user.id,
@@ -135,6 +135,6 @@ window.addEventListener('DOMContentLoaded', async () => {
   if (document.body.dataset.page === 'reset') $('resetForm').addEventListener('submit', resetPassword);
   if (document.body.dataset.page === 'forgot-email') $('forgotEmailForm').addEventListener('submit', forgotEmail);
   if (document.body.dataset.page === 'update-password') $('updatePasswordForm').addEventListener('submit', updatePassword);
-  if (document.body.dataset.page === 'dashboard') { const user = await requireLogin('dashboard.html'); if (!user) return; $('welcome').textContent = user.email; $('tripForm').addEventListener('submit', addTrip); await renderTrips(); }
+  if (document.body.dataset.page === 'dashboard') { const user = await requireLogin('trips.html'); if (!user) return; $('welcome').textContent = user.email; $('tripForm').addEventListener('submit', addTrip); await renderTrips(); }
   if (document.body.dataset.page === 'owner') { const user = await requireLogin('owner.html'); if (!user) return; $('ownerWelcome').textContent = user.email; await renderOwner(); }
 });
