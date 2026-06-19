@@ -29,6 +29,7 @@ create table if not exists public.trips (
   passenger_last text not null,
   date_of_birth date not null,
   confirmation_no text not null,
+  flight_no text,
   paid numeric not null,
   current_price numeric,
   notes text,
@@ -42,6 +43,12 @@ alter table public.profiles enable row level security;
 alter table public.trips enable row level security;
 alter table public.owner_emails enable row level security;
 alter table public.account_recovery_requests enable row level security;
+
+-- Keep old RouteRefund schemas compatible with the current manual-entry form.
+alter table public.trips add column if not exists flight_no text;
+alter table public.trips alter column flight_no drop not null;
+alter table public.trips add column if not exists confirmation_no text;
+alter table public.trips alter column confirmation_no set not null;
 
 -- Supabase PostgREST still needs table privileges; RLS policies decide which rows are visible/editable.
 grant usage on schema public to anon, authenticated;
