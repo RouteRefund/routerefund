@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>My trips | RouteRefund</title>
-  <link rel="stylesheet" href="styles.css?v=customer-dashboard-polish-2" />
+  <link rel="stylesheet" href="styles.css?v=customer-lookup-intake-1" />
   <link rel="icon" href="/favicon.ico?v=logo-a-1" sizes="any" />
   <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png?v=logo-a-1" />
   <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16.png?v=logo-a-1" />
@@ -72,25 +72,13 @@
         <p class="mini">Use this for the cleanest setup. If anything is missing, RouteRefund will follow up before any savings action is taken.</p>
       </section>
 
-      <form id="tripForm" class="panel formPanel">
-        <span class="eyebrow">Backup option</span>
-        <h2>Enter manually</h2>
-        <div class="notice smallNotice"><b>Use a real booked flight.</b> Choose the airline first, then enter the record locator/confirmation code exactly as shown in the booking email. The record locator is not always the same as the flight number, and length can vary by airline. Do not enter payment card numbers in this form.</div>
-        <label>Airline
-          <select id="airlineSelect" required>
-            <option value="" disabled selected>Select airline</option>
-            <option>American Airlines</option>
-            <option>Delta Air Lines</option>
-            <option>United Airlines</option>
-            <option>Southwest Airlines</option>
-            <option>JetBlue</option>
-            <option>Alaska Airlines</option>
-            <option>Spirit Airlines</option>
-            <option>Frontier Airlines</option>
-            <option>Hawaiian Airlines</option>
-            <option>Other</option>
-          </select>
-          <span id="locatorHint" class="formHint">Select the airline first so we can check the expected record locator format.</span>
+      <form id="tripForm" class="panel formPanel lookupForm">
+        <span class="eyebrow">Manual lookup</span>
+        <h2>Enter the basics</h2>
+        <div class="notice smallNotice"><b>Keep this simple.</b> Start with the same details the airline uses to find your reservation. RouteRefund will review the booking and fill in route, date, and timing details when we can verify them.</div>
+        <label>Confirmation / record locator
+          <input id="confirmationNo" placeholder="ABC123" maxlength="13" pattern="[A-Za-z0-9]{5,13}" autocomplete="off" required>
+          <span id="locatorHint" class="formHint">Enter the booking confirmation / record locator exactly as shown. Usually 6 characters, but we accept 5–13 letters/numbers.</span>
         </label>
         <div class="grid two compactFields">
           <label>Passenger first name
@@ -102,31 +90,48 @@
         </div>
         <label>Date of birth
           <input id="dateOfBirth" type="date" required>
+          <span class="formHint">Used only to help match the booking. Do not enter airline passwords or payment card details.</span>
         </label>
-        <label>Confirmation / record locator
-          <input id="confirmationNo" placeholder="ABC123" maxlength="13" pattern="[A-Za-z0-9]{5,13}" autocomplete="off" required>
-          <span class="formHint">Usually 6 characters, but some airlines/booking sources use 5–13 letters/numbers.</span>
-        </label>
-        <div class="grid two compactFields">
-          <label>Route <span class="optional">optional</span>
-            <input id="route" placeholder="DFW → LAX, if shown">
-          </label>
-          <label>Departure date
-            <input id="travelDate" type="date" required>
-          </label>
-        </div>
-        <label>Price paid
-          <input id="paid" type="number" min="0" step="0.01" inputmode="decimal" placeholder="325.00" required>
-        </label>
-        <label>Notes <span class="optional">optional</span>
-          <textarea id="notes" placeholder="Cabin, baggage, seating, schedule limits, or anything we should know."></textarea>
-        </label>
+        <details class="optionalTripDetails">
+          <summary>Add details if you have them <span>optional</span></summary>
+          <div class="optionalTripBody">
+            <label>Airline <span class="optional">optional</span>
+              <select id="airlineSelect">
+                <option value="" selected>Not sure / let RouteRefund identify it</option>
+                <option>American Airlines</option>
+                <option>Delta Air Lines</option>
+                <option>United Airlines</option>
+                <option>Southwest Airlines</option>
+                <option>JetBlue</option>
+                <option>Alaska Airlines</option>
+                <option>Spirit Airlines</option>
+                <option>Frontier Airlines</option>
+                <option>Hawaiian Airlines</option>
+                <option>Other</option>
+              </select>
+            </label>
+            <div class="grid two compactFields">
+              <label>Route <span class="optional">optional</span>
+                <input id="route" placeholder="DFW → LAX, if shown">
+              </label>
+              <label>Departure date <span class="optional">optional</span>
+                <input id="travelDate" type="date">
+              </label>
+            </div>
+            <label>Price paid <span class="optional">optional</span>
+              <input id="paid" type="number" min="0" step="0.01" inputmode="decimal" placeholder="325.00">
+            </label>
+            <label>Notes <span class="optional">optional</span>
+              <textarea id="notes" placeholder="Cabin, baggage, seating, schedule limits, or anything we should know."></textarea>
+            </label>
+          </div>
+        </details>
         <label class="checkline">
           <input id="changeConsent" type="checkbox" required>
           I authorize RouteRefund to monitor this trip and prepare eligible savings options within my trip terms. RouteRefund will contact me before any airline booking, cancellation, or rebooking action unless I separately authorize that specific step.
         </label>
-        <button class="btn primary full" type="submit">Start tracking this flight</button>
-        <p class="mini">RouteRefund keeps monitoring separate from payment collection. If savings are captured, any service fee will be handled through a secure payment link.</p>
+        <button class="btn primary full" type="submit">Find my flight</button>
+        <p class="mini">After you submit, the trip appears in your dashboard as a booking lookup. We’ll fill in route, date, time, and fare details after verification.</p>
       </form>
     </section>
 
@@ -145,6 +150,6 @@
   <div id="modal" class="modal"><div id="modalCard" class="modalCard"></div></div>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="config.js"></script>
-  <script src="app.js?v=archive-actions-1"></script>
+  <script src="app.js?v=customer-lookup-intake-1"></script>
 </body>
 </html>

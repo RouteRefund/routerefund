@@ -1,7 +1,7 @@
 const RR = window.ROUTEREFUND_CONFIG || {};
 const supabaseClient = window.supabase?.createClient(RR.SUPABASE_URL, RR.SUPABASE_ANON_KEY);
 const $ = id => document.getElementById(id);
-const money = n => '$' + Number(n || 0).toLocaleString(undefined, { maximumFractionDigits: 2 });
+const money = n => (n===null||n===undefined||n==='') ? 'Pending' : '$' + Number(n || 0).toLocaleString(undefined, { maximumFractionDigits: 2 });
 
 function toast(message){
   let t=$('toast');
@@ -109,14 +109,13 @@ async function addTrip(e){
   const confirmation=normalizeConfirmation($('confirmationNo').value);
   const route=$('route')?.value?.trim().toUpperCase()||'';
   const travelDate=$('travelDate')?.value||'';
-  if(!airline)return fail('Select the airline first.');
-  if(!validConfirmation(confirmation,airline)){const r=locatorRule(airline);return fail(`For ${airline}, enter ${r.min===r.max?r.min:`${r.min}-${r.max}`} letters/numbers from the booking email.`)}
-  if(!travelDate)return fail('Enter the departure date so monitoring can run.');
-  const rawNotes=$('notes').value.trim();
+  if(!validConfirmation(confirmation,airline)){const r=locatorRule(airline);return fail(`Enter ${r.min===r.max?r.min:`${r.min}-${r.max}`} letters/numbers from the booking email.`)}
+  const rawNotes=$('notes')?.value?.trim()||'';
   const noteSafety=tripTextSafetyMessage(rawNotes);
   if(noteSafety)return fail(noteSafety);
   const notes=[rawNotes].filter(Boolean).join('\n');
-  const trip={user_id:user.id,passenger_first:$('passengerFirst').value.trim(),passenger_last:$('passengerLast').value.trim(),date_of_birth:$('dateOfBirth').value,confirmation_no:confirmation,airline,route:route||null,travel_date:travelDate,paid:Number($('paid').value),notes,change_consent:true,status:'Monitoring'};
+  const paidValue=$('paid')?.value;
+  const trip={user_id:user.id,passenger_first:$('passengerFirst').value.trim(),passenger_last:$('passengerLast').value.trim(),date_of_birth:$('dateOfBirth').value,confirmation_no:confirmation,airline:airline||null,route:route||null,travel_date:travelDate||null,paid:paidValue?Number(paidValue):null,notes,change_consent:true,status:'Intake review'};
   lock('Saving trip...');
   const {error}=await supabaseClient.from('trips').insert(trip);
   if(error)return fail(error.message);
@@ -126,12 +125,14 @@ async function loadTrips(){const {data,error}=await supabaseClient.from('trips')
 function tripSavings(r){return r.current_price?Number(r.paid)-Number(r.current_price):0}
 function customerTripStatus(r){
   const status=r.status||'Monitoring';
+  if(['Intake review','Received'].includes(status))return {label:'Finding flight details',step:'Booking lookup started',body:'We received the confirmation number and passenger details. RouteRefund will verify the airline, route, date, time, and fare details before monitoring starts.',tone:'intake'};
   if(['Savings found','Review needed'].includes(status))return {label:'Opportunity review',step:'Internal review',body:'RouteRefund is reviewing a possible fare-change signal for eligibility, comparability, and customer safety before sharing any details or next steps.',tone:'review'};
   if(['Closed'].includes(status))return {label:'Resolved',step:'Resolved',body:'This trip has been closed. Keep the record here for your reference or contact support if something looks off.',tone:'closed'};
   return {label:'Monitoring active',step:'Monitoring active',body:'We are watching for eligible changes and will only contact you if there is a customer-approved next step.',tone:'monitoring'};
 }
+function customerTripTitle(r){return `${escapeHtml(r.confirmation_no||'Trip')} ${r.airline?`<span>${escapeHtml(r.airline)}</span>`:'<span>Airline pending</span>'}`}
 function customerTripMeta(r){
-  return `<div class="customerTripMeta" aria-label="Trip summary"><div><b>Route</b><span>${escapeHtml(r.route||'Pending')}</span></div><div><b>Departure</b><span>${escapeHtml(r.travel_date||'Pending')}</span></div><div><b>Price paid</b><span>${money(r.paid)}</span></div></div>`
+  return `<div class="customerTripMeta" aria-label="Trip summary"><div><b>Route</b><span>${escapeHtml(r.route||'We’ll identify it')}</span></div><div><b>Departure</b><span>${escapeHtml(r.travel_date||'Pending lookup')}</span></div><div><b>Time</b><span>${escapeHtml(r.departure_time||'Pending lookup')}</span></div><div><b>Price paid</b><span>${money(r.paid)}</span></div></div>`
 }
 
 async function renderTrips(){
@@ -140,7 +141,7 @@ async function renderTrips(){
   box.innerHTML=rows.length?rows.map(r=>{
     const status=customerTripStatus(r);
     const tripStatus=r.status||'Monitoring';
-    return `<div class="trip customerTripCard"><div class="row"><div><h3>${escapeHtml(r.airline||'Airline')} ${escapeHtml(r.confirmation_no||'')}</h3><p>Passenger: ${escapeHtml(r.passenger_first||'')} ${escapeHtml(r.passenger_last||'')}</p></div><span class="tag ${escapeHtml(status.tone)}">${escapeHtml(status.label)}</span></div>${customerTripMeta(r)}<div class="miniTimeline"><span class="done">Received</span><span class="${['Monitoring','Savings found','Review needed','Closed','Archived'].includes(tripStatus)?'done':''}">Watching</span><span class="${['Savings found','Review needed','Closed','Archived'].includes(tripStatus)?'done':''}">Review</span><span class="${['Closed','Archived'].includes(tripStatus)?'done':''}">Closed</span></div><div class="customerNextStep"><b>${escapeHtml(status.step)}</b><span>${escapeHtml(status.body)}</span></div>${r.notes?`<p><b>Your note:</b> ${safeLines(r.notes)}</p>`:''}<div class="actions"><a class="btn primary" href="trip-detail.html?id=${encodeURIComponent(r.id)}">View trip</a><button class="btn ghost" data-action="note" data-id="${escapeHtml(r.id)}">Add note</button><button class="btn danger" data-action="remove" data-id="${escapeHtml(r.id)}">Stop monitoring</button></div></div>`
+    return `<div class="trip customerTripCard simpleTripCard"><div class="row"><div><h3>${customerTripTitle(r)}</h3><p>Passenger: ${escapeHtml(r.passenger_first||'')} ${escapeHtml(r.passenger_last||'')}</p></div><span class="tag ${escapeHtml(status.tone)}">${escapeHtml(status.label)}</span></div>${customerTripMeta(r)}<div class="miniTimeline"><span class="done">Submitted</span><span class="${['Intake review','Monitoring','Savings found','Review needed','Closed','Archived'].includes(tripStatus)?'done':''}">Details verified</span><span class="${['Monitoring','Savings found','Review needed','Closed','Archived'].includes(tripStatus)?'done':''}">Monitoring</span><span class="${['Savings found','Review needed','Closed','Archived'].includes(tripStatus)?'done':''}">Review</span></div><div class="customerNextStep"><b>${escapeHtml(status.step)}</b><span>${escapeHtml(status.body)}</span></div>${r.notes?`<p><b>Your note:</b> ${safeLines(r.notes)}</p>`:''}<div class="actions tripActionsSimple"><a class="btn primary" href="trip-detail.html?id=${encodeURIComponent(r.id)}">View details</a><button class="btn ghost" data-action="note" data-id="${escapeHtml(r.id)}">Send update</button></div><p class="mini">Need to stop monitoring? Open trip details or contact RouteRefund support so we don’t remove a booking by accident.</p></div>`
   }).join(''):`<div class="empty"><h3>No trips yet</h3><p>Forward your confirmation email or add your first booked flight above. We will never ask for airline passwords or payment card numbers in the trip form.</p></div>`
 }
 
@@ -161,9 +162,9 @@ async function renderTripDetail(){
   if(!id){box.innerHTML='<div class="empty"><h3>No trip selected</h3><p>Go back to My trips and choose a trip.</p><a class="btn primary" href="trips.html">My trips</a></div>';return}
   const {data:r,error}=await supabaseClient.from('trips').select('*').eq('id',id).single();
   if(error||!r){box.innerHTML=`<div class="panel"><h2>Trip not found</h2><p>${escapeHtml(error?.message||'This trip could not be loaded.')}</p><a class="btn primary" href="trips.html">Back to My trips</a></div>`;return}
-  const statuses=['Received','Under review','Watching fare','Opportunity review','Refund/credit captured'];const active=['Savings found','Review needed'].includes(r.status)?3:['Closed','Archived'].includes(r.status)?4:2;
+  const statuses=['Submitted','Details verified','Monitoring','Opportunity review','Resolved'];const active=['Intake review','Received'].includes(r.status)?0:['Savings found','Review needed'].includes(r.status)?3:['Closed','Archived'].includes(r.status)?4:2;
   const status=customerTripStatus(r);
-  box.innerHTML=`<div class="panel tripDetailCard"><div class="row"><div><h2>Confirmation ${escapeHtml(r.confirmation_no||'')}</h2><p>${escapeHtml(r.airline||'Airline')} • ${escapeHtml(r.route||'Route pending')} • ${escapeHtml(r.travel_date||'Date pending')}</p><p>Passenger: ${escapeHtml(r.passenger_first||'')} ${escapeHtml(r.passenger_last||'')} • Paid ${money(r.paid)}</p></div><span class="tag ${escapeHtml(status.tone)}">${escapeHtml(status.label)}</span></div><div class="detailTimeline">${statuses.map((x,i)=>`<div class="${i<=active?'done':''}"><b>${i+1}</b><span>${x}</span></div>`).join('')}</div>${['Savings found','Review needed'].includes(r.status)?'<div class="savingsBox"><h3>RouteRefund review in progress</h3><p>Our team is reviewing a possible fare-change signal for this booking. We will contact you only if there is a verified, customer-approved next step.</p></div>':''}${r.notes?`<p><b>Notes:</b><br>${safeLines(r.notes)}</p>`:''}<div class="actions"><button class="btn ghost" data-action="note" data-id="${escapeHtml(r.id)}">Add note</button><a class="btn primary" href="trips.html">Back to dashboard</a></div></div>`
+  box.innerHTML=`<div class="panel tripDetailCard simpleTripDetail"><div class="row"><div><h2>Confirmation ${escapeHtml(r.confirmation_no||'')}</h2><p>${escapeHtml(r.airline||'Airline pending')} • ${escapeHtml(r.route||'Route pending')} • ${escapeHtml(r.travel_date||'Date pending')}</p><p>Passenger: ${escapeHtml(r.passenger_first||'')} ${escapeHtml(r.passenger_last||'')} • Price paid: ${money(r.paid)}</p></div><span class="tag ${escapeHtml(status.tone)}">${escapeHtml(status.label)}</span></div><div class="detailTimeline">${statuses.map((x,i)=>`<div class="${i<=active?'done':''}"><b>${i+1}</b><span>${x}</span></div>`).join('')}</div>${['Intake review','Received'].includes(r.status)?'<div class="savingsBox lookupBox"><h3>We’re finding the flight details</h3><p>You gave us the confirmation number, passenger name, and date of birth. RouteRefund will use that to verify airline, route, date, time, and fare details before monitoring starts.</p></div>':''}${['Savings found','Review needed'].includes(r.status)?'<div class="savingsBox"><h3>RouteRefund review in progress</h3><p>Our team is reviewing a possible fare-change signal for this booking. We will contact you only if there is a verified, customer-approved next step.</p></div>':''}${r.notes?`<p><b>Notes:</b><br>${safeLines(r.notes)}</p>`:''}<div class="actions tripActionsSimple"><button class="btn ghost" data-action="note" data-id="${escapeHtml(r.id)}">Send update</button><a class="btn primary" href="trips.html">Back to dashboard</a></div></div>`
 }
 
 let lastModalTrigger=null;

@@ -228,7 +228,7 @@ body[data-page="owner"] main.wrap{padding-bottom:70px}.ownerToolbar{display:grid
 .opsTripTop p,.opsWorkspaceHero p{color:var(--muted);font-weight:800}.opsActions .btn,.opsStack .btn{text-align:center}.opsNotesPanel{margin-bottom:70px}
 @media(max-width:640px){body[data-page="owner"] .navin,body[data-page="owner-trip"] .navin{max-width:100%!important}.ownerNav .links .muted{display:none}.opsWorkflow{grid-template-columns:1fr!important}.opsNextAction{grid-template-columns:1fr}.opsWorkspaceHero{padding-top:26px}.opsHeroActions{display:grid;grid-template-columns:1fr}.opsHeroActions .btn{width:100%}.opsMainPanel,.opsSidePanel,.opsNotesPanel{padding:20px;border-radius:24px}.opsQueueIntro p{font-size:14px}.ownerToolbar input{border-radius:18px}}
 
-/* customer-dashboard-polish-2: safer trip intake hierarchy and next-step clarity */
+/* customer-lookup-intake-1: safer trip intake hierarchy and next-step clarity */
 .safetyStrip{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:-8px 0 18px;background:linear-gradient(135deg,#10231f,#123943);color:#fff;border-color:rgba(255,255,255,.10);box-shadow:0 16px 42px rgba(18,57,67,.14)}
 .safetyStrip div{display:grid;gap:5px;padding:4px 2px}.safetyStrip b{font-size:13px;text-transform:uppercase;letter-spacing:.055em;color:#e8f5e5}.safetyStrip span{color:rgba(255,255,255,.78);font-weight:780;line-height:1.42}.customerFlowPanel{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:0 0 26px}.customerFlowPanel div{background:#fff;border:1px solid var(--line);border-radius:20px;padding:15px 16px;box-shadow:0 10px 26px rgba(18,57,67,.05)}.customerFlowPanel b{display:block;margin-bottom:5px;color:#10231f;font-size:13px;text-transform:uppercase;letter-spacing:.045em}.customerFlowPanel span{display:block;color:var(--muted);font-size:13px;font-weight:820;line-height:1.38}.formPanel h2{margin-top:8px}.formPanel label{line-height:1.35}.formPanel input,.formPanel textarea,.formPanel select{margin-top:7px}.checkline{background:#f8fbf5;border:1px solid #e5eee1;border-radius:18px;padding:14px 15px!important}.checkline input{margin-top:2px}.forwardPanel .mini{background:rgba(255,255,255,.72);border:1px solid #d9ead7;border-radius:16px;padding:12px 14px}
 @media(max-width:860px){.safetyStrip{grid-template-columns:1fr;margin:0 0 16px}.customerFlowPanel{grid-template-columns:1fr;margin-bottom:22px;gap:10px}.dashHead{padding-bottom:18px}.addTripGrid{gap:18px}.formPanel{padding:22px!important}.compactFields{gap:12px}.emailBox{font-size:16px;overflow-wrap:anywhere}.checkline{align-items:flex-start!important}.checkline input{flex:0 0 auto}}
@@ -245,7 +245,7 @@ body[data-page="owner"] main.wrap{padding-bottom:70px}.ownerToolbar{display:grid
 .opsQueueState{margin:-6px 0 16px;color:var(--muted);font-size:13px;font-weight:900;text-transform:uppercase;letter-spacing:.045em}
 @media(max-width:640px){.opsQueueState{margin:2px 0 14px;font-size:12px;line-height:1.35}}
 
-/* modal-a11y-1: keyboard-visible dialogs */
+/* customer-lookup-intake-1: keyboard-visible dialogs */
 .modal.open{align-items:start;overflow:auto}.modalCard:focus{outline:3px solid rgba(15,123,76,.45);outline-offset:4px}.modalCard button:focus-visible,.modalCard a:focus-visible,.modalCard input:focus-visible,.modalCard textarea:focus-visible,.modalCard select:focus-visible{outline:3px solid rgba(15,123,76,.45);outline-offset:3px}@media(max-width:640px){.modal{padding:16px}.modal.open{place-items:end center}.modalCard{max-height:88vh;overflow:auto;border-radius:24px 24px 18px 18px}}
 
 /* savings-review-1: clearer customer-safe fare-drop review story */
@@ -320,3 +320,24 @@ body[data-page="owner"] main.wrap{padding-bottom:70px}.ownerToolbar{display:grid
 .contactCards{padding-top:12px}.contactCards .card{display:flex;flex-direction:column;gap:8px;background:linear-gradient(180deg,#fff,#f8fbf5)}.contactCards .eyebrow{align-self:flex-start}.contactCards h3{margin:4px 0 0}.contactCards p{margin:0;color:var(--ink);font-weight:820;line-height:1.45}.contactCards small{display:block;margin-top:auto;color:var(--muted);font-weight:850;line-height:1.4}.contactCards b{color:var(--green2);overflow-wrap:anywhere}
 .contactExpectations{display:flex;justify-content:space-between;align-items:center;gap:20px;margin-bottom:46px;background:#fff;border-color:#d9ead7}.contactExpectations h2{margin:12px 0 8px}.contactExpectations p{max-width:760px;color:var(--muted);font-weight:780;line-height:1.55}.contactExpectations .btn{flex:0 0 auto}
 @media(max-width:760px){.contactHero{grid-template-columns:1fr;gap:16px;padding-top:28px}.contactSafety{padding:22px!important;border-radius:24px}.contactSafety:after{display:none}.contactCards{gap:14px}.contactCards .card{padding:20px}.contactExpectations{display:block;padding:22px!important;border-radius:24px}.contactExpectations .btn{width:100%;margin-top:12px}}
+
+/* customer-lookup-intake-1 */
+.lookupForm{position:relative;overflow:hidden;background:linear-gradient(180deg,#fff,#fbfdf8)}
+.lookupForm:before{content:'';position:absolute;right:-44px;top:-44px;width:140px;height:140px;border-radius:50%;background:rgba(232,180,79,.14);pointer-events:none}
+.lookupForm>span,.lookupForm>h2,.lookupForm>.notice,.lookupForm>label,.lookupForm>details,.lookupForm>.checkline,.lookupForm>button,.lookupForm>p{position:relative;z-index:1}
+.lookupForm label{font-size:14px;text-transform:none;letter-spacing:0;color:var(--ink)}
+.lookupForm input,.lookupForm select,.lookupForm textarea{margin-top:8px}
+.optionalTripDetails{position:relative;z-index:1;margin:16px 0;border:1px solid #d9ead7;border-radius:22px;background:#f8fbf5;overflow:hidden}
+.optionalTripDetails summary{cursor:pointer;list-style:none;padding:16px 18px;font-weight:950;color:var(--green2);display:flex;justify-content:space-between;gap:12px;align-items:center}
+.optionalTripDetails summary::-webkit-details-marker{display:none}
+.optionalTripDetails summary:after{content:'+';display:grid;place-items:center;width:28px;height:28px;border-radius:50%;background:#e8f5e5;color:var(--green);font-size:20px;line-height:1}
+.optionalTripDetails[open] summary:after{content:'–'}
+.optionalTripDetails summary span{font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+.optionalTripBody{padding:0 18px 18px;display:grid;gap:14px}
+.simpleTripCard h3 span{display:block;margin-top:3px;font-size:14px;letter-spacing:0;color:var(--muted);font-weight:850}
+.customerTripMeta{grid-template-columns:repeat(4,1fr)}
+.tag.intake{background:#fff8e6;color:#704400;border-color:#f1d18a}
+.tripActionsSimple{align-items:center}.tripActionsSimple .danger{display:none}
+.lookupBox{background:#fff8e6;border-color:#f1d18a;color:#5f3b00}
+@media(max-width:760px){.customerTripMeta{grid-template-columns:1fr 1fr}.lookupForm{border-radius:26px}.optionalTripDetails summary{padding:15px}.optionalTripBody{padding:0 15px 15px}.tripActionsSimple{display:grid;grid-template-columns:1fr}.tripActionsSimple .btn{width:100%}}
+@media(max-width:480px){.customerTripMeta{grid-template-columns:1fr}}
