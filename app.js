@@ -31,6 +31,7 @@ const LOCATOR_RULES={
 };
 function locatorRule(airline=''){return LOCATOR_RULES[airline]||LOCATOR_RULES.default}
 function validConfirmation(value='',airline=''){const v=normalizeConfirmation(value),r=locatorRule(airline);return /^[A-Z0-9]+$/.test(v)&&v.length>=r.min&&v.length<=r.max}
+function syncLocatorHint(){const select=$('airline'),hint=$('locatorHint');if(!select||!hint)return;hint.textContent=locatorRule(select.value).hint}
 function luhnOk(value=''){let sum=0,alt=false;for(let i=value.length-1;i>=0;i--){let n=Number(value[i]);if(alt){n*=2;if(n>9)n-=9}sum+=n;alt=!alt}return value.length>=13&&value.length<=19&&sum%10===0}
 function hasPaymentCardNumber(value=''){return (String(value).match(/(?:\d[ -]?){13,19}/g)||[]).some(x=>luhnOk(x.replace(/\D/g,'')))}
 function tripTextSafetyMessage(value=''){
@@ -104,9 +105,11 @@ async function addTrip(e){
   lock('Checking trip...');
   const user=await requireLogin('trips.html');if(!user){unlock();return}
   if(!$('changeConsent').checked)return fail('Please accept trip authorization to continue');
+  const airline=$('airline')?.value.trim()||'';
+  if(!airline)return fail('Choose the airline so RouteRefund can start the right lookup.');
   const confirmation=normalizeConfirmation($('confirmationNo').value);
-  if(!validConfirmation(confirmation,'')){const r=locatorRule('');return fail(`Enter ${r.min===r.max?r.min:`${r.min}-${r.max}`} letters/numbers from the booking email.`)}
-  const trip={user_id:user.id,passenger_first:$('passengerFirst').value.trim(),passenger_last:$('passengerLast').value.trim(),date_of_birth:$('dateOfBirth').value,confirmation_no:confirmation,airline:null,route:null,travel_date:null,paid:null,notes:null,change_consent:true,status:'Intake review'};
+  if(!validConfirmation(confirmation,airline)){const r=locatorRule(airline);return fail(`Enter ${r.min===r.max?r.min:`${r.min}-${r.max}`} letters/numbers from the booking email.`)}
+  const trip={user_id:user.id,passenger_first:$('passengerFirst').value.trim(),passenger_last:$('passengerLast').value.trim(),date_of_birth:$('dateOfBirth').value,confirmation_no:confirmation,airline,route:null,travel_date:null,paid:null,notes:null,change_consent:true,status:'Intake review'};
   lock('Saving trip...');
   const {error}=await supabaseClient.from('trips').insert(trip);
   if(error)return fail(error.message);
@@ -371,7 +374,7 @@ window.addEventListener('DOMContentLoaded',async()=>{
   if(document.body.dataset.page==='reset')$('resetForm').addEventListener('submit',resetPassword);
   if(document.body.dataset.page==='forgot-email')$('forgotEmailForm').addEventListener('submit',forgotEmail);
   if(document.body.dataset.page==='update-password')$('updatePasswordForm').addEventListener('submit',updatePassword);
-  if(document.body.dataset.page==='dashboard'){const user=await requireLogin('trips.html');if(!user)return;$('welcome').textContent=user.email;$('tripForm').addEventListener('submit',addTrip);await renderTrips()}
+  if(document.body.dataset.page==='dashboard'){const user=await requireLogin('trips.html');if(!user)return;$('welcome').textContent=user.email;syncLocatorHint();$('airline')?.addEventListener('change',syncLocatorHint);$('tripForm').addEventListener('submit',addTrip);await renderTrips()}
   if(document.body.dataset.page==='account'){await renderAccount()}
   if(document.body.dataset.page==='trip-detail'){await renderTripDetail()}
   if(document.body.dataset.page==='owner'){const user=await requireOwner('partner-ops-dashboard.html');if(!user)return;$('ownerWelcome').textContent=user.email;await renderOwner()}

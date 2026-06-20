@@ -54,7 +54,7 @@ alter table public.account_recovery_requests enable row level security;
 -- Manual lookup can start before the customer knows the exact price paid.
 alter table public.trips alter column paid drop not null;
 alter table public.trips add column if not exists departure_time text;
-drop constraint if exists trips_paid_positive on public.trips;
+alter table public.trips drop constraint if exists trips_paid_positive;
 alter table public.trips add column if not exists flight_no text;
 alter table public.trips alter column flight_no drop not null;
 alter table public.trips add column if not exists confirmation_no text;
@@ -116,6 +116,25 @@ create table if not exists public.forwarded_confirmations (
 );
 alter table public.forwarded_confirmations enable row level security;
 
+create table if not exists public.airline_lookup_attempts (
+  id uuid primary key default gen_random_uuid(),
+  trip_id uuid not null references public.trips(id) on delete cascade,
+  airline text not null,
+  status text not null default 'Queued',
+  attempt_count integer not null default 0,
+  last_error text,
+  result_excerpt text,
+  started_at timestamptz,
+  finished_at timestamptz,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+alter table public.airline_lookup_attempts enable row level security;
+create index if not exists airline_lookup_attempts_status_created_idx on public.airline_lookup_attempts(status, created_at);
+create unique index if not exists airline_lookup_attempts_one_active_per_trip_idx
+  on public.airline_lookup_attempts(trip_id)
+  where status in ('Queued','Running');
+
 create or replace function public.queue_initial_monitoring_check()
 returns trigger
 language plpgsql
@@ -125,6 +144,13 @@ as $$
 begin
   insert into public.monitoring_checks(trip_id, check_due_at, source, result, notes)
   values (new.id, now(), 'Initial review', 'Due', 'Initial verification and fare-baseline check');
+
+  if coalesce(new.airline, '') <> '' then
+    insert into public.airline_lookup_attempts(trip_id, airline, status)
+    values (new.id, new.airline, 'Queued')
+    on conflict do nothing;
+  end if;
+
   return new;
 end;
 $$;
@@ -175,6 +201,7 @@ revoke all privileges on public.account_recovery_requests from anon, authenticat
 revoke all privileges on public.owner_trip_notes from anon, authenticated;
 revoke all privileges on public.monitoring_checks from anon, authenticated;
 revoke all privileges on public.forwarded_confirmations from anon, authenticated;
+revoke all privileges on public.airline_lookup_attempts from anon, authenticated;
 
 grant usage on schema public to anon, authenticated;
 grant select, insert, update, delete on public.profiles to authenticated;
@@ -185,6 +212,7 @@ grant select, update, delete on public.account_recovery_requests to authenticate
 grant select, insert, update, delete on public.owner_trip_notes to authenticated;
 grant select, insert, update, delete on public.monitoring_checks to authenticated;
 grant select, insert, update, delete on public.forwarded_confirmations to authenticated;
+grant select, insert, update, delete on public.airline_lookup_attempts to authenticated;
 
 create or replace function public.is_owner()
 returns boolean
@@ -264,6 +292,10 @@ for all using (public.is_owner()) with check (public.is_owner());
 
 drop policy if exists "forwarded_confirmations_owner_all" on public.forwarded_confirmations;
 create policy "forwarded_confirmations_owner_all" on public.forwarded_confirmations
+for all using (public.is_owner()) with check (public.is_owner());
+
+drop policy if exists "airline_lookup_attempts_owner_all" on public.airline_lookup_attempts;
+create policy "airline_lookup_attempts_owner_all" on public.airline_lookup_attempts
 for all using (public.is_owner()) with check (public.is_owner());
 
 drop policy if exists "recovery_insert_anyone" on public.account_recovery_requests;

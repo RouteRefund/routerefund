@@ -76,6 +76,22 @@
         <span class="eyebrow">Manual lookup</span>
         <h2>Enter the basics</h2>
         <div class="notice smallNotice"><b>Keep this simple.</b> Start with the same details the airline uses to find your reservation. RouteRefund will review the booking and fill in route, date, and timing details when we can verify them.</div>
+        <label>Airline
+          <select id="airline" required>
+            <option value="">Choose airline</option>
+            <option>American Airlines</option>
+            <option>Delta Air Lines</option>
+            <option>United Airlines</option>
+            <option>Southwest Airlines</option>
+            <option>Alaska Airlines</option>
+            <option>JetBlue</option>
+            <option>Frontier Airlines</option>
+            <option>Spirit Airlines</option>
+            <option>Hawaiian Airlines</option>
+            <option value="Other">Other / not listed</option>
+          </select>
+          <span class="formHint">This tells RouteRefund which airline lookup page to try first.</span>
+        </label>
         <label>Confirmation / record locator
           <input id="confirmationNo" placeholder="ABC123" maxlength="13" pattern="[A-Za-z0-9]{5,13}" autocomplete="off" required>
           <span id="locatorHint" class="formHint">Enter the booking confirmation / record locator exactly as shown. Usually 6 characters, but we accept 5–13 letters/numbers.</span>
@@ -120,6 +136,6 @@
   <div id="modal" class="modal"><div id="modalCard" class="modalCard"></div></div>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="config.js"></script>
-  <script src="app.js?v=customer-lookup-wording-5"></script>
+  <script src="app.js?v=airline-lookup-1"></script>
 </body>
 </html>

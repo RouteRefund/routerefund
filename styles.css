@@ -364,3 +364,14 @@ body[data-page="owner"] main.wrap{padding-bottom:70px}.ownerToolbar{display:grid
 .airlineChips{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
 .airlineChips span{display:grid;place-items:center;min-height:70px;padding:14px;border:1px solid #e5eee1;border-radius:22px;background:#fff;box-shadow:0 12px 30px rgba(18,57,67,.06);font-weight:950;color:#10231f;text-align:center}
 @media(max-width:760px){.airlineProof{grid-template-columns:1fr;gap:12px;padding-top:4px}.airlineProof>div:first-child{padding:22px;border-radius:24px}.airlineChips{grid-template-columns:1fr 1fr;gap:10px}.airlineChips span{min-height:54px;border-radius:18px}}
+
+/* airline-safety-2: clarify what supported-airline coverage actually includes */
+.coverageExplainer{display:grid;grid-template-columns:minmax(0,.82fr) minmax(320px,1.18fr);gap:20px;align-items:stretch;padding-top:6px}
+.coverageExplainer>div:first-child{background:#fff;border:1px solid var(--line);border-radius:28px;padding:26px;box-shadow:0 16px 42px rgba(18,57,67,.07)}
+.coverageExplainer h2{margin:12px 0 10px;max-width:650px}
+.coverageExplainer p{color:var(--muted);font-weight:780;line-height:1.55}
+.coverageSteps{display:grid;gap:12px}
+.coverageSteps div{background:linear-gradient(180deg,#fff,#f8fbf5);border:1px solid #e5eee1;border-radius:22px;padding:17px 18px;box-shadow:0 12px 30px rgba(18,57,67,.06)}
+.coverageSteps b{display:block;margin-bottom:6px;color:#10231f;font-size:13px;text-transform:uppercase;letter-spacing:.045em}
+.coverageSteps span{display:block;color:var(--muted);font-weight:850;line-height:1.4}
+@media(max-width:760px){.coverageExplainer{grid-template-columns:1fr;gap:12px;padding-top:4px}.coverageExplainer>div:first-child{padding:22px;border-radius:24px}.coverageSteps{gap:10px}.coverageSteps div{padding:15px 16px;border-radius:18px}}
