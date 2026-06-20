@@ -139,7 +139,32 @@ async function renderTripDetail(){
   box.innerHTML=`<div class="panel tripDetailCard"><div class="row"><div><h2>Confirmation ${escapeHtml(r.confirmation_no||'')}</h2><p>${escapeHtml(r.airline||'Airline')} • ${escapeHtml(r.route||'Route pending')} • ${escapeHtml(r.travel_date||'Date pending')}</p><p>Passenger: ${escapeHtml(r.passenger_first||'')} ${escapeHtml(r.passenger_last||'')} • Paid ${money(r.paid)}</p></div><span class="tag">${escapeHtml(r.status||'Monitoring')}</span></div><div class="detailTimeline">${statuses.map((x,i)=>`<div class="${i<=active?'done':''}"><b>${i+1}</b><span>${x}</span></div>`).join('')}</div>${['Savings found','Review needed'].includes(r.status)?'<div class="savingsBox"><h3>RouteRefund review in progress</h3><p>Our team is reviewing an update for this booking. We will contact you if action is needed.</p></div>':''}${r.notes?`<p><b>Notes:</b><br>${safeLines(r.notes)}</p>`:''}<div class="actions"><button class="btn ghost" data-action="note" data-id="${r.id}">Add note</button><a class="btn primary" href="trips.html">Back to dashboard</a></div></div>`
 }
 
-function modal(html){if(!$('modal'))return;$('modalCard').innerHTML=html;$('modal').classList.add('open')}
+let lastModalTrigger=null;
+function closeModal(){
+  const m=$('modal');
+  if(!m)return;
+  m.classList.remove('open');
+  $('modalCard')?.removeAttribute('tabindex');
+  if(lastModalTrigger&&document.contains(lastModalTrigger))lastModalTrigger.focus();
+  lastModalTrigger=null;
+}
+function modal(html){
+  const m=$('modal'),card=$('modalCard');
+  if(!m||!card)return;
+  lastModalTrigger=document.activeElement instanceof HTMLElement?document.activeElement:null;
+  m.setAttribute('role','dialog');
+  m.setAttribute('aria-modal','true');
+  card.innerHTML=html;
+  const title=card.querySelector('h1,h2,h3');
+  if(title){
+    if(!title.id)title.id='modalTitle';
+    m.setAttribute('aria-labelledby',title.id);
+  }else m.removeAttribute('aria-labelledby');
+  m.classList.add('open');
+  const focusable=card.querySelector('button,[href],input,select,textarea,[tabindex]:not([tabindex="-1"])');
+  if(!focusable)card.setAttribute('tabindex','-1');
+  (focusable||card).focus();
+}
 async function refreshCustomerTripViews(){await renderTrips();await renderTripDetail()}
 async function updateTrip(id,patch,owner=false){const {error}=await supabaseClient.from('trips').update(patch).eq('id',id);if(error)return toast(error.message);if(owner){await renderOwner();await renderOwnerTrip()}else await refreshCustomerTripViews()}
 async function archiveTrip(id){const {error}=await supabaseClient.from('trips').update({status:'Archived'}).eq('id',id);if(error)return toast(error.message);toast('Monitoring stopped; trip removed from your dashboard');if(document.body.dataset.page==='trip-detail')location.href='trips.html';else await renderTrips()}
@@ -236,19 +261,19 @@ document.addEventListener('click',async e=>{
   if(action==='mobile-menu')return modal('<h2>Menu</h2><div class="mobileMenuList"><a href="how-it-works.html">How it works</a><a href="supported-airlines.html">Airlines</a><a href="trust-center.html">Trust center</a><a href="faq.html">FAQ</a><a href="forward-confirmation.html">Forward confirmation</a><a href="login.html">Log in</a><a href="signup.html">Create account</a><a href="add-trip.html">Start tracking</a></div>');
   if(action==='logout')return logout();
   if(action==='remove')return modal(`<h2>Stop monitoring this trip?</h2><p>This archives the booking in RouteRefund, removes it from your customer dashboard, and stops active monitoring. It will not delete operational records or change, cancel, or rebook anything with the airline.</p><div class="actions"><button class="btn danger" data-action="confirm-remove" data-id="${escapeHtml(id)}">Stop monitoring</button><button class="btn ghost" data-action="close-modal">Keep monitoring</button></div>`);
-  if(action==='confirm-remove'){$('modal')?.classList.remove('open');return archiveTrip(id)}
-  if(action==='close-modal')return $('modal')?.classList.remove('open');
+  if(action==='confirm-remove'){closeModal();return archiveTrip(id)}
+  if(action==='close-modal')return closeModal();
   if(action==='note')return modal(`<h2>Add note</h2><label>Note<textarea id="noteText" placeholder="Example: I prefer credit if cash refund is not possible."></textarea></label><button class="btn primary" data-action="save-note" data-id="${id}">Save note</button>`);
-  if(action==='save-note'){await updateTrip(id,{notes:$('noteText').value.trim()});$('modal').classList.remove('open');return toast('Note saved')}
+  if(action==='save-note'){await updateTrip(id,{notes:$('noteText').value.trim()});closeModal();return toast('Note saved')}
   if(action==='owner-filter')return applyOwnerFilter(b.dataset.status||'All');
   if(action==='owner-status')return updateTrip(id,{status:b.dataset.status},true);
   if(action==='owner-payment')return updateTrip(id,{payment_status:b.dataset.status},true);
   if(action==='owner-note')return modal(`<h2>Internal note</h2><label>What happened / next step<textarea id="ownerNoteText" placeholder="Checked AA mobile app. Same cabin. Need customer approval before action."></textarea></label><button class="btn primary" data-action="save-owner-note" data-id="${id}">Save note</button>`);
-  if(action==='save-owner-note'){await saveOwnerNote(id,$('ownerNoteText').value.trim());$('modal').classList.remove('open');return}
+  if(action==='save-owner-note'){await saveOwnerNote(id,$('ownerNoteText').value.trim());closeModal();return}
   if(action==='owner-review')return modal(`<h2>Flag for evidence review</h2><p>Use this only when a verified lower eligible fare appears real. The fare must be below the customer-paid amount before the trip can enter review; this does not change the booking or bill the customer.</p><label>Observed lower fare<input id="foundPrice" type="number" min="0" step="0.01" inputmode="decimal" placeholder="299.00"></label><label>Evidence / next step<textarea id="priceNote" placeholder="Source, same route/date/cabin, screenshot saved, customer action needed..."></textarea></label><button class="btn primary" data-action="save-owner-review" data-id="${id}">Move to review queue</button>`);
   if(action==='owner-no-savings')return modal(`<h2>Record fare check</h2><p>If nothing actionable was found, this schedules the next monitoring check automatically.</p><label>Observed current fare <span class="optional">optional</span><input id="noSavingsPrice" type="number" min="0" step="0.01" inputmode="decimal" placeholder="Leave blank if not recorded"></label><label>Check note<textarea id="noSavingsNote" placeholder="Checked same airline/route/date/cabin. No lower eligible fare found."></textarea></label><button class="btn primary" data-action="save-no-savings" data-id="${id}">Save check + schedule next</button>`);
-  if(action==='save-owner-review'){if(!$('foundPrice').value)return toast('Enter the lower price found.');const saved=await completeMonitoringCheck(id,$('foundPrice').value,'Review needed',$('priceNote').value.trim());if(saved!==false)$('modal').classList.remove('open');return}
-  if(action==='save-no-savings'){const saved=await completeMonitoringCheck(id,$('noSavingsPrice').value,'No savings',$('noSavingsNote').value.trim());if(saved!==false)$('modal').classList.remove('open');return}
+  if(action==='save-owner-review'){if(!$('foundPrice').value)return toast('Enter the lower price found.');const saved=await completeMonitoringCheck(id,$('foundPrice').value,'Review needed',$('priceNote').value.trim());if(saved!==false)closeModal();return}
+  if(action==='save-no-savings'){const saved=await completeMonitoringCheck(id,$('noSavingsPrice').value,'No savings',$('noSavingsNote').value.trim());if(saved!==false)closeModal();return}
 });
 document.addEventListener('input',e=>{if(e.target?.id==='ownerSearch')applyOwnerFilter(ownerActiveFilter)});
 
@@ -258,7 +283,8 @@ window.addEventListener('DOMContentLoaded',async()=>{
   syncPublicNav();
   if(!supabaseClient)return toast('Missing Supabase config');
   ['click','keydown','touchstart','scroll'].forEach(ev=>document.addEventListener(ev,touchActivity,{passive:true}));
-  if($('modal'))$('modal').addEventListener('click',e=>{if(e.target.id==='modal')$('modal').classList.remove('open')});
+  if($('modal'))$('modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal()});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&$('modal')?.classList.contains('open'))closeModal()});
   if(document.body.dataset.page==='signup')$('signupForm').addEventListener('submit',signup);
   if(document.body.dataset.page==='login'||document.body.dataset.page==='partner-login')$('loginForm').addEventListener('submit',login);
   if(document.body.dataset.page==='partner-login'){const user=await getUser();if(user&&PARTNER_EMAIL_ALLOWLIST.has((user.email||'').toLowerCase()))await requirePartnerMfa(new URLSearchParams(location.search).get('next')||'partner-ops-dashboard.html')}
