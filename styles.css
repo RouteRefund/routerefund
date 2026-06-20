@@ -278,3 +278,10 @@ body[data-page="owner"] main.wrap{padding-bottom:70px}.ownerToolbar{display:grid
 .trustMetrics b{display:block;margin-bottom:5px;color:#10231f;font-size:13px;text-transform:uppercase;letter-spacing:.045em}
 .trustMetrics span{display:block;color:var(--muted);font-weight:850;line-height:1.38}
 @media(max-width:760px){.forwardingFlow{padding-top:8px}.forwardingFlow .panel{grid-template-columns:1fr;padding:22px!important;border-radius:24px}.forwardingCard{padding:18px;border-radius:20px}.forwardingCard .btn{width:100%}.trustMetrics{grid-template-columns:1fr;gap:10px}.trustMetrics div{padding:15px 16px;border-radius:18px}}
+
+/* forward-guide-1: safer confirmation-forwarding onboarding */
+.forwardGuideHero{display:grid;grid-template-columns:minmax(0,1fr) minmax(280px,.52fr);gap:24px;align-items:center;padding-bottom:20px}
+.forwardGuideHero h1{max-width:760px}.forwardGuideHero .lead{max-width:760px}.forwardGuideHero .emailBox{text-align:left;padding-left:22px;padding-right:22px}
+.forwardSafetyCard{background:linear-gradient(135deg,#10231f,#123943);color:#fff;overflow:hidden;position:relative}.forwardSafetyCard:after{content:'';position:absolute;right:-46px;top:-46px;width:145px;height:145px;border-radius:50%;background:rgba(232,180,79,.18)}.forwardSafetyCard h2{color:#fff;margin-top:0}.forwardSafetyCard .checklist{position:relative;z-index:1}.forwardSafetyCard .checklist li{color:#fff;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.18);border-radius:16px;padding:12px 12px 12px 40px}.forwardSafetyCard .checklist li:before{left:12px;top:12px;background:#e8f5e5;color:#0f7b4c}
+.forwardSteps{padding-top:18px}.doDont{padding-top:10px}.doDont .panel{background:#fff}.manualFallback{margin:8px 0 48px;background:#f8fbf5;border-color:#d9ead7}
+@media(max-width:760px){.forwardGuideHero{grid-template-columns:1fr;gap:16px;padding-top:28px}.forwardGuideHero .emailBox{text-align:center;padding-left:14px;padding-right:14px}.forwardSafetyCard{padding:22px!important;border-radius:24px}.forwardSafetyCard:after{display:none}.forwardSteps,.doDont{gap:14px}.manualFallback{margin-bottom:34px}.manualFallback .btn{width:100%}}
