@@ -385,3 +385,18 @@ body[data-page="owner"] main.wrap{padding-bottom:70px}.ownerToolbar{display:grid
   .mobileStickyCta .btn{min-height:46px;padding:0 15px;border-radius:16px;white-space:nowrap;background:linear-gradient(135deg,#0f7b4c,#123943)}
 }
 @media(max-width:360px){.mobileStickyCta{grid-template-columns:1fr}.mobileStickyCta .btn{width:100%}}
+
+/* faq-clarity-2: scannable FAQ categories and mobile-safe trust framing */
+body[data-page="info"] .links a.primary{color:#fff}
+.faqHero{display:grid;grid-template-columns:minmax(0,1fr) minmax(300px,.55fr);gap:28px;align-items:center;padding-bottom:24px}
+.faqHero h1{max-width:760px}.faqHero .lead{max-width:720px}.faqHero .actions{margin-top:24px}
+.faqSafetyCard{background:linear-gradient(135deg,#10231f,#123943);color:#fff;overflow:hidden;position:relative}
+.faqSafetyCard:after{content:'';position:absolute;right:-46px;top:-46px;width:145px;height:145px;border-radius:50%;background:rgba(232,180,79,.18)}
+.faqSafetyCard h2{color:#fff;margin-top:0}.faqSafetyCard .checklist{position:relative;z-index:1}.faqSafetyCard .checklist li{color:#fff;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.18);border-radius:16px;padding:12px 12px 12px 40px}.faqSafetyCard .checklist li:before{left:12px;top:12px;background:#e8f5e5;color:#0f7b4c}
+.faqShortcutGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:-6px 0 28px}
+.faqShortcutGrid a{display:block;background:linear-gradient(180deg,#fff,#f8fbf5);border:1px solid #e5eee1;border-radius:22px;padding:17px 18px;box-shadow:0 12px 30px rgba(18,57,67,.06)}
+.faqShortcutGrid b{display:block;margin-bottom:6px;color:#10231f;font-size:13px;text-transform:uppercase;letter-spacing:.045em}.faqShortcutGrid span{display:block;color:var(--muted);font-weight:850;line-height:1.4}
+.faqList{scroll-margin-top:92px;margin-bottom:28px}.faqList h2{margin:0 0 14px;font-size:clamp(26px,3vw,36px)}
+.faqItem{background:#fff;border:1px solid var(--line);border-radius:22px;box-shadow:0 12px 30px rgba(18,57,67,.06);overflow:hidden}
+.faqItem+ .faqItem{margin-top:12px}.faqItem summary{cursor:pointer;list-style:none;padding:18px 52px 18px 20px;font-weight:950;color:#10231f;position:relative}.faqItem summary::-webkit-details-marker{display:none}.faqItem summary:after{content:'+';position:absolute;right:20px;top:50%;transform:translateY(-50%);width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:#e8f5e5;color:#0f7b4c;font-weight:950}.faqItem[open] summary:after{content:'−';background:#10231f;color:#fff}.faqItem p{margin:0;padding:0 20px 20px;color:var(--muted);font-weight:780;line-height:1.55}
+@media(max-width:760px){.faqHero{grid-template-columns:1fr;gap:16px;padding-top:28px}.faqHero .actions{display:grid;grid-template-columns:1fr}.faqHero .actions .btn{width:100%}.faqSafetyCard{padding:22px!important;border-radius:24px}.faqSafetyCard:after{display:none}.faqShortcutGrid{grid-template-columns:1fr;margin-bottom:24px}.faqShortcutGrid a{padding:15px 16px;border-radius:18px}.faqList{margin-bottom:24px;scroll-margin-top:20px}.faqItem{border-radius:18px}.faqItem summary{padding:16px 48px 16px 16px}.faqItem p{padding:0 16px 16px}}
