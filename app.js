@@ -295,7 +295,12 @@ document.addEventListener('click',async e=>{
   if(action==='note')return modal(`<h2>Add a trip update</h2><p>Use this to add schedule preferences, refund constraints, or context for RouteRefund. Existing notes stay attached to the trip.</p><label>New note<textarea id="noteText" placeholder="Example: I prefer travel credit if a cash refund is not possible."></textarea></label><button class="btn primary" data-action="save-note" data-id="${escapeHtml(id)}">Add note to trip</button>`);
   if(action==='save-note'){const saved=await appendCustomerNote(id,$('noteText').value);if(saved)closeModal();return}
   if(action==='owner-filter')return applyOwnerFilter(b.dataset.status||'All');
-  if(action==='owner-status')return updateTrip(id,{status:b.dataset.status},true);
+  if(action==='owner-status'){
+    const status=b.dataset.status;
+    if(status==='Archived')return modal(`<h2>Archive this resolved ops item?</h2><p>This only moves the trip out of the active partner operations queue. It does not delete customer trip records, stop account access, contact the customer, or make any airline booking changes.</p><div class="notice smallNotice"><b>Before archiving:</b> Confirm customer follow-up, payment status, and internal notes are complete enough for another partner to audit later.</div><div class="actions"><button class="btn danger" data-action="confirm-owner-status" data-id="${escapeHtml(id)}" data-status="Archived">Archive resolved item</button><button class="btn ghost" data-action="close-modal">Keep in active queue</button></div>`);
+    return updateTrip(id,{status},true);
+  }
+  if(action==='confirm-owner-status'){closeModal();return updateTrip(id,{status:b.dataset.status},true)}
   if(action==='owner-payment')return updateTrip(id,{payment_status:b.dataset.status},true);
   if(action==='owner-note'){
     const current=b.dataset.note||'';
