@@ -241,6 +241,13 @@ body[data-page="owner"] main.wrap{padding-bottom:70px}.ownerToolbar{display:grid
 .dashboardExpectations .checklist li{font-size:14px;line-height:1.38}
 @media(max-width:860px){.dashboardExpectations{grid-template-columns:1fr;gap:14px;margin-bottom:22px;padding:22px!important;border-radius:24px}.dashboardExpectations .checklist{padding:16px;border-radius:18px}}
 
+/* customer-dashboard-help-1: private dashboard help links before intake */
+.customerSupportPanel{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:16px;align-items:center;margin:-10px 0 26px;padding:17px 18px;border:1px solid #d9ead7;border-radius:24px;background:#f8fbf5;box-shadow:0 12px 30px rgba(18,57,67,.05)}
+.customerSupportPanel b{display:block;margin-bottom:4px;color:#10231f;font-size:14px;text-transform:uppercase;letter-spacing:.045em}
+.customerSupportPanel span{display:block;color:var(--muted);font-weight:820;line-height:1.45;max-width:760px}
+.customerSupportLinks{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}.customerSupportLinks a{display:inline-flex;align-items:center;min-height:40px;padding:9px 12px;border-radius:999px;background:#fff;border:1px solid var(--line);color:#245f3e;font-size:13px;font-weight:950;white-space:nowrap}
+@media(max-width:760px){.customerSupportPanel{grid-template-columns:1fr;margin:-4px 0 22px;padding:16px;border-radius:20px}.customerSupportLinks{display:grid;grid-template-columns:1fr;justify-content:stretch}.customerSupportLinks a{justify-content:center;width:100%}}
+
 /* account-security-polish-1: clearer customer account privacy state */
 .accountHeader{display:flex;justify-content:space-between;gap:18px;align-items:flex-start;margin-bottom:18px}.accountHeader h2{margin:9px 0 6px}.accountTrustGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin:18px 0}.accountTrustGrid div{background:#f8fbf5;border:1px solid #e5eee1;border-radius:18px;padding:14px 15px}.accountTrustGrid b{display:block;font-size:12px;text-transform:uppercase;letter-spacing:.045em;color:var(--muted);margin-bottom:5px}.accountTrustGrid span{font-weight:900;color:var(--ink);overflow-wrap:anywhere}.accountPacket{border:1px solid #d9ead7;background:linear-gradient(180deg,#f3fbf4,#fff);border-radius:22px;padding:18px;margin:18px 0}.accountPacket h3{margin:0 0 6px}.accountPacket .checklist li{font-size:14px;line-height:1.4}
 @media(max-width:640px){.accountHeader{display:block}.accountHeader .tag{display:inline-flex;margin-top:6px}.accountTrustGrid{grid-template-columns:1fr}.accountPacket{padding:16px}}
