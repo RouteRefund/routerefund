@@ -172,6 +172,18 @@ function modal(html){
 async function refreshCustomerTripViews(){await renderTrips();await renderTripDetail()}
 async function updateTrip(id,patch,owner=false){const {error}=await supabaseClient.from('trips').update(patch).eq('id',id);if(error)return toast(error.message);if(owner){await renderOwner();await renderOwnerTrip()}else await refreshCustomerTripViews()}
 async function archiveTrip(id){const {error}=await supabaseClient.from('trips').update({status:'Archived'}).eq('id',id);if(error)return toast(error.message);toast('Monitoring stopped; trip removed from your dashboard');if(document.body.dataset.page==='trip-detail')location.href='trips.html';else await renderTrips()}
+async function appendCustomerNote(id,note){
+  const clean=String(note||'').trim();
+  if(!clean){toast('Enter a note before saving.');return false}
+  const {data,error:loadError}=await supabaseClient.from('trips').select('notes').eq('id',id).single();
+  if(loadError){toast(loadError.message);return false}
+  const stamp=new Date().toLocaleDateString(undefined,{month:'short',day:'numeric',year:'numeric'});
+  const existing=String(data?.notes||'').trim();
+  const next=[existing,`Customer update ${stamp}: ${clean}`].filter(Boolean).join('\n\n');
+  await updateTrip(id,{notes:next});
+  toast('Trip note added');
+  return true;
+}
 async function completeMonitoringCheck(id,observedPrice,kind='No savings',note=''){
   const now=new Date();
   const next=new Date(now.getTime()+6*60*60*1000);
@@ -267,8 +279,8 @@ document.addEventListener('click',async e=>{
   if(action==='remove')return modal(`<h2>Stop monitoring this trip?</h2><p>This archives the booking in RouteRefund, removes it from your customer dashboard, and stops active monitoring. It will not delete operational records or change, cancel, or rebook anything with the airline.</p><div class="actions"><button class="btn danger" data-action="confirm-remove" data-id="${escapeHtml(id)}">Stop monitoring</button><button class="btn ghost" data-action="close-modal">Keep monitoring</button></div>`);
   if(action==='confirm-remove'){closeModal();return archiveTrip(id)}
   if(action==='close-modal')return closeModal();
-  if(action==='note')return modal(`<h2>Add note</h2><label>Note<textarea id="noteText" placeholder="Example: I prefer credit if cash refund is not possible."></textarea></label><button class="btn primary" data-action="save-note" data-id="${id}">Save note</button>`);
-  if(action==='save-note'){await updateTrip(id,{notes:$('noteText').value.trim()});closeModal();return toast('Note saved')}
+  if(action==='note')return modal(`<h2>Add a trip update</h2><p>Use this to add schedule preferences, refund constraints, or context for RouteRefund. Existing notes stay attached to the trip.</p><label>New note<textarea id="noteText" placeholder="Example: I prefer travel credit if a cash refund is not possible."></textarea></label><button class="btn primary" data-action="save-note" data-id="${escapeHtml(id)}">Add note to trip</button>`);
+  if(action==='save-note'){const saved=await appendCustomerNote(id,$('noteText').value);if(saved)closeModal();return}
   if(action==='owner-filter')return applyOwnerFilter(b.dataset.status||'All');
   if(action==='owner-status')return updateTrip(id,{status:b.dataset.status},true);
   if(action==='owner-payment')return updateTrip(id,{payment_status:b.dataset.status},true);
