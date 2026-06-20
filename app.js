@@ -99,14 +99,23 @@ async function addTrip(e){
 }
 async function loadTrips(){const {data,error}=await supabaseClient.from('trips').select('*').or('status.is.null,status.neq.Archived').order('created_at',{ascending:false});if(error){toast(error.message);return[]}return data||[]}
 function tripSavings(r){return r.current_price?Number(r.paid)-Number(r.current_price):0}
+function customerTripStatus(r){
+  const status=r.status||'Monitoring';
+  if(['Savings found','Review needed'].includes(status))return {step:'Internal review',body:'RouteRefund is checking whether the lower-fare signal is eligible, comparable, and safe before contacting you.',tone:'review'};
+  if(['Closed'].includes(status))return {step:'Resolved',body:'This trip has been closed. Keep the record here for your reference or contact support if something looks off.',tone:'closed'};
+  return {step:'Monitoring active',body:'We are watching for eligible changes and will only contact you if there is a customer-approved next step.',tone:'monitoring'};
+}
+function customerTripMeta(r){
+  return `<div class="customerTripMeta" aria-label="Trip summary"><div><b>Route</b><span>${escapeHtml(r.route||'Pending')}</span></div><div><b>Departure</b><span>${escapeHtml(r.travel_date||'Pending')}</span></div><div><b>Price paid</b><span>${money(r.paid)}</span></div></div>`
+}
 
 async function renderTrips(){
   const box=$('trips');if(!box)return;
   const rows=await loadTrips();
   box.innerHTML=rows.length?rows.map(r=>{
-    const savings=tripSavings(r);
-    return `<div class="trip"><div class="row"><div><h3>${escapeHtml(r.airline||'Airline')} ${escapeHtml(r.confirmation_no||'')}</h3><p>${escapeHtml(r.route||'Route pending')} • ${escapeHtml(r.travel_date||'Date pending')} • Paid ${money(r.paid)}</p><p>Passenger: ${escapeHtml(r.passenger_first||'')} ${escapeHtml(r.passenger_last||'')}</p></div><span class="tag">${escapeHtml(r.status||'Monitoring')}</span></div><div class="miniTimeline"><span class="done">Received</span><span class="${['Monitoring','Savings found','Review needed','Closed','Archived'].includes(r.status)?'done':''}">Watching</span><span class="${['Savings found','Review needed','Closed','Archived'].includes(r.status)?'done':''}">Savings</span><span class="${['Closed','Archived'].includes(r.status)?'done':''}">Closed</span></div>${['Savings found','Review needed'].includes(r.status)?'<p>RouteRefund is reviewing an update on this trip and will contact you if action is needed.</p>':'<p>RouteRefund is watching this trip. We will handle review internally and contact you if action is needed.</p>'}${r.notes?`<p><b>Your note:</b> ${safeLines(r.notes)}</p>`:''}<div class="actions"><a class="btn primary" href="trip-detail.html?id=${encodeURIComponent(r.id)}">View trip</a><button class="btn ghost" data-action="note" data-id="${r.id}">Add note</button><button class="btn danger" data-action="remove" data-id="${r.id}">Stop monitoring</button></div></div>`
-  }).join(''):`<div class="empty"><h3>No trips yet</h3><p>Forward your confirmation email or add your first booked flight above.</p></div>`
+    const status=customerTripStatus(r);
+    return `<div class="trip customerTripCard"><div class="row"><div><h3>${escapeHtml(r.airline||'Airline')} ${escapeHtml(r.confirmation_no||'')}</h3><p>Passenger: ${escapeHtml(r.passenger_first||'')} ${escapeHtml(r.passenger_last||'')}</p></div><span class="tag ${escapeHtml(status.tone)}">${escapeHtml(r.status||'Monitoring')}</span></div>${customerTripMeta(r)}<div class="miniTimeline"><span class="done">Received</span><span class="${['Monitoring','Savings found','Review needed','Closed','Archived'].includes(r.status)?'done':''}">Watching</span><span class="${['Savings found','Review needed','Closed','Archived'].includes(r.status)?'done':''}">Review</span><span class="${['Closed','Archived'].includes(r.status)?'done':''}">Closed</span></div><div class="customerNextStep"><b>${escapeHtml(status.step)}</b><span>${escapeHtml(status.body)}</span></div>${r.notes?`<p><b>Your note:</b> ${safeLines(r.notes)}</p>`:''}<div class="actions"><a class="btn primary" href="trip-detail.html?id=${encodeURIComponent(r.id)}">View trip</a><button class="btn ghost" data-action="note" data-id="${r.id}">Add note</button><button class="btn danger" data-action="remove" data-id="${r.id}">Stop monitoring</button></div></div>`
+  }).join(''):`<div class="empty"><h3>No trips yet</h3><p>Forward your confirmation email or add your first booked flight above. We will never ask for airline passwords or payment card numbers in the trip form.</p></div>`
 }
 
 
