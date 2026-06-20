@@ -336,3 +336,22 @@ body[data-page="owner"] main.wrap{padding-bottom:70px}.ownerToolbar{display:grid
 .lookupBox{background:#fff8e6;border-color:#f1d18a;color:#5f3b00}
 @media(max-width:760px){.customerTripMeta{grid-template-columns:1fr 1fr}.lookupForm{border-radius:26px}.tripActionsSimple{display:grid;grid-template-columns:1fr}.tripActionsSimple .btn{width:100%}}
 @media(max-width:480px){.customerTripMeta{grid-template-columns:1fr}}
+
+/* customer-lookup-card-clean-3 */
+.lookupSummary{margin:18px 0;display:block}
+.lookupSummary>div{border:1px solid #d9ead7;background:linear-gradient(135deg,#f3fbef,#fff);border-radius:22px;padding:18px 20px;display:grid;gap:6px}
+.lookupSummary b{font-size:18px;color:var(--green2)}
+.lookupSummary span{color:var(--muted);font-weight:820;line-height:1.45}
+.simpleTripCard .miniTimeline span:not(.done){background:#fff;color:#8a9994}
+.simpleTripCard .customerNextStep{background:#f8fbf5;border-color:#d9ead7}
+.simpleTripCard .mini{font-size:13px;color:var(--muted);margin-top:10px}
+@media(max-width:640px){.lookupSummary>div{padding:16px;border-radius:18px}.lookupSummary b{font-size:16px}}
+
+/* customer-lookup-card-clean-3 */
+.lookupOnlyCard{padding:24px 26px}.lookupOnlyCard .row{align-items:flex-start}.lookupOnlyCard .tag{white-space:nowrap}
+.compactLookup{margin:18px 0 14px}.compactLookup>div{padding:20px 22px;background:linear-gradient(135deg,#f1fbef,#fff);border-color:#cfe8cb}
+.lookupProgress{display:grid;grid-template-columns:1fr 1.2fr 1.4fr;gap:10px;margin:14px 0 20px}
+.lookupProgress span{display:block;border:1px solid var(--line);border-radius:999px;background:#fff;color:#7b8c86;font-weight:950;font-size:13px;text-align:center;padding:9px 10px}
+.lookupProgress span.done{background:#e8f5e5;border-color:#cfe8cb;color:#236440}.lookupProgress span.active{background:#fff8e6;border-color:#efd28e;color:#704400}
+.lookupOnlyCard .tripActionsSimple{margin-top:8px}.lookupOnlyCard .tripActionsSimple .btn{min-width:150px}
+@media(max-width:760px){.lookupOnlyCard{padding:20px}.lookupOnlyCard .row{display:block}.lookupOnlyCard .tag{margin-top:10px}.lookupProgress{grid-template-columns:1fr}.lookupOnlyCard .tripActionsSimple{display:grid;grid-template-columns:1fr}.lookupOnlyCard .tripActionsSimple .btn{width:100%}}
