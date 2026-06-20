@@ -97,7 +97,7 @@ async function addTrip(e){
   if(error)return toast(error.message);
   e.target.reset();toast('Flight saved');await renderTrips()
 }
-async function loadTrips(){const {data,error}=await supabaseClient.from('trips').select('*').order('created_at',{ascending:false});if(error){toast(error.message);return[]}return data||[]}
+async function loadTrips(){const {data,error}=await supabaseClient.from('trips').select('*').or('status.is.null,status.neq.Archived').order('created_at',{ascending:false});if(error){toast(error.message);return[]}return data||[]}
 function tripSavings(r){return r.current_price?Number(r.paid)-Number(r.current_price):0}
 
 async function renderTrips(){
@@ -105,7 +105,7 @@ async function renderTrips(){
   const rows=await loadTrips();
   box.innerHTML=rows.length?rows.map(r=>{
     const savings=tripSavings(r);
-    return `<div class="trip"><div class="row"><div><h3>${escapeHtml(r.airline||'Airline')} ${escapeHtml(r.confirmation_no||'')}</h3><p>${escapeHtml(r.route||'Route pending')} • ${escapeHtml(r.travel_date||'Date pending')} • Paid ${money(r.paid)}</p><p>Passenger: ${escapeHtml(r.passenger_first||'')} ${escapeHtml(r.passenger_last||'')}</p></div><span class="tag">${escapeHtml(r.status||'Monitoring')}</span></div><div class="miniTimeline"><span class="done">Received</span><span class="${['Monitoring','Savings found','Review needed','Closed','Archived'].includes(r.status)?'done':''}">Watching</span><span class="${['Savings found','Review needed','Closed','Archived'].includes(r.status)?'done':''}">Savings</span><span class="${['Closed','Archived'].includes(r.status)?'done':''}">Closed</span></div>${['Savings found','Review needed'].includes(r.status)?'<p>RouteRefund is reviewing an update on this trip and will contact you if action is needed.</p>':'<p>RouteRefund is watching this trip. We will handle review internally and contact you if action is needed.</p>'}${r.notes?`<p><b>Your note:</b> ${safeLines(r.notes)}</p>`:''}<div class="actions"><a class="btn primary" href="trip-detail.html?id=${encodeURIComponent(r.id)}">View trip</a><button class="btn ghost" data-action="note" data-id="${r.id}">Add note</button><button class="btn danger" data-action="remove" data-id="${r.id}">Remove</button></div></div>`
+    return `<div class="trip"><div class="row"><div><h3>${escapeHtml(r.airline||'Airline')} ${escapeHtml(r.confirmation_no||'')}</h3><p>${escapeHtml(r.route||'Route pending')} • ${escapeHtml(r.travel_date||'Date pending')} • Paid ${money(r.paid)}</p><p>Passenger: ${escapeHtml(r.passenger_first||'')} ${escapeHtml(r.passenger_last||'')}</p></div><span class="tag">${escapeHtml(r.status||'Monitoring')}</span></div><div class="miniTimeline"><span class="done">Received</span><span class="${['Monitoring','Savings found','Review needed','Closed','Archived'].includes(r.status)?'done':''}">Watching</span><span class="${['Savings found','Review needed','Closed','Archived'].includes(r.status)?'done':''}">Savings</span><span class="${['Closed','Archived'].includes(r.status)?'done':''}">Closed</span></div>${['Savings found','Review needed'].includes(r.status)?'<p>RouteRefund is reviewing an update on this trip and will contact you if action is needed.</p>':'<p>RouteRefund is watching this trip. We will handle review internally and contact you if action is needed.</p>'}${r.notes?`<p><b>Your note:</b> ${safeLines(r.notes)}</p>`:''}<div class="actions"><a class="btn primary" href="trip-detail.html?id=${encodeURIComponent(r.id)}">View trip</a><button class="btn ghost" data-action="note" data-id="${r.id}">Add note</button><button class="btn danger" data-action="remove" data-id="${r.id}">Stop monitoring</button></div></div>`
   }).join(''):`<div class="empty"><h3>No trips yet</h3><p>Forward your confirmation email or add your first booked flight above.</p></div>`
 }
 
@@ -133,7 +133,7 @@ async function renderTripDetail(){
 function modal(html){if(!$('modal'))return;$('modalCard').innerHTML=html;$('modal').classList.add('open')}
 async function refreshCustomerTripViews(){await renderTrips();await renderTripDetail()}
 async function updateTrip(id,patch,owner=false){const {error}=await supabaseClient.from('trips').update(patch).eq('id',id);if(error)return toast(error.message);if(owner){await renderOwner();await renderOwnerTrip()}else await refreshCustomerTripViews()}
-async function removeTrip(id){const {error}=await supabaseClient.from('trips').delete().eq('id',id);if(error)return toast(error.message);toast('Trip removed');if(document.body.dataset.page==='trip-detail')location.href='trips.html';else await renderTrips()}
+async function archiveTrip(id){const {error}=await supabaseClient.from('trips').update({status:'Archived'}).eq('id',id);if(error)return toast(error.message);toast('Monitoring stopped; trip removed from your dashboard');if(document.body.dataset.page==='trip-detail')location.href='trips.html';else await renderTrips()}
 async function completeMonitoringCheck(id,observedPrice,kind='No savings',note=''){
   const now=new Date();
   const next=new Date(now.getTime()+6*60*60*1000);
@@ -226,8 +226,8 @@ document.addEventListener('click',async e=>{
   const action=b.dataset.action,id=b.dataset.id;
   if(action==='mobile-menu')return modal('<h2>Menu</h2><div class="mobileMenuList"><a href="how-it-works.html">How it works</a><a href="supported-airlines.html">Airlines</a><a href="trust-center.html">Trust center</a><a href="faq.html">FAQ</a><a href="forward-confirmation.html">Forward confirmation</a><a href="login.html">Log in</a><a href="signup.html">Create account</a><a href="add-trip.html">Start tracking</a></div>');
   if(action==='logout')return logout();
-  if(action==='remove')return modal(`<h2>Remove this trip?</h2><p>This stops RouteRefund monitoring for this booking and removes it from your customer dashboard. It will not change, cancel, or rebook anything with the airline.</p><div class="actions"><button class="btn danger" data-action="confirm-remove" data-id="${escapeHtml(id)}">Yes, remove trip</button><button class="btn ghost" data-action="close-modal">Keep monitoring</button></div>`);
-  if(action==='confirm-remove'){$('modal')?.classList.remove('open');return removeTrip(id)}
+  if(action==='remove')return modal(`<h2>Stop monitoring this trip?</h2><p>This archives the booking in RouteRefund, removes it from your customer dashboard, and stops active monitoring. It will not delete operational records or change, cancel, or rebook anything with the airline.</p><div class="actions"><button class="btn danger" data-action="confirm-remove" data-id="${escapeHtml(id)}">Stop monitoring</button><button class="btn ghost" data-action="close-modal">Keep monitoring</button></div>`);
+  if(action==='confirm-remove'){$('modal')?.classList.remove('open');return archiveTrip(id)}
   if(action==='close-modal')return $('modal')?.classList.remove('open');
   if(action==='note')return modal(`<h2>Add note</h2><label>Note<textarea id="noteText" placeholder="Example: I prefer credit if cash refund is not possible."></textarea></label><button class="btn primary" data-action="save-note" data-id="${id}">Save note</button>`);
   if(action==='save-note'){await updateTrip(id,{notes:$('noteText').value.trim()});$('modal').classList.remove('open');return toast('Note saved')}
