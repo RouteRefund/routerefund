@@ -285,3 +285,14 @@ body[data-page="owner"] main.wrap{padding-bottom:70px}.ownerToolbar{display:grid
 .forwardSafetyCard{background:linear-gradient(135deg,#10231f,#123943);color:#fff;overflow:hidden;position:relative}.forwardSafetyCard:after{content:'';position:absolute;right:-46px;top:-46px;width:145px;height:145px;border-radius:50%;background:rgba(232,180,79,.18)}.forwardSafetyCard h2{color:#fff;margin-top:0}.forwardSafetyCard .checklist{position:relative;z-index:1}.forwardSafetyCard .checklist li{color:#fff;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.18);border-radius:16px;padding:12px 12px 12px 40px}.forwardSafetyCard .checklist li:before{left:12px;top:12px;background:#e8f5e5;color:#0f7b4c}
 .forwardSteps{padding-top:18px}.doDont{padding-top:10px}.doDont .panel{background:#fff}.manualFallback{margin:8px 0 48px;background:#f8fbf5;border-color:#d9ead7}
 @media(max-width:760px){.forwardGuideHero{grid-template-columns:1fr;gap:16px;padding-top:28px}.forwardGuideHero .emailBox{text-align:center;padding-left:14px;padding-right:14px}.forwardSafetyCard{padding:22px!important;border-radius:24px}.forwardSafetyCard:after{display:none}.forwardSteps,.doDont{gap:14px}.manualFallback{margin-bottom:34px}.manualFallback .btn{width:100%}}
+
+/* landing-trust-proof-1: proof without unsupported savings claims */
+.proofStrip{display:grid;grid-template-columns:minmax(0,.86fr) minmax(320px,1.14fr);gap:22px;align-items:stretch;padding-top:10px}
+.proofStrip>div:first-child{background:#fff;border:1px solid var(--line);border-radius:28px;padding:26px;box-shadow:0 16px 42px rgba(18,57,67,.07)}
+.proofStrip h2{margin:12px 0 10px;max-width:620px}
+.proofStrip p{color:var(--muted);font-weight:780;line-height:1.55}
+.proofGrid{display:grid;gap:12px}
+.proofGrid div{background:linear-gradient(180deg,#fff,#f8fbf5);border:1px solid #e5eee1;border-radius:22px;padding:17px 18px;box-shadow:0 12px 30px rgba(18,57,67,.06)}
+.proofGrid b{display:block;margin-bottom:5px;color:#10231f;font-size:13px;text-transform:uppercase;letter-spacing:.045em}
+.proofGrid span{display:block;color:var(--muted);font-weight:850;line-height:1.4}
+@media(max-width:760px){.proofStrip{grid-template-columns:1fr;gap:12px;padding-top:4px}.proofStrip>div:first-child{padding:22px;border-radius:24px}.proofGrid{gap:10px}.proofGrid div{border-radius:18px;padding:15px 16px}}
