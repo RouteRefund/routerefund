@@ -247,3 +247,15 @@ body[data-page="owner"] main.wrap{padding-bottom:70px}.ownerToolbar{display:grid
 
 /* modal-a11y-1: keyboard-visible dialogs */
 .modal.open{align-items:start;overflow:auto}.modalCard:focus{outline:3px solid rgba(15,123,76,.45);outline-offset:4px}.modalCard button:focus-visible,.modalCard a:focus-visible,.modalCard input:focus-visible,.modalCard textarea:focus-visible,.modalCard select:focus-visible{outline:3px solid rgba(15,123,76,.45);outline-offset:3px}@media(max-width:640px){.modal{padding:16px}.modal.open{place-items:end center}.modalCard{max-height:88vh;overflow:auto;border-radius:24px 24px 18px 18px}}
+
+/* savings-review-1: clearer customer-safe fare-drop review story */
+.savingsReview .panel{background:linear-gradient(135deg,#10231f,#123943);color:#fff;overflow:hidden;position:relative}
+.savingsReview .panel:after{content:'';position:absolute;right:-54px;top:-54px;width:170px;height:170px;border-radius:50%;background:rgba(232,180,79,.18)}
+.savingsReview .eyebrow{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.22);color:#e8f5e5}
+.savingsReview h2{max-width:760px;color:#fff;margin-top:14px}
+.savingsReview p{max-width:760px;color:rgba(255,255,255,.76);font-weight:780}
+.reviewSteps{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:22px;position:relative;z-index:1}
+.reviewSteps div{background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.18);border-radius:20px;padding:16px 17px;backdrop-filter:blur(8px)}
+.reviewSteps b{display:block;margin-bottom:6px;color:#fff;font-size:14px;text-transform:uppercase;letter-spacing:.045em}
+.reviewSteps span{display:block;color:rgba(255,255,255,.78);font-weight:800;line-height:1.4}
+@media(max-width:760px){.reviewSteps{grid-template-columns:1fr}.savingsReview .panel{padding:22px!important;border-radius:24px}.savingsReview h2{font-size:28px;line-height:1.08}.reviewSteps div{padding:15px}}
