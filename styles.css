@@ -355,3 +355,12 @@ body[data-page="owner"] main.wrap{padding-bottom:70px}.ownerToolbar{display:grid
 .lookupProgress span.done{background:#e8f5e5;border-color:#cfe8cb;color:#236440}.lookupProgress span.active{background:#fff8e6;border-color:#efd28e;color:#704400}
 .lookupOnlyCard .tripActionsSimple{margin-top:8px}.lookupOnlyCard .tripActionsSimple .btn{min-width:150px}
 @media(max-width:760px){.lookupOnlyCard{padding:20px}.lookupOnlyCard .row{display:block}.lookupOnlyCard .tag{margin-top:10px}.lookupProgress{grid-template-columns:1fr}.lookupOnlyCard .tripActionsSimple{display:grid;grid-template-columns:1fr}.lookupOnlyCard .tripActionsSimple .btn{width:100%}}
+
+/* landing-airline-proof-1: supported-carrier reassurance without unsupported stats */
+.airlineProof{display:grid;grid-template-columns:minmax(0,.95fr) minmax(300px,1.05fr);gap:18px;align-items:center;padding-top:8px}
+.airlineProof>div:first-child{background:linear-gradient(135deg,#fffdf8,#f3fbf4);border:1px solid #d9ead7;border-radius:28px;padding:26px;box-shadow:0 16px 42px rgba(18,57,67,.07)}
+.airlineProof h2{margin:12px 0 10px;max-width:680px}
+.airlineProof p{color:var(--muted);font-weight:780;line-height:1.55}.airlineProof a{display:inline-flex;margin-top:8px;color:var(--green2);font-weight:950}
+.airlineChips{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.airlineChips span{display:grid;place-items:center;min-height:70px;padding:14px;border:1px solid #e5eee1;border-radius:22px;background:#fff;box-shadow:0 12px 30px rgba(18,57,67,.06);font-weight:950;color:#10231f;text-align:center}
+@media(max-width:760px){.airlineProof{grid-template-columns:1fr;gap:12px;padding-top:4px}.airlineProof>div:first-child{padding:22px;border-radius:24px}.airlineChips{grid-template-columns:1fr 1fr;gap:10px}.airlineChips span{min-height:54px;border-radius:18px}}
