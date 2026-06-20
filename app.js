@@ -139,14 +139,18 @@ async function completeMonitoringCheck(id,observedPrice,kind='No savings',note='
   const next=new Date(now.getTime()+6*60*60*1000);
   const price=observedPrice===''||observedPrice==null?null:Number(observedPrice);
   const {data:trip}=await supabaseClient.from('trips').select('paid').eq('id',id).single();
-  const savingsFound=kind==='Review needed'||(price&&trip?.paid&&price<Number(trip.paid));
+  const paid=Number(trip?.paid||0);
+  const lowerFare=price!=null&&Number.isFinite(price)&&paid>0&&price<paid;
+  if(kind==='Review needed'&&!lowerFare){toast('Review queue requires a verified fare lower than the customer paid.');return false}
+  if(kind==='No savings'&&lowerFare){toast('Lower fare entered. Use “Send to review” so evidence is captured intentionally.');return false}
+  const savingsFound=lowerFare;
   await supabaseClient.from('monitoring_checks').update({checked_at:now.toISOString(),observed_price:price,result:savingsFound?'Savings found':'No savings',notes:note||'Partner completed fare check'}).eq('trip_id',id).eq('result','Due');
   const patch={last_checked_at:now.toISOString(),next_check_at:next.toISOString(),status:savingsFound?'Review needed':'Monitoring'};
   if(!savingsFound)await supabaseClient.from('monitoring_checks').insert({trip_id:id,check_due_at:next.toISOString(),source:'Scheduled follow-up',result:'Due',notes:'Next monitoring reminder'});
   if(price)patch.current_price=price;
   const {error}=await supabaseClient.from('trips').update(patch).eq('id',id);
   if(error)return toast(error.message);
-  await renderOwner();await renderOwnerTrip();toast(savingsFound?'Moved to review needed':'No savings recorded; next check scheduled')
+  await renderOwner();await renderOwnerTrip();toast(savingsFound?'Moved to review needed':'No savings recorded; next check scheduled');return true
 }
 let ownerActiveFilter='All';
 function ownerStatusLabel(status){return ({'Monitoring':'Watching','Savings found':'Review needed','Review needed':'Review needed','Closed':'Archived','Archived':'Archived'}[status]||status||'Watching')}
@@ -232,10 +236,10 @@ document.addEventListener('click',async e=>{
   if(action==='owner-payment')return updateTrip(id,{payment_status:b.dataset.status},true);
   if(action==='owner-note')return modal(`<h2>Internal note</h2><label>What happened / next step<textarea id="ownerNoteText" placeholder="Checked AA mobile app. Same cabin. Need customer approval before action."></textarea></label><button class="btn primary" data-action="save-owner-note" data-id="${id}">Save note</button>`);
   if(action==='save-owner-note'){await saveOwnerNote(id,$('ownerNoteText').value.trim());$('modal').classList.remove('open');return}
-  if(action==='owner-review')return modal(`<h2>Flag for evidence review</h2><p>Use this only when a lower eligible fare appears real. This moves the trip to the review queue; it does not change the booking or bill the customer.</p><label>Observed lower fare<input id="foundPrice" type="number" min="0" step="0.01" placeholder="299.00"></label><label>Evidence / next step<textarea id="priceNote" placeholder="Source, same route/date/cabin, screenshot saved, customer action needed..."></textarea></label><button class="btn primary" data-action="save-owner-review" data-id="${id}">Move to review queue</button>`);
-  if(action==='owner-no-savings')return modal(`<h2>Record fare check</h2><p>If nothing actionable was found, this schedules the next monitoring check automatically.</p><label>Observed current fare <span class="optional">optional</span><input id="noSavingsPrice" type="number" min="0" step="0.01" placeholder="Leave blank if not recorded"></label><label>Check note<textarea id="noSavingsNote" placeholder="Checked same airline/route/date/cabin. No lower eligible fare found."></textarea></label><button class="btn primary" data-action="save-no-savings" data-id="${id}">Save check + schedule next</button>`);
-  if(action==='save-owner-review'){if(!$('foundPrice').value)return toast('Enter the lower price found.');await completeMonitoringCheck(id,$('foundPrice').value,'Review needed',$('priceNote').value.trim());$('modal').classList.remove('open');return}
-  if(action==='save-no-savings'){await completeMonitoringCheck(id,$('noSavingsPrice').value,'No savings',$('noSavingsNote').value.trim());$('modal').classList.remove('open');return}
+  if(action==='owner-review')return modal(`<h2>Flag for evidence review</h2><p>Use this only when a verified lower eligible fare appears real. The fare must be below the customer-paid amount before the trip can enter review; this does not change the booking or bill the customer.</p><label>Observed lower fare<input id="foundPrice" type="number" min="0" step="0.01" inputmode="decimal" placeholder="299.00"></label><label>Evidence / next step<textarea id="priceNote" placeholder="Source, same route/date/cabin, screenshot saved, customer action needed..."></textarea></label><button class="btn primary" data-action="save-owner-review" data-id="${id}">Move to review queue</button>`);
+  if(action==='owner-no-savings')return modal(`<h2>Record fare check</h2><p>If nothing actionable was found, this schedules the next monitoring check automatically.</p><label>Observed current fare <span class="optional">optional</span><input id="noSavingsPrice" type="number" min="0" step="0.01" inputmode="decimal" placeholder="Leave blank if not recorded"></label><label>Check note<textarea id="noSavingsNote" placeholder="Checked same airline/route/date/cabin. No lower eligible fare found."></textarea></label><button class="btn primary" data-action="save-no-savings" data-id="${id}">Save check + schedule next</button>`);
+  if(action==='save-owner-review'){if(!$('foundPrice').value)return toast('Enter the lower price found.');const saved=await completeMonitoringCheck(id,$('foundPrice').value,'Review needed',$('priceNote').value.trim());if(saved!==false)$('modal').classList.remove('open');return}
+  if(action==='save-no-savings'){const saved=await completeMonitoringCheck(id,$('noSavingsPrice').value,'No savings',$('noSavingsNote').value.trim());if(saved!==false)$('modal').classList.remove('open');return}
 });
 document.addEventListener('input',e=>{if(e.target?.id==='ownerSearch')applyOwnerFilter(ownerActiveFilter)});
 
