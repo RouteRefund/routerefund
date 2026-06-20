@@ -32,6 +32,14 @@ const LOCATOR_RULES={
 function locatorRule(airline=''){return LOCATOR_RULES[airline]||LOCATOR_RULES.default}
 function validConfirmation(value='',airline=''){const v=normalizeConfirmation(value),r=locatorRule(airline);return /^[A-Z0-9]+$/.test(v)&&v.length>=r.min&&v.length<=r.max}
 function updateLocatorHint(){const airline=$('airlineSelect')?.value||'',hint=$('locatorHint'),input=$('confirmationNo'),r=locatorRule(airline);if(hint)hint.textContent=r.hint;if(input){input.minLength=r.min;input.maxLength=r.max;input.pattern=`[A-Za-z0-9]{${r.min},${r.max}}`}}
+function luhnOk(value=''){let sum=0,alt=false;for(let i=value.length-1;i>=0;i--){let n=Number(value[i]);if(alt){n*=2;if(n>9)n-=9}sum+=n;alt=!alt}return value.length>=13&&value.length<=19&&sum%10===0}
+function hasPaymentCardNumber(value=''){return (String(value).match(/(?:\d[ -]?){13,19}/g)||[]).some(x=>luhnOk(x.replace(/\D/g,'')))}
+function tripTextSafetyMessage(value=''){
+  const text=String(value||'');
+  if(hasPaymentCardNumber(text))return 'Please remove payment card numbers before saving this trip note.';
+  if(/\b(password|passcode|cvv|cvc|security code|2fa code|airline login|email login|account login)\b/i.test(text))return 'Please remove passwords, login details, or verification codes before saving this trip note.';
+  return '';
+}
 function touchActivity(){localStorage.setItem('rr_last_activity',String(Date.now()))}
 function safeNext(value='',fallback='trips.html',partner=false){const raw=String(value||'').trim();if(!raw)return fallback;if(/^[a-z][a-z0-9+.-]*:/i.test(raw)||raw.startsWith('//')||raw.includes('\\'))return fallback;try{const url=new URL(raw,location.origin);if(url.origin!==location.origin)return fallback;const page=(url.pathname.split('/').filter(Boolean).pop()||'index.html');if(partner&&!page.startsWith('partner-ops-'))return fallback;if(!partner&&page.startsWith('partner-ops-'))return fallback;return `${page}${url.search}${url.hash}`}catch{return fallback}}
 function partnerLoginUrl(next='partner-ops-dashboard.html'){return `partner-ops-login.html?next=${encodeURIComponent(safeNext(next,'partner-ops-dashboard.html',true))}`}
@@ -105,6 +113,8 @@ async function addTrip(e){
   if(!validConfirmation(confirmation,airline)){const r=locatorRule(airline);return fail(`For ${airline}, enter ${r.min===r.max?r.min:`${r.min}-${r.max}`} letters/numbers from the booking email.`)}
   if(!travelDate)return fail('Enter the departure date so monitoring can run.');
   const rawNotes=$('notes').value.trim();
+  const noteSafety=tripTextSafetyMessage(rawNotes);
+  if(noteSafety)return fail(noteSafety);
   const notes=[rawNotes].filter(Boolean).join('\n');
   const trip={user_id:user.id,passenger_first:$('passengerFirst').value.trim(),passenger_last:$('passengerLast').value.trim(),date_of_birth:$('dateOfBirth').value,confirmation_no:confirmation,airline,route:route||null,travel_date:travelDate,paid:Number($('paid').value),notes,change_consent:true,status:'Monitoring'};
   lock('Saving trip...');
@@ -188,6 +198,8 @@ async function archiveTrip(id){const {error}=await supabaseClient.from('trips').
 async function appendCustomerNote(id,note){
   const clean=String(note||'').trim();
   if(!clean){toast('Enter a note before saving.');return false}
+  const noteSafety=tripTextSafetyMessage(clean);
+  if(noteSafety){toast(noteSafety);return false}
   const {data,error:loadError}=await supabaseClient.from('trips').select('notes').eq('id',id).single();
   if(loadError){toast(loadError.message);return false}
   const stamp=new Date().toLocaleDateString(undefined,{month:'short',day:'numeric',year:'numeric'});
@@ -293,7 +305,7 @@ document.addEventListener('click',async e=>{
   if(action==='remove')return modal(`<h2>Stop monitoring this trip?</h2><p>This archives the booking in RouteRefund, removes it from your customer dashboard, and stops active monitoring. It will not delete operational records or change, cancel, or rebook anything with the airline.</p><div class="actions"><button class="btn danger" data-action="confirm-remove" data-id="${escapeHtml(id)}">Stop monitoring</button><button class="btn ghost" data-action="close-modal">Keep monitoring</button></div>`);
   if(action==='confirm-remove'){closeModal();return archiveTrip(id)}
   if(action==='close-modal')return closeModal();
-  if(action==='note')return modal(`<h2>Add a trip update</h2><p>Use this to add schedule preferences, refund constraints, or context for RouteRefund. Existing notes stay attached to the trip.</p><label>New note<textarea id="noteText" placeholder="Example: I prefer travel credit if a cash refund is not possible."></textarea></label><button class="btn primary" data-action="save-note" data-id="${escapeHtml(id)}">Add note to trip</button>`);
+  if(action==='note')return modal(`<h2>Add a trip update</h2><p>Use this to add schedule preferences, refund constraints, or context for RouteRefund. Existing notes stay attached to the trip. Do not include payment card numbers, passwords, or verification codes.</p><label>New note<textarea id="noteText" placeholder="Example: I prefer travel credit if a cash refund is not possible."></textarea></label><button class="btn primary" data-action="save-note" data-id="${escapeHtml(id)}">Add note to trip</button>`);
   if(action==='save-note'){const saved=await appendCustomerNote(id,$('noteText').value);if(saved)closeModal();return}
   if(action==='owner-filter')return applyOwnerFilter(b.dataset.status||'All');
   if(action==='owner-status'){
