@@ -88,21 +88,29 @@ async function updatePassword(e){e.preventDefault();const password=$('password')
 
 async function addTrip(e){
   e.preventDefault();
-  const user=await requireLogin('trips.html');if(!user)return;
-  if(!$('changeConsent').checked)return toast('Please accept trip authorization to continue');
+  const submit=e.submitter||e.target.querySelector('button[type="submit"]');
+  if(submit?.disabled)return;
+  const originalLabel=submit?.textContent||'';
+  const lock=label=>{if(submit){submit.disabled=true;submit.textContent=label}};
+  const unlock=()=>{if(submit){submit.disabled=false;submit.textContent=originalLabel||'Start tracking this flight'}};
+  const fail=message=>{unlock();toast(message);return false};
+  lock('Checking trip...');
+  const user=await requireLogin('trips.html');if(!user){unlock();return}
+  if(!$('changeConsent').checked)return fail('Please accept trip authorization to continue');
   const airline=$('airlineSelect')?.value?.trim()||'';
   const confirmation=normalizeConfirmation($('confirmationNo').value);
   const route=$('route')?.value?.trim().toUpperCase()||'';
   const travelDate=$('travelDate')?.value||'';
-  if(!airline)return toast('Select the airline first.');
-  if(!validConfirmation(confirmation,airline)){const r=locatorRule(airline);return toast(`For ${airline}, enter ${r.min===r.max?r.min:`${r.min}-${r.max}`} letters/numbers from the booking email.`)}
-  if(!travelDate)return toast('Enter the departure date so monitoring can run.');
+  if(!airline)return fail('Select the airline first.');
+  if(!validConfirmation(confirmation,airline)){const r=locatorRule(airline);return fail(`For ${airline}, enter ${r.min===r.max?r.min:`${r.min}-${r.max}`} letters/numbers from the booking email.`)}
+  if(!travelDate)return fail('Enter the departure date so monitoring can run.');
   const rawNotes=$('notes').value.trim();
   const notes=[rawNotes].filter(Boolean).join('\n');
   const trip={user_id:user.id,passenger_first:$('passengerFirst').value.trim(),passenger_last:$('passengerLast').value.trim(),date_of_birth:$('dateOfBirth').value,confirmation_no:confirmation,airline,route:route||null,travel_date:travelDate,paid:Number($('paid').value),notes,change_consent:true,status:'Monitoring'};
+  lock('Saving trip...');
   const {error}=await supabaseClient.from('trips').insert(trip);
-  if(error)return toast(error.message);
-  e.target.reset();toast('Flight saved');await renderTrips()
+  if(error)return fail(error.message);
+  e.target.reset();updateLocatorHint();toast('Flight saved; monitoring request received.');await renderTrips();unlock()
 }
 async function loadTrips(){const {data,error}=await supabaseClient.from('trips').select('*').or('status.is.null,status.neq.Archived').order('created_at',{ascending:false});if(error){toast(error.message);return[]}return data||[]}
 function tripSavings(r){return r.current_price?Number(r.paid)-Number(r.current_price):0}
