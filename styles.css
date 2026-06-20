@@ -375,3 +375,13 @@ body[data-page="owner"] main.wrap{padding-bottom:70px}.ownerToolbar{display:grid
 .coverageSteps b{display:block;margin-bottom:6px;color:#10231f;font-size:13px;text-transform:uppercase;letter-spacing:.045em}
 .coverageSteps span{display:block;color:var(--muted);font-weight:850;line-height:1.4}
 @media(max-width:760px){.coverageExplainer{grid-template-columns:1fr;gap:12px;padding-top:4px}.coverageExplainer>div:first-child{padding:22px;border-radius:24px}.coverageSteps{gap:10px}.coverageSteps div{padding:15px 16px;border-radius:18px}}
+
+/* landing-sticky-cta-1: mobile-first persistent conversion path */
+.mobileStickyCta{display:none}
+@media(max-width:640px){
+  body[data-page="home"]{padding-bottom:92px}
+  .mobileStickyCta{position:fixed;left:14px;right:14px;bottom:14px;z-index:30;display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;padding:10px 10px 10px 14px;border:1px solid rgba(217,234,215,.95);border-radius:22px;background:rgba(255,253,248,.94);box-shadow:0 18px 48px rgba(16,35,31,.20);backdrop-filter:blur(18px)}
+  .mobileStickyCta span{color:#245f3e;font-size:12px;font-weight:900;line-height:1.25}
+  .mobileStickyCta .btn{min-height:46px;padding:0 15px;border-radius:16px;white-space:nowrap;background:linear-gradient(135deg,#0f7b4c,#123943)}
+}
+@media(max-width:360px){.mobileStickyCta{grid-template-columns:1fr}.mobileStickyCta .btn{width:100%}}
