@@ -53,6 +53,7 @@ alter table public.account_recovery_requests enable row level security;
 
 -- Manual lookup can start before the customer knows the exact price paid.
 alter table public.trips alter column paid drop not null;
+alter table public.trips add column if not exists departure_time text;
 drop constraint if exists trips_paid_positive on public.trips;
 alter table public.trips add column if not exists flight_no text;
 alter table public.trips alter column flight_no drop not null;
