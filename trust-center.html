@@ -14,13 +14,13 @@
     <section class="grid three section">
       <div class="card"><h3>No card numbers in trip forms</h3><p>Customers should not type raw credit card numbers into RouteRefund. Payments belong in secure Stripe-hosted flows.</p></div>
       <div class="card"><h3>Private customer dashboards</h3><p>Supabase row-level security should ensure customers can only read and manage their own trips.</p></div>
-      <div class="card"><h3>Restricted owner tools</h3><p>Owner dashboards should only work for approved RouteRefund partner emails.</p></div>
+      <div class="card"><h3>Restricted owner tools</h3><p>Partner dashboards are kept separate from customer pages and require approved partner accounts with two-factor authentication.</p></div>
     </section>
     <section class="grid two section">
       <div class="panel"><h2>Data we may need</h2><ul class="checklist"><li>Passenger name and date of birth</li><li>Airline and confirmation code</li><li>Forwarded confirmation details</li><li>Price paid and operational notes</li></ul></div>
       <div class="panel"><h2>Data we avoid</h2><ul class="checklist"><li>Raw payment card numbers</li><li>Unnecessary personal details</li><li>Public exposure of trip records</li><li>Owner access from customer pages</li></ul></div>
     </section>
-    <section class="panel"><h2>Security work still matters</h2><p>Before taking real customers, RouteRefund should verify Supabase policies, owner access, password reset flows, and Stripe payment flow. The website is moving toward launch-ready, but security verification is a required step.</p></section>
+    <section class="panel"><h2>Security work still matters</h2><p>Before taking real customers, RouteRefund should verify Supabase policies, partner 2FA, password reset flows, and Stripe payment flow. The website is moving toward launch-ready, but security verification is a required step.</p><p>RouteRefund also avoids automatic airline changes: monitoring and evidence review are separate from any booking, cancellation, or rebooking action.</p></section>
   </main>
   <div id="toast" class="toast"></div><div id="modal" class="modal"><div id="modalCard" class="modalCard"></div></div>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="config.js"></script><script src="app.js?v=customer-archive-1"></script>
