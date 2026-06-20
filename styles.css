@@ -296,3 +296,14 @@ body[data-page="owner"] main.wrap{padding-bottom:70px}.ownerToolbar{display:grid
 .proofGrid b{display:block;margin-bottom:5px;color:#10231f;font-size:13px;text-transform:uppercase;letter-spacing:.045em}
 .proofGrid span{display:block;color:var(--muted);font-weight:850;line-height:1.4}
 @media(max-width:760px){.proofStrip{grid-template-columns:1fr;gap:12px;padding-top:4px}.proofStrip>div:first-child{padding:22px;border-radius:24px}.proofGrid{gap:10px}.proofGrid div{border-radius:18px;padding:15px 16px}}
+
+/* landing-fit-clarity-1: qualify good-fit trips without overpromising */
+.fitStrip{display:grid;grid-template-columns:1fr 1fr;gap:18px;padding-top:8px}
+.fitCard{border:1px solid var(--line);border-radius:28px;padding:26px;box-shadow:0 16px 42px rgba(18,57,67,.07);overflow:hidden;position:relative}
+.fitCard h2{margin:12px 0 16px;font-size:clamp(28px,3.1vw,42px)}
+.fitCard .checklist{margin-top:12px}
+.fitGood{background:linear-gradient(135deg,#fffdf8,#f3fbf4);border-color:#d9ead7}
+.fitCareful{background:linear-gradient(135deg,#fff,#fff8e6);border-color:#f0d79a}
+.fitCareful .eyebrow{background:#fff8e6;border-color:#f0d79a;color:#704400}
+.fitCareful .checklist li:before{background:#fff3d0;color:#704400}
+@media(max-width:760px){.fitStrip{grid-template-columns:1fr;gap:12px;padding-top:4px}.fitCard{padding:22px;border-radius:24px}.fitCard h2{font-size:27px;line-height:1.08}}
