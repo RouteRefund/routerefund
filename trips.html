@@ -28,7 +28,7 @@
       <div>
         <span class="eyebrow">Customer dashboard</span>
         <h1>Your flight watchlist.</h1>
-        <p class="lead small">Add booked reservations, let RouteRefund run supported airline lookups, and keep every monitored trip in one private dashboard.</p>
+        <p class="lead small">Add booked reservations, let RouteRefund review supported airline details, and keep every monitored trip in one private dashboard.</p>
       </div>
       <div class="cleanDashActions"><a class="btn ghost" href="forward-confirmation.html">Forwarding guide</a><a class="btn ghost" href="supported-airlines.html">Supported airlines</a></div>
     </section>
@@ -37,7 +37,7 @@
       <form id="tripForm" class="panel formPanel lookupForm cleanLookupForm">
         <span class="eyebrow">Add a trip</span>
         <h2>Find my flight</h2>
-        <p class="mini formIntro">Use the same details the airline asks for on its manage-trip page. For supported airlines, lookup can start after submission without airline passwords or payment details.</p>
+        <p class="mini formIntro">Use the same details the airline asks for on its manage-trip page. For supported airlines, review can start after submission without airline passwords, payment details, or one-time codes.</p>
         <label for="airline">Airline
           <select id="airline" aria-describedby="airlineHint" required>
             <option value="">Choose airline</option>
@@ -75,7 +75,7 @@
 
     <section class="section cleanTripsSection">
       <div class="row dashboardRow"><div><span class="eyebrow">Your trips</span><h2>Current tracking</h2><p class="mini">Remove trip deletes the RouteRefund record only. It never changes, cancels, or contacts the airline.</p></div></div>
-      <div id="trips"><div class="empty"><h3>Loading trips...</h3></div></div>
+      <div id="trips" aria-live="polite" aria-busy="true"><div class="empty"><h3>Loading trips...</h3></div></div>
     </section>
   </main>
 

@@ -372,6 +372,19 @@ body.rr-v2 .tripDetailHero .tag[aria-label],body.rr-v2 .accountHeroCard .tag[ari
   body.rr-v2 .customerTripCard .btn,body.rr-v2 .tripDetailCard .btn,body.rr-v2 .accountPanelV2 .btn{min-width:0}
 }
 
+/* revamp-v2-14: customer app page header rhythm */
+body.rr-v2 .appPageHeader{display:grid!important;gap:12px!important;margin-bottom:8px!important;padding-bottom:18px!important;border-bottom:1px solid var(--rr-line)!important}
+body.rr-v2 .appPageHeader h1{margin:0!important;text-wrap:balance}
+body.rr-v2 .appPageHeader .lead{margin:0!important;color:var(--rr-slate)}
+body.rr-v2 #trips[aria-busy="true"],body.rr-v2 #tripDetail[aria-busy="true"],body.rr-v2 #accountPanel[aria-busy="true"]{cursor:progress}
+body.rr-v2 .cleanDashHead .lead{max-width:620px!important}
+body.rr-v2 .cleanLookupForm .full:focus-visible{box-shadow:0 0 0 4px rgba(83,58,253,.14),0 12px 22px rgba(83,58,253,.22)!important}
+@media(max-width:820px){
+  body.rr-v2 .appPageHeader{gap:10px!important;margin-bottom:4px!important;padding-bottom:16px!important}
+  body.rr-v2 .appPageHeader .eyebrow{margin-bottom:2px!important}
+  body.rr-v2 .appPageHeader .lead{font-size:15.5px!important;line-height:1.45!important}
+}
+
 /* revamp-v2-12b: partner live API enrichment cards */
 .opsLivePanel{margin-top:22px!important}.opsLiveHead{display:flex;justify-content:space-between;gap:18px;align-items:flex-start;margin-bottom:18px}.opsLiveHead h2{margin:6px 0!important}.opsLiveHead p{margin:0;color:var(--muted,#5f6b7a)}.opsLiveGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.opsLiveCard{border:1px solid rgba(15,123,76,.16);background:linear-gradient(180deg,#fff,#f7fbff);border-radius:16px;padding:18px;box-shadow:0 12px 28px rgba(20,30,60,.08);display:grid;gap:7px}.opsLiveCard b{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:#0f7b4c}.opsLiveCard strong{font-size:20px;color:#18213a}.opsLiveCard span{font-weight:700;color:#5d6380}.opsLiveCard p{margin:0;color:#384156;line-height:1.45;font-size:14px}.opsLiveCard small{color:#758097;font-weight:700}
 @media(max-width:820px){.opsLiveHead{display:grid}.opsLiveGrid{grid-template-columns:1fr}.opsLiveCard{padding:16px}}
