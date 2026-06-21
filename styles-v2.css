@@ -339,3 +339,24 @@ body.rr-v2 .cleanForwardPanel .checklist{margin-top:2px}
   body.rr-v2 .checkline{padding:13px!important}
   body.rr-v2 .cleanForwardPanel{gap:10px!important}
 }
+
+/* revamp-v2-12: app card a11y and dense mobile cleanup */
+body.rr-v2 .lookupProgress [aria-current="step"],body.rr-v2 .miniTimeline [aria-current="step"],body.rr-v2 .detailTimeline [aria-current="step"]{box-shadow:0 0 0 3px rgba(83,58,253,.10)!important;border-color:#b9b9f9!important}
+body.rr-v2 .tag[aria-label]{white-space:nowrap}
+body.rr-v2 .tripCardTop .tag,body.rr-v2 .tripDetailHero .tag{flex:0 0 auto}
+body.rr-v2 .tripActionsSimple .btn:focus-visible{transform:none}
+@media(max-width:820px){
+  body.rr-v2 .cleanTripsSection{padding-top:12px!important;gap:12px!important}
+  body.rr-v2 .dashboardRow{padding-bottom:12px!important}
+  body.rr-v2 .dashboardRow h2{font-size:28px!important}
+  body.rr-v2 .customerTripCard{gap:12px!important}
+  body.rr-v2 .customerTripMeta div,body.rr-v2 .tripDetailSummary div,body.rr-v2 .accountTrustGrid div{padding:12px!important}
+  body.rr-v2 .lookupProgress span,body.rr-v2 .miniTimeline span{min-height:40px;display:flex;align-items:center;justify-content:center;text-align:center}
+  body.rr-v2 .detailTimeline div{min-height:46px}
+}
+@media(max-width:380px){
+  body.rr-v2 .cleanDashboard,body.rr-v2 .pageMain{padding-left:16px!important;padding-right:16px!important}
+  body.rr-v2 .cleanDashHead,body.rr-v2 .cleanLookupForm,body.rr-v2 .cleanForwardPanel,body.rr-v2 .customerTripCard,body.rr-v2 .accountPanelV2,body.rr-v2 .tripDetailCard{border-radius:12px!important}
+  body.rr-v2 .tripCardTop h3{font-size:22px!important}
+  body.rr-v2 .tripDetailHero h2{font-size:26px!important;line-height:1.04!important}
+}
