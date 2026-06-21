@@ -322,6 +322,40 @@ async function renderOwner(){
   box.innerHTML=ownerControls()+queueIntro+(sortedRows.length?sortedRows.map(ownerTripCard).join(''):`<div class="empty"><h3>No customer trips yet</h3><p>New customer bookings will appear here when monitoring starts.</p></div>`)+`<div id="ownerNoMatches" class="empty opsNoMatches" hidden><h3>No trips match this view</h3><p>Try another queue tab or search term.</p></div>`;
   applyOwnerFilter('All')
 }
+
+async function latestFlightEnrichment(tripId){
+  if(!isUuid(tripId))return [];
+  const {data,error}=await supabaseClient.from('flight_status_checks').select('source,status,observed_at,callsign,route,payload').eq('trip_id',tripId).order('observed_at',{ascending:false}).limit(6);
+  if(error)return [];
+  return data||[]
+}
+function formatObservedAt(ts){
+  if(!ts)return 'Not recorded';
+  try{return new Date(ts).toLocaleString([], {month:'short',day:'numeric',hour:'numeric',minute:'2-digit'})}catch{return ts}
+}
+function summarizeLivePayload(row){
+  const payload=row?.payload||{};
+  if(row.source==='adsb.lol'){
+    const ac=payload.aircraft||{};
+    const parts=[];
+    if(ac.alt_baro||ac.alt_geom)parts.push(`Alt ${escapeHtml(String(ac.alt_baro||ac.alt_geom))}`);
+    if(ac.gs)parts.push(`${escapeHtml(String(Math.round(ac.gs)))} kt`);
+    if(ac.lat&&ac.lon)parts.push(`${Number(ac.lat).toFixed(2)}, ${Number(ac.lon).toFixed(2)}`);
+    return parts.length?parts.join(' • '):escapeHtml(row.status||'No aircraft visible');
+  }
+  if(row.source==='aviationweather.gov'){
+    const metar=Array.isArray(payload.metar)?payload.metar:[];
+    return metar.length?metar.slice(0,2).map(m=>`${escapeHtml(m.icaoId||'APT')}: ${escapeHtml(m.rawOb||'Weather observed')}`).join('<br>'):escapeHtml(row.status||'Weather unavailable');
+  }
+  return escapeHtml(row.status||'Recorded')
+}
+function renderLiveFlightCards(rows=[]){
+  if(!rows.length)return `<section class="panel opsLivePanel"><div><span class="eyebrow">Live APIs</span><h2>No live enrichment yet</h2><p class="muted">The free live worker runs every 5 minutes for near-date trips once a flight number or route is known.</p></div></section>`;
+  const latestBySource=[];const seen=new Set();
+  rows.forEach(r=>{if(!seen.has(r.source)){seen.add(r.source);latestBySource.push(r)}});
+  return `<section class="panel opsLivePanel"><div class="opsLiveHead"><div><span class="eyebrow">Live APIs</span><h2>Real-time flight context</h2><p>Free ADS-B and airport weather checks. This does not change the airline reservation or run fare searches.</p></div><span class="mini muted">Updates every 5 min near travel day</span></div><div class="opsLiveGrid">${latestBySource.map(r=>`<div class="opsLiveCard"><b>${escapeHtml(r.source)}</b><strong>${escapeHtml(r.status||'Checked')}</strong><span>${escapeHtml(r.callsign||r.route||'Route context')}</span><p>${summarizeLivePayload(r)}</p><small>${escapeHtml(formatObservedAt(r.observed_at))}</small></div>`).join('')}</div></section>`
+}
+
 async function renderOwnerTrip(){
   const box=$('ownerTripDetail');if(!box)return;
   const user=await requireOwner(`partner-ops-trip.html${location.search}`);if(!user)return;if($('ownerWelcome'))$('ownerWelcome').textContent=user.email;
@@ -331,12 +365,13 @@ async function renderOwnerTrip(){
   if(error||!r){box.innerHTML=`<div class="panel"><h2>Access blocked or trip missing</h2><p>${escapeHtml(error?.message||'This trip could not be loaded.')}</p><a class="btn primary" href="partner-ops-dashboard.html">Ops dashboard</a></div>`;return}
   const privateNotes=await ownerNotesByTrip();
   const dueChecks=await dueChecksByTrip();
+  const liveRows=await latestFlightEnrichment(r.id);
   r.owner_notes=privateNotes[r.id]||'';r.due_checks=dueChecks[r.id]||[];
   const savings=Math.max(tripSavings(r),0),statusLabel=ownerStatusLabel(r.status),due=r.due_checks.length;
   const isArchived=statusLabel==='Archived';
   const workspaceActions=isArchived?ownerNoteButton(r.id,r.owner_notes,'Update archive note'):`<button class="btn ghost" data-action="owner-details" data-id="${escapeHtml(r.id)}">Verify trip details</button><button class="btn primary" data-action="owner-no-savings" data-id="${escapeHtml(r.id)}">Document fare check</button><button class="btn ghost" data-action="owner-review" data-id="${escapeHtml(r.id)}">Send to review</button>`;
   const sideActions=isArchived?`${ownerNoteButton(r.id,r.owner_notes,'Update archive note')}<a class="btn ghost" href="partner-ops-dashboard.html">Back to resolved archive</a>`:`<button class="btn ghost" data-action="owner-details" data-id="${escapeHtml(r.id)}">Verify lookup details</button><button class="btn ghost" data-action="owner-no-savings" data-id="${escapeHtml(r.id)}">Document routine fare check</button><button class="btn primary" data-action="owner-review" data-id="${escapeHtml(r.id)}">Document lower fare for review</button><button class="btn ghost" data-action="owner-payment" data-id="${escapeHtml(r.id)}" data-status="Invoice sent">Record invoice sent</button><button class="btn ghost" data-action="owner-payment" data-id="${escapeHtml(r.id)}" data-status="Paid">Record fee captured</button><button class="btn ghost" data-action="owner-status" data-id="${escapeHtml(r.id)}" data-status="Archived">Archive resolved trip</button>`;
-  box.innerHTML=`<section class="opsWorkspaceHero"><div><a class="mini" href="partner-ops-dashboard.html">← Back to ops dashboard</a><span class="opsPill ${ownerStatusClass(r.status,due)}">${due?'Due check':escapeHtml(statusLabel)}</span><h1>${escapeHtml(r.airline||'Airline')} ${escapeHtml(r.confirmation_no||'')}</h1><p>${escapeHtml(r.route||'Route pending')} • ${escapeHtml(r.travel_date||'Date pending')}</p></div><div class="opsHeroActions">${workspaceActions}</div></section>${due?`<div class="notice dueNotice"><b>${due} check due.</b> Compare the same airline, route, date and cabin. Do not contact customer until a lower eligible fare is verified and documented.</div>`:''}<section class="opsWorkspaceGrid"><div class="opsMainPanel"><h2>Trip details</h2><div class="opsDetailGrid"><div><b>Passenger</b><span>${escapeHtml(r.passenger_first||'')} ${escapeHtml(r.passenger_last||'')}</span></div><div><b>Date of birth</b><span>${escapeHtml(r.date_of_birth||'')}</span></div><div><b>Customer paid</b><span>${money(r.paid)}</span></div><div><b>Observed fare</b><span>${r.current_price?money(r.current_price):'Not recorded'}</span></div><div><b>Potential savings</b><span>${savings>0?money(savings):'None yet'}</span></div><div><b>Ops timing</b><span>${escapeHtml(ownerDueSummary(r))}</span></div><div><b>Fee status</b><span>${escapeHtml(r.payment_status||'Not billed')}</span></div><div><b>Ops status</b><span>${escapeHtml(statusLabel)}</span></div></div><div class="opsTimeline"><div class="done"><b>1</b><span>Booking received</span></div><div class="${statusLabel!=='Archived'?'done':''}"><b>2</b><span>Monitoring fare</span></div><div class="${statusLabel==='Review needed'?'done':''}"><b>3</b><span>Evidence review</span></div><div class="${r.payment_status==='Paid'?'done':''}"><b>4</b><span>Customer follow-up / resolved</span></div></div></div><aside class="opsSidePanel"><h3>Recommended next action</h3><p>${escapeHtml(ownerNextStep(r))}</p><div class="opsStack">${sideActions}</div></aside></section><section class="panel opsNotesPanel"><h2>Notes</h2><div class="grid two"><div>${r.notes?`<p><b>Customer note</b><br>${safeLines(r.notes)}</p>`:'<p class="muted">No customer note.</p>'}</div><div>${r.owner_notes?`<p><b>Internal note</b><br>${safeLines(r.owner_notes)}</p>`:'<p class="muted">No internal note yet.</p>'}</div></div><div class="actions">${ownerNoteButton(r.id,r.owner_notes,'Update internal note')}</div></section>`
+  box.innerHTML=`<section class="opsWorkspaceHero"><div><a class="mini" href="partner-ops-dashboard.html">← Back to ops dashboard</a><span class="opsPill ${ownerStatusClass(r.status,due)}">${due?'Due check':escapeHtml(statusLabel)}</span><h1>${escapeHtml(r.airline||'Airline')} ${escapeHtml(r.confirmation_no||'')}</h1><p>${escapeHtml(r.route||'Route pending')} • ${escapeHtml(r.travel_date||'Date pending')}</p></div><div class="opsHeroActions">${workspaceActions}</div></section>${due?`<div class="notice dueNotice"><b>${due} check due.</b> Compare the same airline, route, date and cabin. Do not contact customer until a lower eligible fare is verified and documented.</div>`:''}<section class="opsWorkspaceGrid"><div class="opsMainPanel"><h2>Trip details</h2><div class="opsDetailGrid"><div><b>Passenger</b><span>${escapeHtml(r.passenger_first||'')} ${escapeHtml(r.passenger_last||'')}</span></div><div><b>Date of birth</b><span>${escapeHtml(r.date_of_birth||'')}</span></div><div><b>Customer paid</b><span>${money(r.paid)}</span></div><div><b>Observed fare</b><span>${r.current_price?money(r.current_price):'Not recorded'}</span></div><div><b>Potential savings</b><span>${savings>0?money(savings):'None yet'}</span></div><div><b>Ops timing</b><span>${escapeHtml(ownerDueSummary(r))}</span></div><div><b>Fee status</b><span>${escapeHtml(r.payment_status||'Not billed')}</span></div><div><b>Ops status</b><span>${escapeHtml(statusLabel)}</span></div></div><div class="opsTimeline"><div class="done"><b>1</b><span>Booking received</span></div><div class="${statusLabel!=='Archived'?'done':''}"><b>2</b><span>Monitoring fare</span></div><div class="${statusLabel==='Review needed'?'done':''}"><b>3</b><span>Evidence review</span></div><div class="${r.payment_status==='Paid'?'done':''}"><b>4</b><span>Customer follow-up / resolved</span></div></div></div><aside class="opsSidePanel"><h3>Recommended next action</h3><p>${escapeHtml(ownerNextStep(r))}</p><div class="opsStack">${sideActions}</div></aside></section><section class="panel opsNotesPanel"><h2>Notes</h2><div class="grid two"><div>${r.notes?`<p><b>Customer note</b><br>${safeLines(r.notes)}</p>`:'<p class="muted">No customer note.</p>'}</div><div>${r.owner_notes?`<p><b>Internal note</b><br>${safeLines(r.owner_notes)}</p>`:'<p class="muted">No internal note yet.</p>'}</div></div><div class="actions">${ownerNoteButton(r.id,r.owner_notes,'Update internal note')}</div></section>${renderLiveFlightCards(liveRows)}`
 }
 function applyOwnerFilter(status=ownerActiveFilter){
   ownerActiveFilter=status||'All';

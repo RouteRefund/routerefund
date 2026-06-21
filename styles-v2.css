@@ -360,3 +360,7 @@ body.rr-v2 .tripActionsSimple .btn:focus-visible{transform:none}
   body.rr-v2 .tripCardTop h3{font-size:22px!important}
   body.rr-v2 .tripDetailHero h2{font-size:26px!important;line-height:1.04!important}
 }
+
+/* revamp-v2-12b: partner live API enrichment cards */
+.opsLivePanel{margin-top:22px!important}.opsLiveHead{display:flex;justify-content:space-between;gap:18px;align-items:flex-start;margin-bottom:18px}.opsLiveHead h2{margin:6px 0!important}.opsLiveHead p{margin:0;color:var(--muted,#5f6b7a)}.opsLiveGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.opsLiveCard{border:1px solid rgba(15,123,76,.16);background:linear-gradient(180deg,#fff,#f7fbff);border-radius:16px;padding:18px;box-shadow:0 12px 28px rgba(20,30,60,.08);display:grid;gap:7px}.opsLiveCard b{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:#0f7b4c}.opsLiveCard strong{font-size:20px;color:#18213a}.opsLiveCard span{font-weight:700;color:#5d6380}.opsLiveCard p{margin:0;color:#384156;line-height:1.45;font-size:14px}.opsLiveCard small{color:#758097;font-weight:700}
+@media(max-width:820px){.opsLiveHead{display:grid}.opsLiveGrid{grid-template-columns:1fr}.opsLiveCard{padding:16px}}

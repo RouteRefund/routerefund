@@ -26,9 +26,9 @@ Script: `scripts/free_flight_enrichment.py`
 
 Local cron wrapper: `~/.hermes/scripts/routerefund_free_flight_enrichment.sh`
 
-Scheduler: `RouteRefund free flight enrichment`, every 30 minutes, local-only delivery.
+Scheduler: `RouteRefund free flight enrichment`, every 5 minutes, local-only delivery.
 
-The worker only selects active trips with `flight_no` where `travel_date` is today, yesterday, tomorrow, or unknown. It stores owner-only rows in `public.flight_status_checks`.
+The worker only selects active trips with `flight_no` where `travel_date` is today, yesterday, tomorrow, or unknown. It stores owner-only rows in `public.flight_status_checks`, and the partner trip workspace shows the latest ADS-B/weather results.
 
 ## Safety boundaries
 
