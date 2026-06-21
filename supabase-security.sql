@@ -160,8 +160,8 @@ create trigger trips_queue_initial_monitoring_check
 after insert on public.trips
 for each row execute function public.queue_initial_monitoring_check();
 
--- Customers may update their own customer-facing notes, but owner-controlled workflow fields
--- must not be editable from a customer browser session even though the row is customer-owned.
+-- Customers may only update their own customer-facing notes. Everything else on a
+-- trip row is either sensitive identity/booking data or owner/automation workflow state.
 create or replace function public.protect_owner_trip_fields()
 returns trigger
 language plpgsql
@@ -173,14 +173,28 @@ begin
     return new;
   end if;
 
-  if new.status is distinct from old.status
+  if new.id is distinct from old.id
+    or new.user_id is distinct from old.user_id
+    or new.passenger_first is distinct from old.passenger_first
+    or new.passenger_last is distinct from old.passenger_last
+    or new.date_of_birth is distinct from old.date_of_birth
+    or new.airline is distinct from old.airline
+    or new.confirmation_no is distinct from old.confirmation_no
+    or new.flight_no is distinct from old.flight_no
+    or new.route is distinct from old.route
+    or new.travel_date is distinct from old.travel_date
+    or new.departure_time is distinct from old.departure_time
+    or new.paid is distinct from old.paid
     or new.current_price is distinct from old.current_price
+    or new.change_consent is distinct from old.change_consent
+    or new.status is distinct from old.status
     or new.payment_status is distinct from old.payment_status
     or new.last_checked_at is distinct from old.last_checked_at
     or new.next_check_at is distinct from old.next_check_at
     or new.monitoring_frequency_hours is distinct from old.monitoring_frequency_hours
+    or new.created_at is distinct from old.created_at
   then
-    raise exception 'Owner-only trip fields cannot be changed by customers';
+    raise exception 'Only customer notes can be changed from the customer dashboard';
   end if;
 
   return new;
