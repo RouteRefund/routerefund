@@ -251,3 +251,74 @@ body.rr-v2 .detailNotes span{white-space:normal}
   body.rr-v2 .accountPacketV2 span{text-align:left!important}
   body.rr-v2 .accountSafetyNote{grid-template-columns:1fr!important}
 }
+
+/* revamp-v2-10: public-page consistency pass */
+body.rr-v2 .btn{height:44px!important;min-height:44px!important;padding:0 18px!important;border-radius:8px!important;line-height:1!important;white-space:nowrap;text-align:center}
+body.rr-v2 .btn.big{height:50px!important;min-height:50px!important;padding:0 22px!important;font-size:16px!important}
+body.rr-v2 .actions{display:flex!important;gap:12px!important;flex-wrap:wrap!important;align-items:center!important;margin-top:20px}
+body.rr-v2 .actions .btn{flex:0 0 auto!important;min-width:150px!important}
+body.rr-v2 .pageMain{max-width:1120px!important;padding-top:48px!important;padding-bottom:72px!important}
+body.rr-v2 .pageMain>.section{padding:34px 0!important;margin:0!important}
+body.rr-v2 .pageMain h1{font-size:clamp(42px,6vw,64px)!important;line-height:1!important;letter-spacing:-.055em!important;max-width:860px}
+body.rr-v2 .pageMain h2{font-size:clamp(28px,3.4vw,42px)!important;line-height:1.05!important;letter-spacing:-.04em!important}
+body.rr-v2 .pageMain h3{font-size:23px!important;line-height:1.1!important;letter-spacing:-.025em!important}
+body.rr-v2 .pageMain p{color:var(--rr-slate);line-height:1.55}
+body.rr-v2 .pageMain .lead{font-size:20px!important;line-height:1.48!important;max-width:780px!important}
+body.rr-v2 .card,body.rr-v2 .panel,body.rr-v2 .faqItem,body.rr-v2 .faqShortcutGrid a,body.rr-v2 .coverageMatrixGrid div,body.rr-v2 .coveragePreflightGrid div,body.rr-v2 .handoffProofGrid div,body.rr-v2 .trustBoundaryGrid div,body.rr-v2 .trustProcessSteps div,body.rr-v2 .reviewSteps div,body.rr-v2 .coverageSteps div{background:#fff!important;border:1px solid var(--rr-line)!important;border-radius:14px!important;box-shadow:var(--rr-soft)!important;padding:22px!important}
+body.rr-v2 .grid.three,body.rr-v2 .grid.four,body.rr-v2 .rr-grid-3{gap:16px!important}
+body.rr-v2 .howHero,body.rr-v2 .trustHero,body.rr-v2 .faqHero,body.rr-v2 .forwardGuideHero,body.rr-v2 .contactHero{display:grid!important;grid-template-columns:minmax(0,1fr) minmax(320px,.52fr)!important;gap:28px!important;align-items:center!important}
+body.rr-v2 .howTrustCard,body.rr-v2 .faqSafetyCard,body.rr-v2 .contactSafety,body.rr-v2 .forwardSafetyCard{background:linear-gradient(135deg,#1c1e54,#061b31)!important;color:#fff!important;border-color:rgba(255,255,255,.16)!important;box-shadow:var(--rr-shadow)!important}
+body.rr-v2 .howTrustCard h2,body.rr-v2 .faqSafetyCard h2,body.rr-v2 .contactSafety h2,body.rr-v2 .forwardSafetyCard h2{color:#fff!important}
+body.rr-v2 .howTrustCard p,body.rr-v2 .faqSafetyCard p,body.rr-v2 .contactSafety p,body.rr-v2 .forwardSafetyCard p{color:rgba(255,255,255,.75)!important}
+body.rr-v2 .checklist{display:grid;gap:10px;list-style:none;margin:14px 0 0;padding:0}
+body.rr-v2 .checklist li{position:relative;padding:11px 12px 11px 38px!important;border:1px solid var(--rr-line);border-radius:10px;background:#f8fbff;color:var(--rr-label);font-weight:600;line-height:1.35}
+body.rr-v2 .checklist li:before{content:"";position:absolute;left:13px;top:14px;width:13px;height:13px;border-radius:50%;background:rgba(21,190,83,.18);border:1px solid rgba(21,190,83,.35)}
+body.rr-v2 .howTrustCard .checklist li,body.rr-v2 .faqSafetyCard .checklist li,body.rr-v2 .contactSafety .checklist li,body.rr-v2 .forwardSafetyCard .checklist li{background:rgba(255,255,255,.10)!important;border-color:rgba(255,255,255,.18)!important;color:#fff!important}
+body.rr-v2 .handoffProofGrid,body.rr-v2 .trustBoundaryGrid,body.rr-v2 .trustProcessSteps,body.rr-v2 .reviewSteps,body.rr-v2 .coverageMatrixGrid,body.rr-v2 .coveragePreflightGrid,body.rr-v2 .coverageSteps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px!important}
+body.rr-v2 .reviewSteps{grid-template-columns:1fr!important}
+body.rr-v2 .handoffProofGrid b,body.rr-v2 .trustBoundaryGrid b,body.rr-v2 .trustProcessSteps b,body.rr-v2 .reviewSteps b,body.rr-v2 .coverageMatrixGrid b,body.rr-v2 .coveragePreflightGrid b,body.rr-v2 .coverageSteps b{display:block;color:var(--rr-purple);font-size:12px;text-transform:uppercase;letter-spacing:.06em;margin-bottom:7px}
+body.rr-v2 .handoffProofGrid span,body.rr-v2 .trustBoundaryGrid span,body.rr-v2 .trustProcessSteps span,body.rr-v2 .reviewSteps span,body.rr-v2 .coverageMatrixGrid span,body.rr-v2 .coveragePreflightGrid span,body.rr-v2 .coverageSteps span{display:block;color:var(--rr-slate);line-height:1.42;font-weight:500}
+body.rr-v2 .howReviewPanel,body.rr-v2 .coverageExplainer,body.rr-v2 .trustProcess,body.rr-v2 .contactExpectations{display:grid;grid-template-columns:minmax(0,.85fr) minmax(320px,1fr);gap:22px;align-items:center;background:linear-gradient(135deg,#1c1e54,#061b31)!important;color:#fff!important;border-radius:16px!important;padding:30px!important;box-shadow:var(--rr-shadow)!important}
+body.rr-v2 .howReviewPanel h2,body.rr-v2 .coverageExplainer h2,body.rr-v2 .trustProcess h2,body.rr-v2 .contactExpectations h2{color:#fff!important}
+body.rr-v2 .howReviewPanel p,body.rr-v2 .coverageExplainer p,body.rr-v2 .trustProcess p,body.rr-v2 .contactExpectations p{color:rgba(255,255,255,.74)!important}
+body.rr-v2 .cta:not(.rr-cta),body.rr-v2 .airlineCta{background:linear-gradient(135deg,#533afd,#1c1e54)!important;color:#fff!important;border-radius:16px!important;padding:32px!important;box-shadow:var(--rr-shadow)!important;text-align:left!important}
+body.rr-v2 .cta:not(.rr-cta) h2,body.rr-v2 .airlineCta h2{color:#fff!important}.rr-v2 .cta:not(.rr-cta) p,.rr-v2 .airlineCta p{color:rgba(255,255,255,.76)!important}.rr-v2 .cta:not(.rr-cta) .btn,.rr-v2 .airlineCta .btn{background:#fff!important;color:var(--rr-purple)!important;box-shadow:none!important}
+body.rr-v2 details.faqItem{padding:0!important;overflow:hidden}body.rr-v2 details.faqItem summary{padding:18px 20px;cursor:pointer;font-weight:700;color:var(--rr-ink)}body.rr-v2 details.faqItem p{padding:0 20px 18px;margin:0}
+body.rr-v2 .faqShortcutGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:8px 0 28px}
+body.rr-v2 .faqList{display:grid;gap:12px;margin:28px 0}.rr-v2 .faqList h2{margin-bottom:4px}
+body.rr-v2 .legal{max-width:860px}.rr-v2 .legal h2{margin-top:28px}.rr-v2 .legal p{font-size:16px}
+@media(max-width:820px){
+  body.rr-v2 .btn,body.rr-v2 .btn.big{height:46px!important;min-height:46px!important;width:100%!important;min-width:0!important;font-size:15px!important}
+  body.rr-v2 .actions{display:grid!important;grid-template-columns:1fr!important;gap:10px!important}
+  body.rr-v2 .pageMain{max-width:440px!important;padding:28px 20px 56px!important}.rr-v2 .pageMain>.section{padding:24px 0!important}.rr-v2 .pageMain h1{font-size:34px!important;line-height:1.04!important}.rr-v2 .pageMain h2{font-size:28px!important}.rr-v2 .pageMain .lead{font-size:16px!important;line-height:1.48!important}
+  body.rr-v2 .howHero,body.rr-v2 .trustHero,body.rr-v2 .faqHero,body.rr-v2 .forwardGuideHero,body.rr-v2 .contactHero,body.rr-v2 .howReviewPanel,body.rr-v2 .coverageExplainer,body.rr-v2 .trustProcess,body.rr-v2 .contactExpectations{grid-template-columns:1fr!important;gap:16px!important;padding-left:0!important;padding-right:0!important}
+  body.rr-v2 .howReviewPanel,body.rr-v2 .coverageExplainer,body.rr-v2 .trustProcess,body.rr-v2 .contactExpectations,body.rr-v2 .cta:not(.rr-cta),body.rr-v2 .airlineCta{padding:22px!important;border-radius:14px!important}
+  body.rr-v2 .handoffProofGrid,body.rr-v2 .trustBoundaryGrid,body.rr-v2 .trustProcessSteps,body.rr-v2 .coverageMatrixGrid,body.rr-v2 .coveragePreflightGrid,body.rr-v2 .coverageSteps,body.rr-v2 .faqShortcutGrid{grid-template-columns:1fr!important}
+  body.rr-v2 .card,body.rr-v2 .panel,body.rr-v2 .faqItem,body.rr-v2 .faqShortcutGrid a,body.rr-v2 .coverageMatrixGrid div,body.rr-v2 .coveragePreflightGrid div,body.rr-v2 .handoffProofGrid div,body.rr-v2 .trustBoundaryGrid div,body.rr-v2 .trustProcessSteps div,body.rr-v2 .reviewSteps div,body.rr-v2 .coverageSteps div{padding:18px!important;border-radius:12px!important}
+}
+
+/* revamp-v2-10b: nav button size consistency */
+body.rr-v2 .nav .mobileMenuBtn{display:none!important}
+@media(max-width:820px){
+  body.rr-v2 .nav .links{display:flex!important;align-items:center!important;gap:8px!important;flex:0 0 auto!important}
+  body.rr-v2 .nav .links .btn,body.rr-v2 .nav .mobileMenuBtn{width:auto!important;min-width:72px!important;height:38px!important;min-height:38px!important;padding:0 12px!important;font-size:13px!important;border-radius:8px!important;line-height:1!important}
+  body.rr-v2 .nav .mobileMenuBtn{display:inline-flex!important;background:var(--rr-indigo)!important;color:#fff!important;border-color:var(--rr-indigo)!important}
+  body.rr-v2 .nav .links .primary{display:none!important}
+}
+@media(max-width:380px){body.rr-v2 .nav .links .btn,body.rr-v2 .nav .mobileMenuBtn{min-width:64px!important;padding:0 10px!important;font-size:12.5px!important}}
+
+/* revamp-v2-10c: organize proof/quote-style sections */
+body.rr-v2 .handoffProof{display:grid!important;grid-template-columns:minmax(0,.9fr) minmax(0,1.3fr)!important;gap:18px!important;align-items:stretch!important}
+body.rr-v2 .handoffProofIntro,body.rr-v2 .trustBoundaryIntro,body.rr-v2 .coverageMatrixIntro,body.rr-v2 .coveragePreflightIntro{background:#fff!important;color:var(--rr-ink)!important;border:1px solid var(--rr-line)!important;border-radius:14px!important;box-shadow:var(--rr-soft)!important;padding:24px!important;min-width:0!important}
+body.rr-v2 .handoffProofIntro h2,body.rr-v2 .trustBoundaryIntro h2,body.rr-v2 .coverageMatrixIntro h2,body.rr-v2 .coveragePreflightIntro h2{color:var(--rr-ink)!important;margin:10px 0!important}
+body.rr-v2 .handoffProofIntro p,body.rr-v2 .trustBoundaryIntro p,body.rr-v2 .coverageMatrixIntro p,body.rr-v2 .coveragePreflightIntro p{color:var(--rr-slate)!important;margin:0!important;font-size:16px!important}
+body.rr-v2 .handoffProofGrid{grid-template-columns:repeat(3,minmax(0,1fr))!important;align-self:stretch!important}
+body.rr-v2 .handoffProofGrid div{display:flex;flex-direction:column;justify-content:flex-start;min-height:100%!important}
+body.rr-v2 .howReviewPanel{overflow:hidden!important}.rr-v2 .howReviewPanel h2{max-width:520px}.rr-v2 .howReviewPanel .reviewSteps div{box-shadow:none!important}
+body.rr-v2 .fitStrip{display:grid!important;grid-template-columns:1fr 1fr!important;gap:18px!important}.rr-v2 .fitCard{border-radius:16px!important;padding:24px!important;box-shadow:var(--rr-soft)!important}
+@media(max-width:820px){body.rr-v2 .handoffProof,body.rr-v2 .fitStrip{grid-template-columns:1fr!important;gap:14px!important}body.rr-v2 .handoffProofGrid{grid-template-columns:1fr!important}body.rr-v2 .handoffProofIntro,body.rr-v2 .trustBoundaryIntro,body.rr-v2 .coverageMatrixIntro,body.rr-v2 .coveragePreflightIntro,body.rr-v2 .fitCard{padding:18px!important;border-radius:12px!important}}
+
+/* revamp-v2-10d: force padded feature panels over generic section rules */
+body.rr-v2 .pageMain>.section.howReviewPanel,body.rr-v2 .pageMain>.section.coverageExplainer,body.rr-v2 .pageMain>.section.trustProcess,body.rr-v2 .pageMain>.section.contactExpectations{padding:34px!important}
+body.rr-v2 .pageMain>.section.cta,body.rr-v2 .pageMain>.section.airlineCta{padding:32px!important}
+@media(max-width:820px){body.rr-v2 .pageMain>.section.howReviewPanel,body.rr-v2 .pageMain>.section.coverageExplainer,body.rr-v2 .pageMain>.section.trustProcess,body.rr-v2 .pageMain>.section.contactExpectations,body.rr-v2 .pageMain>.section.cta,body.rr-v2 .pageMain>.section.airlineCta{padding:22px!important}}
