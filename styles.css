@@ -391,6 +391,22 @@ body[data-page="owner"] main.wrap{padding-bottom:70px}.ownerToolbar{display:grid
 .coverageSteps span{display:block;color:var(--muted);font-weight:850;line-height:1.4}
 @media(max-width:760px){.coverageExplainer{grid-template-columns:1fr;gap:12px;padding-top:4px}.coverageExplainer>div:first-child{padding:22px;border-radius:24px}.coverageSteps{gap:10px}.coverageSteps div{padding:15px 16px;border-radius:18px}}
 
+/* airline-coverage-guide-1: set expectations before trip intake */
+.coverageMatrix{display:grid;grid-template-columns:minmax(0,.82fr) minmax(320px,1.18fr);gap:20px;align-items:stretch;padding-top:2px}
+.coverageMatrixIntro{background:linear-gradient(135deg,#10231f,#123943);color:#fff;border:1px solid rgba(255,255,255,.10);border-radius:28px;padding:26px;box-shadow:0 18px 48px rgba(18,57,67,.14);overflow:hidden;position:relative}
+.coverageMatrixIntro:after{content:'';position:absolute;right:-48px;top:-52px;width:150px;height:150px;border-radius:50%;background:rgba(232,180,79,.18)}
+.coverageMatrixIntro .eyebrow{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.22);color:#e8f5e5;position:relative;z-index:1}
+.coverageMatrixIntro h2{color:#fff;margin:12px 0 10px;position:relative;z-index:1}
+.coverageMatrixIntro p{color:rgba(255,255,255,.76);font-weight:780;line-height:1.55;position:relative;z-index:1}
+.coverageMatrixGrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.coverageMatrixGrid div{background:#fff;border:1px solid #e5eee1;border-radius:22px;padding:17px 18px;box-shadow:0 12px 30px rgba(18,57,67,.06)}
+.coverageMatrixGrid b{display:block;margin-bottom:6px;color:#10231f;font-size:13px;text-transform:uppercase;letter-spacing:.045em}
+.coverageMatrixGrid span{display:block;color:var(--muted);font-weight:850;line-height:1.42}
+.coverageMatrixGrid div:nth-child(2){background:#f8fbf5;border-color:#d9ead7}.coverageMatrixGrid div:nth-child(3){background:#fff8e6;border-color:#f0d79a}.coverageMatrixGrid div:nth-child(4){background:#fff1ee;border-color:#ffd4cd}
+.coverageMatrixGrid div:nth-child(3) b{color:#704400}.coverageMatrixGrid div:nth-child(4) b{color:#9a3128}
+@media(max-width:860px){.coverageMatrix{grid-template-columns:1fr;gap:12px}.coverageMatrixIntro{padding:24px;border-radius:26px}.coverageMatrixIntro:after{display:none}}
+@media(max-width:640px){.coverageMatrix{padding-top:0}.coverageMatrixIntro{padding:22px;border-radius:24px}.coverageMatrixIntro h2{font-size:28px;line-height:1.08}.coverageMatrixGrid{grid-template-columns:1fr;gap:10px}.coverageMatrixGrid div{padding:15px 16px;border-radius:18px}}
+
 /* landing-sticky-cta-1: mobile-first persistent conversion path */
 .mobileStickyCta{display:none}
 @media(max-width:640px){
