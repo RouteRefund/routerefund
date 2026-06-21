@@ -385,6 +385,26 @@ body.rr-v2 .cleanLookupForm .full:focus-visible{box-shadow:0 0 0 4px rgba(83,58,
   body.rr-v2 .appPageHeader .lead{font-size:15.5px!important;line-height:1.45!important}
 }
 
+/* revamp-v2-15: mobile menu + account privacy finish */
+body.rr-v2 .modalCard{position:relative}
+body.rr-v2 .modalCard .modalClose{position:absolute;right:14px;top:14px;width:36px;height:36px;border:1px solid var(--rr-line);border-radius:10px;background:#fff;color:var(--rr-ink);font-size:24px;line-height:1;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:none}
+body.rr-v2 .modalCard .modalClose:hover{border-color:#b9b9f9;color:var(--rr-purple)}
+body.rr-v2 .modalCard .modalClose:focus-visible{outline:3px solid rgba(83,58,253,.28);outline-offset:2px}
+body.rr-v2 .modalCard .mobileMenuList{display:grid;gap:10px;margin-top:14px}
+body.rr-v2 .modalCard .mobileMenuList a{display:flex;align-items:center;justify-content:space-between;min-height:46px;padding:0 14px;border:1px solid var(--rr-line);border-radius:10px;background:#fff;color:var(--rr-ink);font-weight:700}
+body.rr-v2 .modalCard .mobileMenuList a:after{content:"›";color:var(--rr-purple);font-size:20px;line-height:1}
+body.rr-v2 .modalCard .mobileMenuList a.mobileMenuPrimary{background:linear-gradient(135deg,var(--rr-purple),var(--rr-indigo));border-color:transparent;color:#fff;box-shadow:0 12px 22px rgba(83,58,253,.20)}
+body.rr-v2 .modalCard .mobileMenuList a.mobileMenuPrimary:after{color:#fff}
+body.rr-v2 .modalCard .mobileMenuPromise{margin-top:14px;padding:13px 14px;border:1px solid rgba(21,190,83,.26);border-radius:10px;background:rgba(21,190,83,.08);display:grid;gap:4px}
+body.rr-v2 .modalCard .mobileMenuPromise b{color:var(--rr-green-text);font-size:12px;text-transform:uppercase;letter-spacing:.055em}
+body.rr-v2 .modalCard .mobileMenuPromise span{color:var(--rr-label);font-size:14px;line-height:1.42;font-weight:600}
+body.rr-v2 .modalCard .mobileMenuClose{margin-top:12px;width:100%!important;color:var(--rr-ink)!important;background:#fff!important}
+body.rr-v2 .accountTrustGrid div:nth-child(3) span{color:var(--rr-green-text)}
+@media(max-width:820px){
+  body.rr-v2 .modalCard h2{font-size:26px!important;line-height:1.06!important}
+  body.rr-v2 .modalCard p{font-size:15px!important;line-height:1.45!important}
+}
+
 /* revamp-v2-12b: partner live API enrichment cards */
 .opsLivePanel{margin-top:22px!important}.opsLiveHead{display:flex;justify-content:space-between;gap:18px;align-items:flex-start;margin-bottom:18px}.opsLiveHead h2{margin:6px 0!important}.opsLiveHead p{margin:0;color:var(--muted,#5f6b7a)}.opsLiveGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.opsLiveCard{border:1px solid rgba(15,123,76,.16);background:linear-gradient(180deg,#fff,#f7fbff);border-radius:16px;padding:18px;box-shadow:0 12px 28px rgba(20,30,60,.08);display:grid;gap:7px}.opsLiveCard b{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:#0f7b4c}.opsLiveCard strong{font-size:20px;color:#18213a}.opsLiveCard span{font-weight:700;color:#5d6380}.opsLiveCard p{margin:0;color:#384156;line-height:1.45;font-size:14px}.opsLiveCard small{color:#758097;font-weight:700}
 @media(max-width:820px){.opsLiveHead{display:grid}.opsLiveGrid{grid-template-columns:1fr}.opsLiveCard{padding:16px}}
