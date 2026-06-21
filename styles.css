@@ -600,3 +600,10 @@ body[data-page="info"] .links a.primary{color:#fff}
 .firstWeekSteps b{position:absolute;left:17px;top:18px;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,#0f7b4c,#123943);color:#fff;font-weight:950;box-shadow:0 10px 18px rgba(15,123,76,.18)}
 .firstWeekSteps h3{margin:0 0 6px;font-size:18px}.firstWeekSteps p{margin:0;color:var(--muted);font-weight:800;line-height:1.42}
 @media(max-width:860px){.firstWeekFlow{grid-template-columns:1fr;gap:12px;padding-top:8px}.firstWeekIntro{padding:22px;border-radius:24px}.firstWeekSteps{grid-template-columns:1fr}.firstWeekSteps div{padding:16px 16px 16px 54px;border-radius:20px}.firstWeekSteps b{left:15px;top:16px}}
+
+/* hero-forward-1: make the easiest confirmation handoff visible in the first viewport */
+.heroForward{margin-top:20px;padding:16px 17px;border:1px solid #d9ead7;border-radius:20px;background:linear-gradient(135deg,#f8fbf5,#fffdf8);box-shadow:0 12px 28px rgba(18,57,67,.06)}
+.heroForward span{display:block;margin-bottom:5px;color:#245f3e;font-size:12px;font-weight:950;text-transform:uppercase;letter-spacing:.055em}
+.heroForward b{display:block;color:#10231f;font-size:17px;line-height:1.28;overflow-wrap:anywhere}
+.heroForward a{display:inline-flex;margin-top:10px;color:#0b5d3b;font-weight:950;text-decoration:underline;text-underline-offset:3px}
+@media(max-width:640px){.heroForward{margin-top:16px;padding:15px;border-radius:18px}.heroForward b{font-size:15px}.heroForward a{font-size:14px}}
