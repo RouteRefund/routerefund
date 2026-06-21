@@ -664,3 +664,8 @@ body[data-page="info"] .links a.primary{color:#fff}
   .cleanHeroPanel{margin-top:18px!important}.cleanSteps li{padding:13px!important;border-radius:18px!important}.cleanSteps b{font-size:14px!important}.cleanSteps span{font-size:12.5px!important}
 }
 @media(max-width:380px){.cleanHero h1,.hero h1{font-size:32px!important;max-width:310px!important}.cleanHero .lead,.hero .lead{font-size:14.8px!important}.brand{font-size:16.5px!important}.links .btn{padding:0 10px!important}}
+
+/* mobile-rebuild-3: fix Start tracking dark fit card after global mobile card override */
+@media(max-width:700px){
+  .preLoginSafety{background:linear-gradient(145deg,#10231f,#123943)!important;color:#fff!important;border:0!important;box-shadow:0 18px 42px rgba(16,35,31,.18)!important}.preLoginSafety h2{color:#fff!important}.preLoginSafety .checklist li{background:rgba(255,255,255,.10)!important;border:1px solid rgba(255,255,255,.18)!important;color:#fff!important}.preLoginSafety .checklist li:before{background:#e8f5e5!important;color:#0f7b4c!important}
+}
