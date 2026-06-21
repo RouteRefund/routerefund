@@ -3,102 +3,116 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>RouteRefund | Automatic flight refund monitoring</title>
-  <meta name="description" content="RouteRefund watches direct-booked flights after purchase for eligible lower fares. No upfront fee, no password sharing, no surprise airline changes." />
-  <meta property="og:title" content="RouteRefund | Automatic flight refund monitoring" />
-  <meta property="og:description" content="Add your flight, let RouteRefund verify the reservation, and get notified when a reviewed savings opportunity appears." />
-  <meta property="og:type" content="website" />
-  <link rel="stylesheet" href="styles.css?v=mobile-rebuild-3" />
-  <link rel="icon" href="/favicon.ico?v=logo-a-1" sizes="any" />
-  <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png?v=logo-a-1" />
-  <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16.png?v=logo-a-1" />
-  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png?v=logo-a-1" />
-  <link rel="manifest" href="/site.webmanifest" />
-  <meta name="theme-color" content="#0f7b4c" />
+  <title>RouteRefund | Flight savings after you book</title>
+  <meta name="description" content="RouteRefund monitors booked flights for eligible savings and refund opportunities without asking for airline passwords." />
+  <link rel="icon" type="image/png" href="/assets/favicon-32.png?v=logo-a-1">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css?v=revamp-v2-3" />
+  <link rel="stylesheet" href="styles-v2.css?v=revamp-v2-3" />
 </head>
-<body data-page="home">
-  <nav class="nav"><div class="wrap navin"><a class="brand" href="index.html"><span class="logo"><img src="/assets/favicon-32.png?v=logo-a-1" alt="" /></span>RouteRefund</a><div class="links"><a class="hide-sm" href="how-it-works.html">How it works</a><a class="hide-sm" href="supported-airlines.html">Airlines</a><a class="hide-sm" href="trust-center.html">Trust</a><a class="hide-sm" href="faq.html">FAQ</a><a class="btn ghost" href="login.html">Log in</a><a class="btn primary" href="add-trip.html">Start tracking</a></div></div></nav>
-  <main>
-    <section class="hero wrap cleanHero">
-      <div class="cleanHeroCopy">
-        <span class="eyebrow">After-booking flight savings</span>
-        <h1>Your booked flight, watched for savings.</h1>
-        <p class="lead">Add a direct-booked flight. RouteRefund looks up the reservation, monitors eligible fare changes, and brings you reviewed options before any airline action is considered.</p>
-        <div class="actions"><a class="btn primary big" href="add-trip.html">Start tracking</a><a class="btn ghost big" href="how-it-works.html">See how it works</a></div>
-        <p class="mini">No upfront fee. No airline password sharing. No automatic canceling, changing, or rebooking.</p>
-      </div>
-      <div class="panel cleanHeroPanel">
-        <span class="eyebrow">What happens after you submit</span>
-        <ol class="cleanSteps">
-          <li><b>Reservation lookup starts</b><span>We use the airline, confirmation code, passenger name, and DOB to verify the booked trip when supported.</span></li>
-          <li><b>Your dashboard updates</b><span>Route, date, and flight details appear once the reservation is found or reviewed.</span></li>
-          <li><b>Monitoring begins</b><span>If a lower eligible option appears, RouteRefund reviews it before contacting you.</span></li>
-        </ol>
-      </div>
-    </section>
-
-    <section class="wrap cleanTrustBar" aria-label="RouteRefund promises">
-      <div><b>No upfront fee</b><span>Start free. RouteRefund is paid only from savings we help capture.</span></div>
-      <div><b>You stay in control</b><span>We never make surprise airline changes.</span></div>
-      <div><b>Private by design</b><span>Do not send passwords, one-time codes, or card numbers.</span></div>
-    </section>
-
-    <section class="wrap section cleanSplit">
-      <div>
-        <span class="eyebrow">Simple customer flow</span>
-        <h2>Add the trip once. We handle the watching.</h2>
-        <p>RouteRefund is built for travelers who booked directly with the airline and do not want to keep refreshing prices. Submit the basics or forward the confirmation email, then use your dashboard to track status, delete test trips, or see when a trip enters review.</p>
-      </div>
-      <div class="cards two grid">
-        <div class="card"><h3>Manual trip entry</h3><p>Choose airline, enter confirmation code, passenger name, DOB, and authorization. For supported airlines, lookup starts automatically.</p></div>
-        <div class="card"><h3>Forward confirmation</h3><p>Send the airline confirmation to <b>trips@routerefund.com</b>. RouteRefund can organize details from the email without inbox access.</p></div>
-      </div>
-    </section>
-
-    <section id="how" class="wrap section"><h2>How RouteRefund works</h2><div class="cards three grid"><div class="card"><span class="num">1</span><h3>Submit a booked flight</h3><p>Use a direct airline booking with a real confirmation code. The reservation stays in your airline account.</p></div><div class="card"><span class="num">2</span><h3>We verify and monitor</h3><p>RouteRefund looks up supported reservations, fills your dashboard, and watches for like-for-like savings signals.</p></div><div class="card"><span class="num">3</span><h3>You approve next steps</h3><p>If a reviewed option looks eligible, you see the tradeoffs before any airline action is considered.</p></div></div></section>
-
-    <section class="wrap section cleanSplit reverse">
-      <div class="panel cleanDarkPanel">
-        <span class="eyebrow">Current automation</span>
-        <h2>Built to become automation-first.</h2>
-        <p>American Airlines lookup is already working from customer-submitted details. Other airlines fall back to email parsing or partner review until their lookup flow is stable.</p>
-      </div>
-      <div class="cleanChecklist">
-        <div><b>American Airlines</b><span>Reservation lookup can find real trips and fill route/date/flight.</span></div>
-        <div><b>Other major airlines</b><span>Queued for airline-by-airline automation and safe fallbacks.</span></div>
-        <div><b>Human review remains</b><span>Potential savings are checked before customer outreach.</span></div>
-      </div>
-    </section>
-
-    <section class="wrap section fitStrip cleanFit"><div class="fitCard fitGood"><span class="eyebrow">Best fit</span><h2>Use RouteRefund for direct-booked flights.</h2><ul class="checklist"><li>You booked with a supported airline</li><li>You have the confirmation code and passenger details</li><li>You want reviewed savings without constant manual checking</li></ul></div><div class="fitCard fitCareful"><span class="eyebrow">Not a fit</span><h2>We will not ask for risky access.</h2><ul class="checklist"><li>No airline passwords or email inbox access</li><li>No one-time security codes</li><li>No automatic canceling or rebooking without approval</li></ul></div></section>
-
-    <section id="trust" class="wrap section split"><div><h2>Built for trust from day one.</h2><p>Flight details are sensitive. RouteRefund separates customer and partner access, keeps exact savings under review until verified, and uses secure payment links instead of storing card numbers in the app.</p></div><div class="panel"><ul class="checklist"><li>Customers only see their own trips</li><li>Partner portal is separate and restricted</li><li>Trip authorization is collected before monitoring</li><li>Customers can delete test or duplicate trips from the dashboard</li></ul></div></section>
-
-    <section class="wrap section cleanFaq"><div class="panel"><h2>Common questions</h2><h3>Does RouteRefund change my flight automatically?</h3><p>No. RouteRefund monitors and reviews. You stay in control of airline actions.</p><h3>What do I need to submit?</h3><p>Airline, confirmation code, passenger name, DOB, and authorization. You can also forward the airline confirmation email.</p><h3>How does RouteRefund get paid?</h3><p>No upfront fee. RouteRefund is paid from savings we help capture, with details shown before payment.</p><p><a href="faq.html">Read the full FAQ →</a></p></div></section>
-
-    <section class="wrap section cta"><h2>Start tracking your flight.</h2><p>Add your booked flight and let RouteRefund watch for eligible savings.</p><a class="btn primary big" href="add-trip.html">Start tracking</a></section>
-  </main>
-  <footer class="siteFooter">
-    <div class="wrap siteFooterInner">
-      <div>
-        <a class="brand footerBrand" href="index.html"><span class="logo"><img src="/assets/favicon-32.png?v=logo-a-1" alt="" /></span>RouteRefund</a>
-        <p>Flight savings monitoring for direct-booked trips, with conservative review and no surprise airline changes.</p>
-      </div>
-      <nav aria-label="Footer">
+<body class="rr-v2" data-page="home">
+  <nav class="nav">
+    <div class="navin wrap">
+      <a class="brand" href="index.html"><span class="logo"><img src="/assets/favicon-32.png?v=logo-a-1" alt=""></span>RouteRefund</a>
+      <div class="links">
         <a href="how-it-works.html">How it works</a>
         <a href="supported-airlines.html">Airlines</a>
         <a href="trust-center.html">Trust</a>
-        <a href="faq.html">FAQ</a>
-        <a href="privacy.html">Privacy</a>
-        <a href="terms.html">Terms</a>
-        <a href="contact.html">Contact</a>
-      </nav>
+        <a class="btn ghost" href="login.html">Log in</a>
+        <a class="btn primary" href="add-trip.html">Start tracking</a>
+        <button class="btn ghost mobileMenuBtn" data-action="mobile-menu" aria-label="Open menu">Menu</button>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <section class="rr-hero">
+      <div class="rr-hero-grid">
+        <div class="rr-hero-copy">
+          <span class="eyebrow">After-booking flight savings</span>
+          <h1>Your flight is booked. RouteRefund keeps watching.</h1>
+          <p class="lead">Add a booked flight once. We look up the reservation, monitor eligible fare changes, and bring you reviewed options before anything changes with the airline.</p>
+          <div class="rr-actions">
+            <a class="btn primary big" href="add-trip.html">Start tracking free</a>
+            <a class="btn ghost big" href="how-it-works.html">See the process</a>
+          </div>
+          <div class="rr-proof">
+            <span>No upfront fee</span>
+            <span>No airline password sharing</span>
+            <span>No surprise rebooking</span>
+          </div>
+        </div>
+        <div class="rr-device" aria-label="RouteRefund flight monitoring preview">
+          <div class="rr-device-top"><span class="rr-dot"></span><span class="rr-dot"></span><span class="rr-dot"></span></div>
+          <div class="rr-device-body">
+            <div class="rr-status-card">
+              <strong>Reservation found</strong>
+              <div class="rr-route"><span>DFW</span><i class="rr-arrow"></i><span>GRR</span></div>
+              <p>American Airlines • AA 981 • Monitoring active</p>
+            </div>
+            <div class="rr-found">RouteRefund is watching for eligible savings.</div>
+            <div class="rr-status-card">
+              <strong>Customer control</strong>
+              <p>Every next step is reviewed before outreach. Customers can delete test trips anytime.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="rr-section">
+      <div class="rr-section-inner">
+        <div class="rr-section-head">
+          <span class="eyebrow">Simple flow</span>
+          <h2>Designed to feel automatic, with human review where it matters.</h2>
+          <p>RouteRefund is built around the customer doing less: submit the trip, let the system look it up, and wait for verified next steps.</p>
+        </div>
+        <div class="rr-grid-3">
+          <div class="rr-card"><b>1. Add trip</b><h3>Enter the basics</h3><p>Airline, confirmation number, passenger name, and date of birth are enough to start lookup for supported flights.</p></div>
+          <div class="rr-card"><b>2. Lookup starts</b><h3>Reservation details fill in</h3><p>For supported airlines, RouteRefund attempts to pull route, date, and flight details automatically.</p></div>
+          <div class="rr-card"><b>3. We monitor</b><h3>You approve next steps</h3><p>If there is a possible opportunity, RouteRefund reviews it before contacting you. No automatic airline changes.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="rr-section rr-dark">
+      <div class="rr-section-inner">
+        <div class="rr-section-head">
+          <span class="eyebrow">Built for trust</span>
+          <h2>No sketchy access. No customer confusion.</h2>
+          <p>RouteRefund should feel like a private travel assistant, not a form dump. The product is intentionally strict about what it asks for.</p>
+        </div>
+        <div class="rr-grid-3">
+          <div class="rr-card"><b>Privacy boundary</b><h3>Never send passwords</h3><p>Customers should not share airline logins, email passwords, payment card numbers, or one-time codes.</p></div>
+          <div class="rr-card"><b>Customer-owned</b><h3>Delete test trips</h3><p>Customers can remove their own trips from RouteRefund without affecting airline reservations.</p></div>
+          <div class="rr-card"><b>Automation-first</b><h3>Human fallback</h3><p>AA lookup is working; other airlines route through queued automation and manual review when blocked.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="rr-section">
+      <div class="rr-cta">
+        <div>
+          <h2>Start with one booked flight.</h2>
+          <p>Submit a direct-booked flight and RouteRefund will begin lookup and monitoring where supported.</p>
+        </div>
+        <a class="btn primary big" href="add-trip.html">Start tracking</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="siteFooter">
+    <div class="siteFooterInner">
+      <div><a class="brand" href="index.html"><span class="logo"><img src="/assets/favicon-32.png?v=logo-a-1" alt=""></span>RouteRefund</a><p>Flight savings monitoring after you book.</p></div>
+      <nav aria-label="Footer"><a href="how-it-works.html">How it works</a><a href="supported-airlines.html">Airlines</a><a href="trust-center.html">Trust</a><a href="faq.html">FAQ</a><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a><a href="contact.html">Contact</a></nav>
     </div>
   </footer>
-  <div class="mobileStickyCta" aria-label="Start tracking your booked flight"><span>No upfront fee. No surprise changes.</span><a class="btn primary" href="add-trip.html">Start tracking</a></div>
-  <div id="toast" class="toast"></div>
   <div id="modal" class="modal"><div id="modalCard" class="modalCard"></div></div>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <div id="toast" class="toast"></div>
   <script src="config.js"></script>
-  <script src="app.js?v=mobile-rebuild-3"></script>
-</body></html>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="app.js?v=revamp-v2-3"></script>
+</body>
+</html>
