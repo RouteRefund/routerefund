@@ -40,6 +40,10 @@ function tripTextSafetyMessage(value=''){
   if(/\b(password|passcode|cvv|cvc|security code|2fa code|airline login|email login|account login)\b/i.test(text))return 'Please remove passwords, login details, or verification codes before saving this trip note.';
   return '';
 }
+function sensitiveOpsTextMessage(value=''){
+  const message=tripTextSafetyMessage(value);
+  return message ? message.replace('trip note','partner note') : '';
+}
 function touchActivity(){localStorage.setItem('rr_last_activity',String(Date.now()))}
 function safeNext(value='',fallback='trips.html',partner=false){const raw=String(value||'').trim();if(!raw)return fallback;if(/^[a-z][a-z0-9+.-]*:/i.test(raw)||raw.startsWith('//')||raw.includes('\\'))return fallback;try{const url=new URL(raw,location.origin);if(url.origin!==location.origin)return fallback;const page=(url.pathname.split('/').filter(Boolean).pop()||'index.html');if(partner&&!page.startsWith('partner-ops-'))return fallback;if(!partner&&page.startsWith('partner-ops-'))return fallback;return `${page}${url.search}${url.hash}`}catch{return fallback}}
 function partnerLoginUrl(next='partner-ops-dashboard.html'){return `partner-ops-login.html?next=${encodeURIComponent(safeNext(next,'partner-ops-dashboard.html',true))}`}
@@ -216,6 +220,8 @@ async function appendCustomerNote(id,note){
   return true;
 }
 async function completeMonitoringCheck(id,observedPrice,kind='No savings',note=''){
+  const noteSafety=sensitiveOpsTextMessage(note);
+  if(noteSafety){toast(noteSafety);return false}
   const now=new Date();
   const next=new Date(now.getTime()+6*60*60*1000);
   const price=observedPrice===''||observedPrice==null?null:Number(observedPrice);
@@ -241,7 +247,7 @@ function ownerNextStep(r){const label=ownerStatusLabel(r.status);if(r.due_checks
 function ownerPriority(r){if(r.due_checks?.length)return 0;const label=ownerStatusLabel(r.status);if(label==='Review needed')return 1;if(label==='Watching')return 2;return 3}
 function ownerControls(){return `<div class="ownerToolbar" aria-label="Operations queue controls"><div class="ownerFilters"><button class="btn ghost" data-action="owner-filter" data-status="All">Active queue</button><button class="btn ghost" data-action="owner-filter" data-status="Due">Due now</button><button class="btn ghost" data-action="owner-filter" data-status="Review needed">Review queue</button><button class="btn ghost" data-action="owner-filter" data-status="Watching">Monitoring</button><button class="btn ghost" data-action="owner-filter" data-status="Archived">Resolved archive</button></div><input id="ownerSearch" placeholder="Search passenger, locator, airline, route, or internal note" aria-label="Search operations queue"></div><div id="ownerQueueState" class="opsQueueState" aria-live="polite"></div>`}
 async function ownerNotesByTrip(){const {data,error}=await supabaseClient.from('owner_trip_notes').select('trip_id,owner_notes');if(error)return {};return Object.fromEntries((data||[]).map(n=>[n.trip_id,n.owner_notes||'']))}
-async function saveOwnerNote(id,note){const clean=String(note||'').trim();if(!clean){toast('Enter an internal note before saving.');return false}const {error}=await supabaseClient.from('owner_trip_notes').upsert({trip_id:id,owner_notes:clean,updated_at:new Date().toISOString()},{onConflict:'trip_id'});if(error){toast(error.message);return false}await renderOwner();await renderOwnerTrip();toast('Owner note saved');return true}
+async function saveOwnerNote(id,note){const clean=String(note||'').trim();if(!clean){toast('Enter an internal note before saving.');return false}const noteSafety=sensitiveOpsTextMessage(clean);if(noteSafety){toast(noteSafety);return false}const {error}=await supabaseClient.from('owner_trip_notes').upsert({trip_id:id,owner_notes:clean,updated_at:new Date().toISOString()},{onConflict:'trip_id'});if(error){toast(error.message);return false}await renderOwner();await renderOwnerTrip();toast('Owner note saved');return true}
 async function saveOwnerTripDetails(id,fields={}){
   const owner=await requireOwner('partner-ops-dashboard.html');if(!owner)return false;
   const clean=v=>String(v||'').trim();
@@ -346,7 +352,7 @@ document.addEventListener('click',async e=>{
   if(action==='owner-payment')return updateTrip(id,{payment_status:b.dataset.status},true);
   if(action==='owner-note'){
     const current=b.dataset.note||'';
-    return modal(`<h2>Internal note</h2><p class="mini muted">Private partner-only note. Saving replaces the current internal note for this trip; it is not shown in the customer dashboard.</p><label>What happened / next step<textarea id="ownerNoteText" placeholder="Checked AA mobile app. Same cabin. Need customer approval before action.">${escapeHtml(current)}</textarea></label><button class="btn primary" data-action="save-owner-note" data-id="${escapeHtml(id)}">Save internal note</button>`)
+    return modal(`<h2>Internal note</h2><p class="mini muted">Private partner-only note. Saving replaces the current internal note for this trip; it is not shown in the customer dashboard. Do not save airline passwords, one-time codes, card numbers, or inbox credentials.</p><label>What happened / next step<textarea id="ownerNoteText" placeholder="Checked AA mobile app. Same cabin. Need customer approval before action.">${escapeHtml(current)}</textarea></label><button class="btn primary" data-action="save-owner-note" data-id="${escapeHtml(id)}">Save internal note</button>`)
   }
   if(action==='save-owner-note'){const saved=await saveOwnerNote(id,$('ownerNoteText').value);if(saved)closeModal();return}
   if(action==='owner-details'){
