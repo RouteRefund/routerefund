@@ -143,6 +143,8 @@ def split_dob(value: str) -> tuple[str, str, str]:
 
 def detect_blockers(text: str) -> str:
     low = text.lower()
+    if "our system is having trouble" in low or "please try again or come back later" in low:
+        return "blocked_or_unavailable"
     if "captcha" in low or "verify you are human" in low or "security check" in low:
         return "blocked_by_captcha_or_security_check"
     if "access denied" in low or "temporarily unavailable" in low:
@@ -177,21 +179,15 @@ def extract_basic(page, adapter: AirlineAdapter, timeout_ms: int = 12000) -> Loo
 
 def fill_american(page, data: LookupInput):
     page.goto("https://www.aa.com/reservation/view/find-your-reservation", wait_until="domcontentloaded", timeout=45000)
-    page.wait_for_selector("adc-text-input#lastNameSecure, input[aria-label*='Last name' i]", timeout=20000)
+    page.wait_for_selector("adc-text-input#lastNameSecure input", timeout=20000)
     month, day, year = split_dob(data.date_of_birth)
-    set_custom_input(page, "adc-text-input#lastNameSecure", data.last_name) or fill_first_visible(page, ["input[aria-label*='last name' i]"], data.last_name)
-    set_custom_select(page, "adc-select#fytMonth", month)
-    set_custom_select(page, "adc-select#fytDay", day)
-    set_custom_select(page, "adc-select#fytYear", year)
-    set_custom_input(page, "adc-text-input#recordLocatorSecure", data.confirmation) or fill_first_visible(page, ["input[aria-label*='confirmation' i]"], data.confirmation)
-    clicked = maybe_click(page, ["adc-button#submit", "button:has-text('Find your trip')", "button:has-text('Find')", "input[type=submit]"])
-    if not clicked:
-        page.evaluate("""() => {
-            const btn = document.querySelector('adc-button#submit') || document.querySelector('#submit');
-            btn?.click?.();
-            btn?.dispatchEvent?.(new MouseEvent('click', {bubbles:true, composed:true}));
-        }""")
-    page.wait_for_timeout(2500)
+    page.locator("adc-text-input#lastNameSecure input").fill(data.last_name, timeout=5000)
+    page.locator("adc-select#fytMonth select").select_option(month, timeout=5000)
+    page.locator("adc-select#fytDay select").select_option(day, timeout=5000)
+    page.locator("adc-select#fytYear select").select_option(year, timeout=5000)
+    page.locator("adc-text-input#recordLocatorSecure input").fill(data.confirmation, timeout=5000)
+    page.locator("adc-button#submit button").click(timeout=5000)
+    page.wait_for_timeout(4500)
 
 
 def fill_united(page, data: LookupInput):
