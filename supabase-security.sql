@@ -192,6 +192,26 @@ create trigger trips_protect_owner_fields
 before update on public.trips
 for each row execute function public.protect_owner_trip_fields();
 
+create or replace function public.delete_my_trip(target_trip_id uuid)
+returns void
+language plpgsql
+security definer
+set search_path = public
+as $$
+begin
+  delete from public.trips
+  where id = target_trip_id
+    and user_id = auth.uid();
+
+  if not found then
+    raise exception 'Trip not found or not allowed';
+  end if;
+end;
+$$;
+
+revoke all on function public.delete_my_trip(uuid) from public;
+grant execute on function public.delete_my_trip(uuid) to authenticated;
+
 -- Supabase PostgREST still needs table privileges; RLS policies decide which rows are visible/editable.
 -- Reset broad/default grants first so anon/authenticated do not keep stale TRUNCATE/extra privileges from earlier attempts.
 revoke all privileges on public.profiles from anon, authenticated;
