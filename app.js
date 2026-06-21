@@ -117,27 +117,28 @@ async function addTrip(e){
   lock('Saving trip...');
   const {error}=await supabaseClient.from('trips').insert(trip);
   if(error)return fail(error.message);
-  e.target.reset();toast('Flight lookup started.');await renderTrips();unlock()
+  e.target.reset();syncLocatorHint();toast('Flight lookup started.');await renderTrips();unlock()
 }
-async function loadTrips(){const {data,error}=await supabaseClient.from('trips').select('*').or('status.is.null,status.neq.Archived').order('created_at',{ascending:false});if(error){toast(error.message);return[]}return data||[]}
+async function loadTrips(){const {data,error}=await supabaseClient.from('trips').select('*').or('status.is.null,status.neq.Archived').order('created_at',{ascending:false});return {rows:data||[],error}}
 function tripSavings(r){return r.current_price?Number(r.paid)-Number(r.current_price):0}
 function customerTripStatus(r){
-  const status=r.status||'Monitoring';
-  if(['Intake review','Received'].includes(status))return {label:'Intake review',step:'Next step',body:'Your confirmation is saved. RouteRefund will verify the booking details before monitoring starts; you do not need to share airline passwords, email access, or payment card numbers.',tone:'intake'};
-  if(['Savings found','Review needed'].includes(status))return {label:'Opportunity review',step:'Internal review',body:'RouteRefund is reviewing a possible fare-change signal for eligibility, comparability, and customer safety before sharing any details or next steps.',tone:'review'};
-  if(['Closed'].includes(status))return {label:'Resolved',step:'Resolved',body:'This trip has been closed. Keep the record here for your reference or contact support if something looks off.',tone:'closed'};
-  return {label:'Monitoring active',step:'Monitoring active',body:'We are watching for eligible changes and will only contact you if there is a customer-approved next step.',tone:'monitoring'};
+  const raw=r.status||'';
+  const unverified=!hasVerifiedFlightDetails(r);
+  if(unverified||['Intake review','Received','Submitted'].includes(raw))return {label:'Lookup running',step:'No action needed',body:'Your confirmation is saved. RouteRefund is checking the reservation details and will move it into monitoring once the flight is verified.',tone:'intake'};
+  if(['Savings found','Review needed'].includes(raw))return {label:'Opportunity review',step:'RouteRefund reviewing',body:'We are checking eligibility and customer safety before sharing any next step. You will not be asked to approve anything until the opportunity is verified.',tone:'review'};
+  if(['Closed','Archived'].includes(raw))return {label:'Resolved',step:'Resolved',body:'This RouteRefund record is no longer actively monitored. Deleting it here does not contact or change the airline reservation.',tone:'closed'};
+  return {label:'Monitoring active',step:'Watching quietly',body:'We are monitoring this booked flight and will only contact you if there is a verified, customer-approved next step.',tone:'monitoring'};
 }
 function hasVerifiedFlightDetails(r){return !!(r.route||r.travel_date||r.departure_time)}
 function customerTripTitle(r){return `${escapeHtml(r.confirmation_no||'Trip')}${r.airline?` <span>${escapeHtml(r.airline)}</span>`:''}`}
 function customerTripDeleteButton(r){
   const label=[r.airline,r.confirmation_no].filter(Boolean).join(' ')||'this trip';
-  return `<button class="btn danger" data-action="delete-trip" data-id="${escapeHtml(r.id)}" data-trip-label="${escapeHtml(label)}">Delete trip</button>`
+  return `<button class="btn danger" data-action="delete-trip" data-id="${escapeHtml(r.id)}" data-trip-label="${escapeHtml(label)}">Remove trip</button>`
 }
 function customerTripMeta(r){
   if(!hasVerifiedFlightDetails(r)){
     const airline=r.airline?` for ${escapeHtml(r.airline)}`:'';
-    return `<div class="lookupSummary compactLookup" aria-label="Flight lookup status"><div><b>Looking up flight${airline}</b><span>Confirmation ${escapeHtml(r.confirmation_no||'')} is saved. RouteRefund is checking route, date, time, and fare details for this passenger before monitoring begins.</span></div></div>`;
+    return `<div class="lookupSummary compactLookup" aria-label="Flight lookup status"><div><b>Looking up flight${airline}</b><span>Confirmation ${escapeHtml(r.confirmation_no||'')} is saved. No airline password, email login, payment card, or one-time code is needed.</span></div></div>`;
   }
   return `<div class="customerTripMeta" aria-label="Trip summary"><div><b>Airline</b><span>${escapeHtml(r.airline||'—')}</span></div><div><b>Route</b><span>${escapeHtml(r.route||'—')}</span></div><div><b>Departure</b><span>${escapeHtml(r.travel_date||'—')}</span></div><div><b>Time</b><span>${escapeHtml(r.departure_time||'—')}</span></div>${r.paid!=null?`<div><b>Price paid</b><span>${money(r.paid)}</span></div>`:''}</div>`
 }
@@ -148,14 +149,16 @@ function customerTripProgress(r,tripStatus){
 
 async function renderTrips(){
   const box=$('trips');if(!box)return;
-  const rows=await loadTrips();
+  const {rows,error}=await loadTrips();
+  if(error){box.innerHTML=`<div class="empty dashboardEmpty errorState"><h3>Trips could not be loaded</h3><p>${escapeHtml(error.message||'Please refresh and try again.')}</p><button class="btn primary" type="button" onclick="renderTrips()">Retry</button></div>`;return}
   box.innerHTML=rows.length?rows.map(r=>{
     const status=customerTripStatus(r);
     const tripStatus=r.status||'Monitoring';
     const intake=!hasVerifiedFlightDetails(r);
-    return `<div class="trip customerTripCard simpleTripCard ${intake?'lookupOnlyCard':''}"><div class="row"><div><h3>${customerTripTitle(r)}</h3><p>Passenger: ${escapeHtml(r.passenger_first||'')} ${escapeHtml(r.passenger_last||'')}</p></div><span class="tag ${escapeHtml(status.tone)}">${escapeHtml(status.label)}</span></div>${customerTripMeta(r)}${customerTripProgress(r,tripStatus)}<div class="customerNextStep"><b>${escapeHtml(status.step)}</b><span>${escapeHtml(status.body)}</span></div>${r.notes?`<p><b>Your note:</b> ${safeLines(r.notes)}</p>`:''}<div class="actions tripActionsSimple"><a class="btn primary" href="trip-detail.html?id=${encodeURIComponent(r.id)}">View details</a>${intake?'':`<button class="btn ghost" data-action="note" data-id="${escapeHtml(r.id)}">Send update</button>`}${customerTripDeleteButton(r)}</div></div>`
-  }).join(''):`<div class="empty dashboardEmpty"><h3>No trips yet</h3><p>Add your booked flight with the form above, or forward the airline confirmation email. We will never ask for airline passwords or payment card numbers in the trip form.</p><div class="actions tripActionsSimple"><a class="btn primary" href="#tripForm">Add a trip</a><a class="btn ghost" href="forward-confirmation.html">Forward confirmation</a></div></div>`
+    return `<article class="trip customerTripCard simpleTripCard ${intake?'lookupOnlyCard':''}"><div class="tripCardTop"><div><span class="tripKicker">${escapeHtml(r.airline||'Flight')}</span><h3>${customerTripTitle(r)}</h3><p>Passenger: ${escapeHtml(r.passenger_first||'')} ${escapeHtml(r.passenger_last||'')}</p></div><span class="tag ${escapeHtml(status.tone)}">${escapeHtml(status.label)}</span></div>${customerTripMeta(r)}${customerTripProgress(r,tripStatus)}<div class="customerNextStep"><b>${escapeHtml(status.step)}</b><span>${escapeHtml(status.body)}</span></div>${r.notes?`<div class="customerNotePreview"><b>Your latest update</b><span>${safeLines(r.notes).split('<br>').slice(-2).join('<br>')}</span></div>`:''}<div class="actions tripActionsSimple"><a class="btn primary" href="trip-detail.html?id=${encodeURIComponent(r.id)}">View details</a>${intake?'':`<button class="btn ghost" data-action="note" data-id="${escapeHtml(r.id)}">Send update</button>`}${customerTripDeleteButton(r)}</div></article>`
+  }).join(''):`<div class="empty dashboardEmpty"><span class="eyebrow">Ready when you are</span><h3>Add your first booked flight</h3><p>Use the form above or forward the airline confirmation email. RouteRefund will never ask for airline passwords, email passwords, or payment card numbers.</p><div class="actions tripActionsSimple"><a class="btn primary" href="#tripForm">Add flight details</a><a class="btn ghost" href="forward-confirmation.html">Forward confirmation</a></div></div>`
 }
+
 
 
 async function renderAccount(){
@@ -171,13 +174,13 @@ async function renderTripDetail(){
   const box=$('tripDetail');if(!box)return;
   const user=await requireLogin(`trip-detail.html${location.search}`);if(!user)return;
   const id=new URLSearchParams(location.search).get('id');
-  if(!id){box.innerHTML='<div class="empty"><h3>No trip selected</h3><p>Go back to My trips and choose a trip.</p><a class="btn primary" href="trips.html">My trips</a></div>';return}
+  if(!id||!isUuid(id)){box.innerHTML='<div class="empty"><h3>No trip selected</h3><p>Go back to My trips and choose a trip.</p><a class="btn primary" href="trips.html">My trips</a></div>';return}
   const {data:r,error}=await supabaseClient.from('trips').select('*').eq('id',id).single();
   if(error||!r){box.innerHTML=`<div class="panel"><h2>Trip not found</h2><p>${escapeHtml(error?.message||'This trip could not be loaded.')}</p><a class="btn primary" href="trips.html">Back to My trips</a></div>`;return}
-  const statuses=['Submitted','Details verified','Monitoring','Opportunity review','Resolved'];const active=['Intake review','Received'].includes(r.status)?0:['Savings found','Review needed'].includes(r.status)?3:['Closed','Archived'].includes(r.status)?4:2;
+  const statuses=['Submitted','Details verified','Monitoring','Opportunity review','Resolved'];const unverified=!hasVerifiedFlightDetails(r);const active=(unverified||['Intake review','Received','Submitted'].includes(r.status))?0:['Savings found','Review needed'].includes(r.status)?3:['Closed','Archived'].includes(r.status)?4:2;
   const status=customerTripStatus(r);
-  const flightLine=hasVerifiedFlightDetails(r)?`${escapeHtml(r.airline||'Airline')} • ${escapeHtml(r.route||'Route')} • ${escapeHtml(r.travel_date||'Date')}${r.departure_time?` • ${escapeHtml(r.departure_time)}`:''}`:'Flight details are being matched to this confirmation';
-  box.innerHTML=`<div class="panel tripDetailCard simpleTripDetail"><div class="row"><div><h2>Confirmation ${escapeHtml(r.confirmation_no||'')}</h2><p>${flightLine}</p><p>Passenger: ${escapeHtml(r.passenger_first||'')} ${escapeHtml(r.passenger_last||'')}${r.paid!=null?` • Price paid: ${money(r.paid)}`:''}</p></div><span class="tag ${escapeHtml(status.tone)}">${escapeHtml(status.label)}</span></div><div class="detailTimeline">${statuses.map((x,i)=>`<div class="${i<=active?'done':''}"><b>${i+1}</b><span>${x}</span></div>`).join('')}</div>${['Intake review','Received'].includes(r.status)?'<div class="savingsBox lookupBox"><h3>Secure lookup running</h3><p>RouteRefund is looking up this reservation. The route, date, time, and fare fields will appear here after the reservation is found.</p></div>':''}${['Savings found','Review needed'].includes(r.status)?'<div class="savingsBox"><h3>RouteRefund review in progress</h3><p>Our team is reviewing a possible fare-change signal for this booking. We will contact you only if there is a verified, customer-approved next step.</p></div>':''}${r.notes?`<p><b>Notes:</b><br>${safeLines(r.notes)}</p>`:''}<div class="actions tripActionsSimple"><button class="btn ghost" data-action="note" data-id="${escapeHtml(r.id)}">Send update</button>${customerTripDeleteButton(r)}<a class="btn primary" href="trips.html">Back to dashboard</a></div></div>`
+  const flightLine=hasVerifiedFlightDetails(r)?`${escapeHtml(r.airline||'Airline')} • ${escapeHtml(r.route||'Route')} • ${escapeHtml(r.travel_date||'Date')}${r.departure_time?` • ${escapeHtml(r.departure_time)}`:''}`:'Looking up flight details for this confirmation';
+  box.innerHTML=`<div class="panel tripDetailCard simpleTripDetail"><div class="row"><div><h2>Confirmation ${escapeHtml(r.confirmation_no||'')}</h2><p>${flightLine}</p><p>Passenger: ${escapeHtml(r.passenger_first||'')} ${escapeHtml(r.passenger_last||'')}${r.paid!=null?` • Price paid: ${money(r.paid)}`:''}</p></div><span class="tag ${escapeHtml(status.tone)}">${escapeHtml(status.label)}</span></div><div class="detailTimeline">${statuses.map((x,i)=>`<div class="${i<=active?'done':''}"><b>${i+1}</b><span>${x}</span></div>`).join('')}</div>${(unverified||['Intake review','Received','Submitted'].includes(r.status))?'<div class="savingsBox lookupBox"><h3>Secure lookup running</h3><p>RouteRefund is looking up this reservation. Route, date, time, and flight details will appear here after the reservation is found.</p></div>':''}${['Savings found','Review needed'].includes(r.status)?'<div class="savingsBox"><h3>RouteRefund review in progress</h3><p>Our team is reviewing a possible fare-change signal for this booking. We will contact you only if there is a verified, customer-approved next step.</p></div>':''}${r.notes?`<p><b>Notes:</b><br>${safeLines(r.notes)}</p>`:''}<div class="actions tripActionsSimple">${unverified?'':`<button class="btn ghost" data-action="note" data-id="${escapeHtml(r.id)}">Send update</button>`}${customerTripDeleteButton(r)}<a class="btn primary" href="trips.html">Back to dashboard</a></div></div>`
 }
 
 let lastModalTrigger=null;
@@ -207,11 +210,13 @@ function modal(html){
   (focusable||card).focus();
 }
 async function refreshCustomerTripViews(){await renderTrips();await renderTripDetail()}
-async function updateTrip(id,patch,owner=false){const {error}=await supabaseClient.from('trips').update(patch).eq('id',id);if(error)return toast(error.message);if(owner){await renderOwner();await renderOwnerTrip()}else await refreshCustomerTripViews()}
-async function deleteTrip(id){const {error}=await supabaseClient.rpc('delete_my_trip',{target_trip_id:id});if(error){toast(error.message);return false}toast('Trip deleted');if(document.body.dataset.page==='trip-detail')location.href='trips.html';else await renderTrips();return true}
+async function updateTrip(id,patch,owner=false){if(!isUuid(id))return toast('Invalid trip selected');if(!owner){const allowed=Object.keys(patch||{}).every(k=>k==='notes');if(!allowed)return toast('This update is not allowed from the customer dashboard.')}const {error}=await supabaseClient.from('trips').update(patch).eq('id',id);if(error)return toast(error.message);if(owner){await renderOwner();await renderOwnerTrip()}else await refreshCustomerTripViews()}
+async function deleteTrip(id){if(!isUuid(id)){toast('Invalid trip selected');return false}const {error}=await supabaseClient.rpc('delete_my_trip',{target_trip_id:id});if(error){toast(error.message);return false}toast('Trip deleted');if(document.body.dataset.page==='trip-detail')location.href='trips.html';else await renderTrips();return true}
 async function appendCustomerNote(id,note){
   const clean=String(note||'').trim();
+  if(!isUuid(id)){toast('Invalid trip selected');return false}
   if(!clean){toast('Enter a note before saving.');return false}
+  if(clean.length>1000){toast('Keep updates under 1,000 characters.');return false}
   const noteSafety=tripTextSafetyMessage(clean);
   if(noteSafety){toast(noteSafety);return false}
   const {data,error:loadError}=await supabaseClient.from('trips').select('notes').eq('id',id).single();
@@ -343,9 +348,9 @@ document.addEventListener('click',async e=>{
   if(action==='logout')return logout();
   if(action==='delete-trip'){
     const label=escapeHtml(b.dataset.tripLabel||'this trip');
-    return modal(`<h2>Delete ${label}?</h2><p>This removes the trip from your RouteRefund dashboard and clears related lookup/monitoring records. It does not change, cancel, rebook, or contact the airline.</p><div class="deleteSummary"><b>What happens next</b><ul><li>The trip disappears from My trips.</li><li>You can submit the same flight again later if this was a test or duplicate.</li><li>Your airline reservation stays untouched.</li></ul></div><div class="actions"><button class="btn danger" data-action="confirm-delete-trip" data-id="${escapeHtml(id)}">Yes, delete this trip</button><button class="btn ghost" data-action="close-modal">Keep trip</button></div>`)
+    return modal(`<h2>Remove ${label} from RouteRefund?</h2><p>This removes the trip from your RouteRefund dashboard and clears related lookup/monitoring records. It does not change, cancel, rebook, or contact the airline.</p><div class="deleteSummary"><b>What happens next</b><ul><li>The trip disappears from My trips.</li><li>You can submit the same flight again later if this was a test or duplicate.</li><li>Your airline reservation stays untouched.</li></ul></div><div class="actions"><button class="btn danger" data-action="confirm-delete-trip" data-id="${escapeHtml(id)}">Remove from RouteRefund</button><button class="btn ghost" data-action="close-modal">Keep trip</button></div>`)
   }
-  if(action==='confirm-delete-trip'){b.disabled=true;b.textContent='Deleting...';const ok=await deleteTrip(id);if(!ok){b.disabled=false;b.textContent='Yes, delete this trip';return}closeModal();return}
+  if(action==='confirm-delete-trip'){b.disabled=true;b.textContent='Removing...';const ok=await deleteTrip(id);if(!ok){b.disabled=false;b.textContent='Remove from RouteRefund';return}closeModal();return}
   if(action==='close-modal')return closeModal();
   if(action==='note')return modal(`<h2>Add a trip update</h2><p>Use this to add schedule preferences, refund constraints, or context for RouteRefund. Existing notes stay attached to the trip. Do not include payment card numbers, passwords, or verification codes.</p><label>New note<textarea id="noteText" placeholder="Example: I prefer travel credit if a cash refund is not possible."></textarea></label><button class="btn primary" data-action="save-note" data-id="${escapeHtml(id)}">Add note to trip</button>`);
   if(action==='save-note'){const saved=await appendCustomerNote(id,$('noteText').value);if(saved)closeModal();return}
