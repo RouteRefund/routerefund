@@ -447,3 +447,17 @@ body[data-page="info"] .links a.primary{color:#fff}
 .privacyPromiseGrid div:nth-child(2){background:#fff8e6;border-color:#f0d79a}
 .privacyPromiseGrid div:nth-child(2) b{color:#704400}
 @media(max-width:760px){.privacyPromise{grid-template-columns:1fr;gap:12px;padding-top:4px}.privacyPromise>div:first-child{padding:22px;border-radius:24px}.privacyPromiseGrid{gap:10px}.privacyPromiseGrid div{padding:15px 16px;border-radius:18px}}
+
+/* landing-reassurance-1: private customer workflow reassurance */
+.reassuranceStrip{display:grid;grid-template-columns:minmax(0,.78fr) minmax(320px,1.22fr);gap:20px;align-items:stretch;padding-top:8px}
+.reassuranceIntro{background:linear-gradient(135deg,#10231f,#123943);color:#fff;border:1px solid rgba(255,255,255,.10);border-radius:28px;padding:26px;box-shadow:0 18px 48px rgba(18,57,67,.14);overflow:hidden;position:relative}
+.reassuranceIntro:after{content:'';position:absolute;right:-48px;top:-52px;width:150px;height:150px;border-radius:50%;background:rgba(232,180,79,.18)}
+.reassuranceIntro .eyebrow{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.22);color:#e8f5e5;position:relative;z-index:1}
+.reassuranceIntro h2{color:#fff;margin:12px 0 10px;position:relative;z-index:1}
+.reassuranceIntro p{color:rgba(255,255,255,.76);font-weight:780;line-height:1.55;position:relative;z-index:1}
+.reassuranceGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.reassuranceGrid div{background:#fff;border:1px solid #e5eee1;border-radius:22px;padding:18px;box-shadow:0 12px 30px rgba(18,57,67,.06);display:flex;flex-direction:column;justify-content:flex-start}
+.reassuranceGrid b{display:block;margin-bottom:7px;color:#10231f;font-size:13px;text-transform:uppercase;letter-spacing:.045em}
+.reassuranceGrid span{display:block;color:var(--muted);font-weight:850;line-height:1.42}
+@media(max-width:900px){.reassuranceStrip{grid-template-columns:1fr}.reassuranceGrid{grid-template-columns:1fr 1fr}.reassuranceIntro{padding:24px;border-radius:26px}}
+@media(max-width:640px){.reassuranceStrip{gap:12px;padding-top:4px}.reassuranceIntro{padding:22px;border-radius:24px}.reassuranceIntro:after{display:none}.reassuranceIntro h2{font-size:28px;line-height:1.08}.reassuranceGrid{grid-template-columns:1fr;gap:10px}.reassuranceGrid div{padding:15px 16px;border-radius:18px}}
