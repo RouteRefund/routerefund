@@ -545,3 +545,16 @@ body[data-page="info"] .links a.primary{color:#fff}
 .expectationStrip div:nth-child(2){background:#f8fbf5}.expectationStrip div:nth-child(4){background:#fff8e6;border-color:#f0d79a}
 @media(max-width:900px){.expectationStrip{grid-template-columns:1fr 1fr;margin-top:0}.expectationStrip div{padding:15px 16px;border-radius:20px}}
 @media(max-width:640px){.expectationStrip{grid-template-columns:1fr;gap:10px;margin:0 auto 10px}.expectationStrip div{padding:15px 16px;border-radius:18px}}
+
+/* landing-trackable-1: early fit check for safer customer expectations */
+.trackableTrip{display:grid;grid-template-columns:minmax(0,.86fr) minmax(320px,1.14fr);gap:20px;align-items:stretch;padding-top:10px}
+.trackableIntro{background:linear-gradient(135deg,#10231f,#123943);color:#fff;border:1px solid rgba(255,255,255,.10);border-radius:28px;padding:26px;box-shadow:0 18px 48px rgba(18,57,67,.14);overflow:hidden;position:relative}
+.trackableIntro:after{content:'';position:absolute;right:-50px;top:-54px;width:156px;height:156px;border-radius:50%;background:rgba(232,180,79,.18)}
+.trackableIntro .eyebrow{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.22);color:#e8f5e5;position:relative;z-index:1}
+.trackableIntro h2{color:#fff;margin:12px 0 10px;position:relative;z-index:1}.trackableIntro p{color:rgba(255,255,255,.76);font-weight:780;line-height:1.55;position:relative;z-index:1}
+.trackableGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.trackableGrid div{background:linear-gradient(180deg,#fff,#f8fbf5);border:1px solid #e5eee1;border-radius:22px;padding:18px;box-shadow:0 12px 30px rgba(18,57,67,.06)}
+.trackableGrid b{display:block;margin-bottom:7px;color:#10231f;font-size:13px;text-transform:uppercase;letter-spacing:.045em}.trackableGrid span{display:block;color:var(--muted);font-weight:850;line-height:1.42}
+.trackableGrid div:nth-child(3){background:#fff8e6;border-color:#f0d79a}.trackableGrid div:nth-child(3) b{color:#704400}
+@media(max-width:900px){.trackableTrip{grid-template-columns:1fr}.trackableGrid{grid-template-columns:1fr 1fr}.trackableIntro{padding:24px;border-radius:26px}}
+@media(max-width:640px){.trackableTrip{gap:12px;padding-top:2px}.trackableIntro{padding:22px;border-radius:24px}.trackableIntro:after{display:none}.trackableIntro h2{font-size:28px;line-height:1.08}.trackableGrid{grid-template-columns:1fr;gap:10px}.trackableGrid div{padding:15px 16px;border-radius:18px}}
