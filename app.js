@@ -124,10 +124,13 @@ function customerTripStatus(r){
   if(['Closed'].includes(status))return {label:'Resolved',step:'Resolved',body:'This trip has been closed. Keep the record here for your reference or contact support if something looks off.',tone:'closed'};
   return {label:'Monitoring active',step:'Monitoring active',body:'We are watching for eligible changes and will only contact you if there is a customer-approved next step.',tone:'monitoring'};
 }
-function hasVerifiedFlightDetails(r){return !!(r.airline||r.route||r.travel_date||r.departure_time)}
+function hasVerifiedFlightDetails(r){return !!(r.route||r.travel_date||r.departure_time)}
 function customerTripTitle(r){return `${escapeHtml(r.confirmation_no||'Trip')}${r.airline?` <span>${escapeHtml(r.airline)}</span>`:''}`}
 function customerTripMeta(r){
-  if(!hasVerifiedFlightDetails(r))return `<div class="lookupSummary compactLookup" aria-label="Flight lookup status"><div><b>Looking up flight</b><span>Confirmation ${escapeHtml(r.confirmation_no||'')} is saved. RouteRefund is checking the reservation details for this passenger.</span></div></div>`;
+  if(!hasVerifiedFlightDetails(r)){
+    const airline=r.airline?` for ${escapeHtml(r.airline)}`:'';
+    return `<div class="lookupSummary compactLookup" aria-label="Flight lookup status"><div><b>Looking up flight${airline}</b><span>Confirmation ${escapeHtml(r.confirmation_no||'')} is saved. RouteRefund is checking route, date, time, and fare details for this passenger before monitoring begins.</span></div></div>`;
+  }
   return `<div class="customerTripMeta" aria-label="Trip summary"><div><b>Airline</b><span>${escapeHtml(r.airline||'—')}</span></div><div><b>Route</b><span>${escapeHtml(r.route||'—')}</span></div><div><b>Departure</b><span>${escapeHtml(r.travel_date||'—')}</span></div><div><b>Time</b><span>${escapeHtml(r.departure_time||'—')}</span></div>${r.paid!=null?`<div><b>Price paid</b><span>${money(r.paid)}</span></div>`:''}</div>`
 }
 function customerTripProgress(r,tripStatus){
