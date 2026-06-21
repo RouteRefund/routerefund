@@ -6,7 +6,7 @@
   <title>Trip Detail | RouteRefund</title>
   <meta name="robots" content="noindex,nofollow" />
   <link rel="stylesheet" href="styles.css?v=revamp-v2-10" />
-  <link rel="stylesheet" href="styles-v2.css?v=revamp-v2-12" />
+  <link rel="stylesheet" href="styles-v2.css?v=revamp-v2-13" />
   <link rel="icon" href="/favicon.ico?v=logo-a-1" sizes="any" />
   <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png?v=logo-a-1" />
   <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16.png?v=logo-a-1" />
@@ -15,13 +15,14 @@
   <meta name="theme-color" content="#0f7b4c" />
 </head>
 <body class="rr-v2" data-page="trip-detail">
+  <a class="skipLink" href="#main">Skip to main content</a>
   <nav class="nav">
     <div class="wrap navin">
       <a class="brand" href="index.html"><span class="logo"><img src="/assets/favicon-32.png?v=logo-a-1" alt="" /></span>RouteRefund</a>
       <div class="links"><a class="btn ghost" href="trips.html">My trips</a><button class="btn ghost" data-action="logout">Log out</button></div>
     </div>
   </nav>
-  <main class="wrap pageMain">
+  <main id="main" class="wrap pageMain">
     <section class="section"><span class="eyebrow">Trip detail</span><h1>Your trip timeline</h1><p class="lead small">Track where your flight stands in the RouteRefund review process.</p></section>
     <section id="tripDetail"><div class="empty"><h3>Loading trip...</h3></div></section>
   </main>
@@ -29,6 +30,6 @@
   <div id="modal" class="modal"><div id="modalCard" class="modalCard"></div></div>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="config.js"></script>
-  <script src="app.js?v=revamp-v2-10"></script>
+  <script src="app.js?v=revamp-v2-11"></script>
 </body>
 </html>
