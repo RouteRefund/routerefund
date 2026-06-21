@@ -12,6 +12,7 @@ It does not bypass CAPTCHA/security checks and does not store screenshots or air
 from __future__ import annotations
 
 import os
+import re
 import subprocess
 from dataclasses import asdict
 
@@ -63,6 +64,47 @@ def finish_attempt(cur, attempt_id, status: str, *, error: str = "", excerpt: st
     )
 
 
+def parse_lookup_details(excerpt: str) -> dict[str, str]:
+    details: dict[str, str] = {}
+    text = " ".join((excerpt or "").split())
+    m = re.search(r"Trip name:\s*([A-Z]{3})/([A-Z]{3})", text)
+    if m:
+        details["route"] = f"{m.group(1)} - {m.group(2)}"
+    m = re.search(r"\b(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday),\s+([A-Za-z]+)\s+(\d{1,2}),\s+(\d{4})", text)
+    if m:
+        months = {name: f"{i:02d}" for i, name in enumerate(['January','February','March','April','May','June','July','August','September','October','November','December'], 1)}
+        month = months.get(m.group(2))
+        if month:
+            details["travel_date"] = f"{m.group(4)}-{month}-{int(m.group(3)):02d}"
+    flight = re.search(r"\b(AA\s*\d{1,4})\b", text)
+    if flight:
+        details["flight_no"] = flight.group(1).replace(" ", " ")
+    return details
+
+
+def update_trip_from_lookup(cur, trip_id, details: dict[str, str]) -> None:
+    if not details:
+        return
+    cur.execute("select set_config('app.routerefund_worker','on', true)")
+    cur.execute(
+        """
+        update public.trips
+        set route = coalesce(route, %(route)s),
+            travel_date = coalesce(travel_date, %(travel_date)s::date),
+            flight_no = coalesce(flight_no, %(flight_no)s),
+            status = case when status in ('Intake review','Received') then 'Monitoring' else status end,
+            updated_at = now()
+        where id = %(trip_id)s
+        """,
+        {
+            "trip_id": trip_id,
+            "route": details.get("route"),
+            "travel_date": details.get("travel_date"),
+            "flight_no": details.get("flight_no"),
+        },
+    )
+
+
 def main(limit: int = 5) -> int:
     conn = psycopg2.connect(db_url())
     processed = 0
@@ -98,8 +140,7 @@ def main(limit: int = 5) -> int:
                 conn.commit()
 
                 if not key:
-                    with conn, conn.cursor(cursor_factory=RealDictCursor) as update_cur:
-                        finish_attempt(update_cur, row["attempt_id"], "Unsupported", error=f"No adapter yet for {row['attempt_airline'] or row['airline']}")
+                    finish_attempt(cur, row["attempt_id"], "Unsupported", error=f"No adapter yet for {row['attempt_airline'] or row['airline']}")
                     conn.commit()
                     continue
 
@@ -126,18 +167,10 @@ def main(limit: int = 5) -> int:
                     "page_loaded_needs_parser": "Found",
                 }
                 status = status_map.get(result.status, "Found" if result.ok else "Needs review")
-                with conn, conn.cursor(cursor_factory=RealDictCursor) as update_cur:
-                    finish_attempt(update_cur, row["attempt_id"], status, error=data.get("error") or result.status, excerpt=data.get("raw_excerpt") or "")
-                    if result.ok:
-                        update_cur.execute(
-                            """
-                            update public.trips
-                            set status = case when status in ('Intake review','Received') then 'Monitoring' else status end,
-                                updated_at = now()
-                            where id = %s
-                            """,
-                            (row["trip_id"],),
-                        )
+                excerpt = data.get("raw_excerpt") or ""
+                finish_attempt(cur, row["attempt_id"], status, error=data.get("error") or result.status, excerpt=excerpt)
+                if status == "Found":
+                    update_trip_from_lookup(cur, row["trip_id"], parse_lookup_details(excerpt))
                 conn.commit()
         if processed:
             print(f"Processed {processed} airline lookup attempt(s)")

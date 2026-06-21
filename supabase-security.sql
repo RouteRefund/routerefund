@@ -169,7 +169,7 @@ security definer
 set search_path = public
 as $$
 begin
-  if public.is_owner() then
+  if public.is_owner() or current_setting('app.routerefund_worker', true) = 'on' then
     return new;
   end if;
 
