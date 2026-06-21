@@ -6,6 +6,9 @@ const money = n => (n===null||n===undefined||n==='') ? 'Pending' : '$' + Number(
 function toast(message){
   let t=$('toast');
   if(!t){t=document.createElement('div');t.id='toast';t.className='toast';document.body.appendChild(t)}
+  t.setAttribute('role','status');
+  t.setAttribute('aria-live','polite');
+  t.setAttribute('aria-atomic','true');
   t.textContent=message;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2600)
 }
 function escapeHtml(value=''){return String(value).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
