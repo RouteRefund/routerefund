@@ -322,3 +322,20 @@ body.rr-v2 .fitStrip{display:grid!important;grid-template-columns:1fr 1fr!import
 body.rr-v2 .pageMain>.section.howReviewPanel,body.rr-v2 .pageMain>.section.coverageExplainer,body.rr-v2 .pageMain>.section.trustProcess,body.rr-v2 .pageMain>.section.contactExpectations{padding:34px!important}
 body.rr-v2 .pageMain>.section.cta,body.rr-v2 .pageMain>.section.airlineCta{padding:32px!important}
 @media(max-width:820px){body.rr-v2 .pageMain>.section.howReviewPanel,body.rr-v2 .pageMain>.section.coverageExplainer,body.rr-v2 .pageMain>.section.trustProcess,body.rr-v2 .pageMain>.section.contactExpectations,body.rr-v2 .pageMain>.section.cta,body.rr-v2 .pageMain>.section.airlineCta{padding:22px!important}}
+
+/* revamp-v2-11: dashboard form accessibility + mobile rhythm */
+body.rr-v2 .cleanLookupForm label:focus-within{color:var(--rr-purple)}
+body.rr-v2 .cleanLookupForm input:focus-visible,body.rr-v2 .cleanLookupForm select:focus-visible{border-color:#b9b9f9;box-shadow:0 0 0 4px rgba(83,58,253,.10)}
+body.rr-v2 .checkline:focus-within{border-color:#b9b9f9!important;box-shadow:0 0 0 4px rgba(83,58,253,.10)}
+body.rr-v2 .emailBox:focus-visible{outline:3px solid rgba(83,58,253,.28);outline-offset:3px;border-color:#b9b9f9}
+body.rr-v2 .customerTripCard:focus-within,body.rr-v2 .tripDetailCard:focus-within,body.rr-v2 .accountPanelV2:focus-within{border-color:#d6dcff!important;box-shadow:var(--rr-shadow)!important}
+body.rr-v2 .cleanForwardPanel .checklist{margin-top:2px}
+@media(max-width:820px){
+  body.rr-v2 .cleanLookupForm{gap:13px!important}
+  body.rr-v2 .cleanLookupForm .formIntro{font-size:14.5px!important;line-height:1.45!important}
+  body.rr-v2 .cleanLookupForm label{gap:6px!important}
+  body.rr-v2 .cleanLookupForm input,body.rr-v2 .cleanLookupForm select{min-height:48px!important;font-size:16px!important}
+  body.rr-v2 .formHint{font-size:12px!important;line-height:1.35!important}
+  body.rr-v2 .checkline{padding:13px!important}
+  body.rr-v2 .cleanForwardPanel{gap:10px!important}
+}

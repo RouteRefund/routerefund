@@ -135,6 +135,21 @@ create unique index if not exists airline_lookup_attempts_one_active_per_trip_id
   on public.airline_lookup_attempts(trip_id)
   where status in ('Queued','Running');
 
+
+create table if not exists public.flight_status_checks (
+  id uuid primary key default gen_random_uuid(),
+  trip_id uuid not null references public.trips(id) on delete cascade,
+  source text not null,
+  status text not null,
+  observed_at timestamptz not null default now(),
+  callsign text,
+  route text,
+  payload jsonb,
+  created_at timestamptz not null default now()
+);
+alter table public.flight_status_checks enable row level security;
+create index if not exists flight_status_checks_trip_observed_idx on public.flight_status_checks(trip_id, observed_at desc);
+
 create or replace function public.queue_initial_monitoring_check()
 returns trigger
 language plpgsql
@@ -236,6 +251,7 @@ revoke all privileges on public.owner_trip_notes from anon, authenticated;
 revoke all privileges on public.monitoring_checks from anon, authenticated;
 revoke all privileges on public.forwarded_confirmations from anon, authenticated;
 revoke all privileges on public.airline_lookup_attempts from anon, authenticated;
+revoke all privileges on public.flight_status_checks from anon, authenticated;
 
 grant usage on schema public to anon, authenticated;
 grant select, insert, update, delete on public.profiles to authenticated;
@@ -247,6 +263,7 @@ grant select, insert, update, delete on public.owner_trip_notes to authenticated
 grant select, insert, update, delete on public.monitoring_checks to authenticated;
 grant select, insert, update, delete on public.forwarded_confirmations to authenticated;
 grant select, insert, update, delete on public.airline_lookup_attempts to authenticated;
+grant select, insert, update, delete on public.flight_status_checks to authenticated;
 
 create or replace function public.is_owner()
 returns boolean
@@ -347,3 +364,9 @@ insert into public.owner_emails(email) values
   ('max@routerefund.com'),
   ('andrew@routerefund.com')
 on conflict do nothing;
+
+
+drop policy if exists "flight_status_owner_all" on public.flight_status_checks;
+create policy "flight_status_owner_all" on public.flight_status_checks
+for all using (public.is_owner())
+with check (public.is_owner());

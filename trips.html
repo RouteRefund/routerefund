@@ -6,7 +6,7 @@
   <title>My trips | RouteRefund</title>
   <meta name="robots" content="noindex,nofollow" />
   <link rel="stylesheet" href="styles.css?v=revamp-v2-10" />
-  <link rel="stylesheet" href="styles-v2.css?v=revamp-v2-10" />
+  <link rel="stylesheet" href="styles-v2.css?v=revamp-v2-11" />
   <link rel="icon" href="/favicon.ico?v=logo-a-1" sizes="any" />
   <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png?v=logo-a-1" />
   <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16.png?v=logo-a-1" />
@@ -36,9 +36,9 @@
       <form id="tripForm" class="panel formPanel lookupForm cleanLookupForm">
         <span class="eyebrow">Add a trip</span>
         <h2>Find my flight</h2>
-        <p class="mini formIntro">Use the same details the airline asks for on its manage-trip page. For American Airlines, lookup can happen automatically after submission.</p>
-        <label>Airline
-          <select id="airline" required>
+        <p class="mini formIntro">Use the same details the airline asks for on its manage-trip page. For supported airlines, lookup can start after submission without airline passwords or payment details.</p>
+        <label for="airline">Airline
+          <select id="airline" aria-describedby="airlineHint" required>
             <option value="">Choose airline</option>
             <option>American Airlines</option>
             <option>Delta Air Lines</option>
@@ -51,16 +51,16 @@
             <option>Hawaiian Airlines</option>
             <option value="Other">Other / not listed</option>
           </select>
-          <span class="formHint">This routes the lookup to the right airline flow.</span>
+          <span id="airlineHint" class="formHint">This routes the lookup to the right airline flow.</span>
         </label>
-        <label>Confirmation / record locator
-          <input id="confirmationNo" placeholder="ABCDEF" maxlength="13" pattern="[A-Za-z0-9]{5,13}" autocomplete="off" required>
+        <label for="confirmationNo">Confirmation / record locator
+          <input id="confirmationNo" placeholder="ABCDEF" maxlength="13" pattern="[A-Za-z0-9]{5,13}" autocomplete="off" aria-describedby="locatorHint" required>
           <span id="locatorHint" class="formHint">Enter the booking confirmation exactly as shown.</span>
         </label>
-        <div class="grid two compactFields"><label>Passenger first name<input id="passengerFirst" autocomplete="given-name" placeholder="Andrew" required></label><label>Passenger last name<input id="passengerLast" autocomplete="family-name" placeholder="Smith" required></label></div>
-        <label>Date of birth<input id="dateOfBirth" type="date" required><span class="formHint">Used only to help match the booking. Never enter airline passwords, one-time codes, or payment card details.</span></label>
-        <label class="checkline"><input id="changeConsent" type="checkbox" required> I authorize RouteRefund to monitor this trip and contact me before any airline booking, cancellation, or rebooking action.</label>
-        <button class="btn primary full" type="submit">Find my flight</button>
+        <div class="grid two compactFields"><label for="passengerFirst">Passenger first name<input id="passengerFirst" autocomplete="given-name" placeholder="Andrew" required></label><label for="passengerLast">Passenger last name<input id="passengerLast" autocomplete="family-name" placeholder="Smith" required></label></div>
+        <label for="dateOfBirth">Date of birth<input id="dateOfBirth" type="date" aria-describedby="dobHint" required><span id="dobHint" class="formHint">Used only to help match the booking. Never enter airline passwords, one-time codes, or payment card details.</span></label>
+        <label class="checkline" for="changeConsent"><input id="changeConsent" type="checkbox" required> I authorize RouteRefund to monitor this trip and contact me before any airline booking, cancellation, or rebooking action.</label>
+        <button class="btn primary full" type="submit">Start flight lookup</button>
       </form>
 
       <section class="panel cleanForwardPanel">
