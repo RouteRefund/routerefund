@@ -589,3 +589,14 @@ body[data-page="info"] .links a.primary{color:#fff}
 .handoffProofGrid b{display:block;margin-bottom:7px;color:#10231f;font-size:13px;text-transform:uppercase;letter-spacing:.045em}.handoffProofGrid span{display:block;color:var(--muted);font-weight:850;line-height:1.42}
 @media(max-width:900px){.handoffProof{grid-template-columns:1fr}.handoffProofGrid{grid-template-columns:1fr 1fr}.handoffProofIntro{padding:24px;border-radius:26px}}
 @media(max-width:640px){.handoffProof{gap:12px;padding-top:0}.handoffProofIntro{padding:22px;border-radius:24px}.handoffProofIntro:after{display:none}.handoffProofIntro h2{font-size:28px;line-height:1.08}.handoffProofGrid{grid-template-columns:1fr;gap:10px}.handoffProofGrid div{padding:15px 16px;border-radius:18px}}
+
+/* landing-first-week-1: clearer post-intake expectations for customer trust */
+.firstWeekFlow{display:grid;grid-template-columns:minmax(0,.82fr) minmax(320px,1.18fr);gap:18px;align-items:stretch;padding-top:14px}
+.firstWeekIntro{border:1px solid #d9ead7;border-radius:28px;background:linear-gradient(135deg,#10231f,#123943);color:#fff;padding:28px;box-shadow:0 18px 46px rgba(18,57,67,.15)}
+.firstWeekIntro .eyebrow{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.22);color:#e8f5e5}
+.firstWeekIntro h2{margin:14px 0 10px;color:#fff}.firstWeekIntro p{color:rgba(255,255,255,.76);font-weight:800;line-height:1.55}
+.firstWeekSteps{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.firstWeekSteps div{position:relative;background:#fff;border:1px solid var(--line);border-radius:22px;padding:18px 18px 18px 58px;box-shadow:0 12px 30px rgba(18,57,67,.06)}
+.firstWeekSteps b{position:absolute;left:17px;top:18px;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,#0f7b4c,#123943);color:#fff;font-weight:950;box-shadow:0 10px 18px rgba(15,123,76,.18)}
+.firstWeekSteps h3{margin:0 0 6px;font-size:18px}.firstWeekSteps p{margin:0;color:var(--muted);font-weight:800;line-height:1.42}
+@media(max-width:860px){.firstWeekFlow{grid-template-columns:1fr;gap:12px;padding-top:8px}.firstWeekIntro{padding:22px;border-radius:24px}.firstWeekSteps{grid-template-columns:1fr}.firstWeekSteps div{padding:16px 16px 16px 54px;border-radius:20px}.firstWeekSteps b{left:15px;top:16px}}
