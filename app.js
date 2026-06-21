@@ -326,7 +326,7 @@ function applyOwnerFilter(status=ownerActiveFilter){
 document.addEventListener('click',async e=>{
   const b=e.target.closest('button,[data-action]');if(!b)return;
   const action=b.dataset.action,id=b.dataset.id;
-  if(action==='mobile-menu')return modal('<h2>Menu</h2><div class="mobileMenuList"><a href="how-it-works.html">How it works</a><a href="supported-airlines.html">Airlines</a><a href="trust-center.html">Trust center</a><a href="faq.html">FAQ</a><a href="forward-confirmation.html">Forward confirmation</a><a href="login.html">Log in</a><a href="signup.html">Create account</a><a href="add-trip.html">Start tracking</a></div>');
+  if(action==='mobile-menu')return modal('<h2>RouteRefund menu</h2><p class="mini muted">Flight monitoring after you book, with no airline passwords and no automatic reservation changes.</p><div class="mobileMenuList"><a href="add-trip.html" class="mobileMenuPrimary">Start tracking</a><a href="how-it-works.html">How it works</a><a href="supported-airlines.html">Supported airlines</a><a href="forward-confirmation.html">Forward a confirmation</a><a href="trust-center.html">Trust center</a><a href="faq.html">FAQ</a><a href="login.html">Log in</a><a href="signup.html">Create account</a></div><div class="mobileMenuPromise"><b>Privacy reminder</b><span>Only send trip details needed for review. Do not share airline passwords, one-time codes, or card numbers.</span></div>');
   if(action==='logout')return logout();
   if(action==='remove')return modal(`<h2>Stop monitoring this trip?</h2><p>This archives the booking in RouteRefund, removes it from your customer dashboard, and stops active monitoring. It will not delete operational records or change, cancel, or rebook anything with the airline.</p><div class="actions"><button class="btn danger" data-action="confirm-remove" data-id="${escapeHtml(id)}">Stop monitoring</button><button class="btn ghost" data-action="close-modal">Keep monitoring</button></div>`);
   if(action==='confirm-remove'){closeModal();return archiveTrip(id)}
@@ -360,7 +360,22 @@ document.addEventListener('click',async e=>{
 });
 document.addEventListener('input',e=>{if(e.target?.id==='ownerSearch')applyOwnerFilter(ownerActiveFilter)});
 
-function syncPublicNav(){const publicPages=new Set(['home','info']);const page=document.body.dataset.page;if(!publicPages.has(page))return;const links=document.querySelector('.nav .links');if(!links)return;links.innerHTML='<a class="hide-sm" href="how-it-works.html">How it works</a><a class="hide-sm" href="supported-airlines.html">Airlines</a><a class="hide-sm" href="trust-center.html">Trust</a><a class="hide-sm" href="faq.html">FAQ</a><a class="btn ghost" href="login.html">Log in</a><a class="btn primary" href="add-trip.html">Start tracking</a><button class="btn ghost mobileMenuBtn" data-action="mobile-menu" aria-label="Open menu">Menu</button>'}
+function navLink(href,label,extra=''){
+  const current=(location.pathname.split('/').pop()||'index.html')===href;
+  return `<a class="${extra}" href="${href}"${current?' aria-current="page"':''}>${label}</a>`
+}
+function syncPublicNav(){
+  const publicPages=new Set(['home','info']);const page=document.body.dataset.page;if(!publicPages.has(page))return;const links=document.querySelector('.nav .links');if(!links)return;
+  links.innerHTML=[
+    navLink('how-it-works.html','How it works','hide-sm'),
+    navLink('supported-airlines.html','Airlines','hide-sm'),
+    navLink('trust-center.html','Trust','hide-sm'),
+    navLink('faq.html','FAQ','hide-sm'),
+    navLink('login.html','Log in','btn ghost'),
+    navLink('add-trip.html','Start tracking','btn primary'),
+    '<button class="btn ghost mobileMenuBtn" data-action="mobile-menu" aria-label="Open RouteRefund menu">Menu</button>'
+  ].join('')
+}
 
 window.addEventListener('DOMContentLoaded',async()=>{
   syncPublicNav();

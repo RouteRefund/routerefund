@@ -477,3 +477,12 @@ body[data-page="info"] .links a.primary{color:#fff}
 .reassuranceGrid span{display:block;color:var(--muted);font-weight:850;line-height:1.42}
 @media(max-width:900px){.reassuranceStrip{grid-template-columns:1fr}.reassuranceGrid{grid-template-columns:1fr 1fr}.reassuranceIntro{padding:24px;border-radius:26px}}
 @media(max-width:640px){.reassuranceStrip{gap:12px;padding-top:4px}.reassuranceIntro{padding:22px;border-radius:24px}.reassuranceIntro:after{display:none}.reassuranceIntro h2{font-size:28px;line-height:1.08}.reassuranceGrid{grid-template-columns:1fr;gap:10px}.reassuranceGrid div{padding:15px 16px;border-radius:18px}}
+
+/* public-nav-menu-1: clearer active states and mobile menu trust framing */
+.nav a[aria-current="page"]{color:var(--green2)}
+.nav a[aria-current="page"]:not(.btn){text-decoration:underline;text-underline-offset:6px;text-decoration-thickness:2px}
+.mobileMenuList a.mobileMenuPrimary{background:linear-gradient(135deg,#0f7b4c,#123943);color:#fff;border-color:transparent;box-shadow:0 14px 28px rgba(15,123,76,.20)}
+.mobileMenuPromise{margin-top:14px;padding:14px 15px;border:1px solid #d9ead7;border-radius:18px;background:#f8fbf5;color:#245f3e}
+.mobileMenuPromise b{display:block;margin-bottom:4px;font-size:12px;text-transform:uppercase;letter-spacing:.045em}
+.mobileMenuPromise span{display:block;color:var(--muted);font-weight:820;line-height:1.4}
+@media(max-width:640px){.nav .links a[aria-current="page"].ghost{border-color:#cfe8cb;color:#0b5d3b;background:#f3fbf4!important}}
