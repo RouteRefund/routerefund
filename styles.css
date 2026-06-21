@@ -558,3 +558,16 @@ body[data-page="info"] .links a.primary{color:#fff}
 .trackableGrid div:nth-child(3){background:#fff8e6;border-color:#f0d79a}.trackableGrid div:nth-child(3) b{color:#704400}
 @media(max-width:900px){.trackableTrip{grid-template-columns:1fr}.trackableGrid{grid-template-columns:1fr 1fr}.trackableIntro{padding:24px;border-radius:26px}}
 @media(max-width:640px){.trackableTrip{gap:12px;padding-top:2px}.trackableIntro{padding:22px;border-radius:24px}.trackableIntro:after{display:none}.trackableIntro h2{font-size:28px;line-height:1.08}.trackableGrid{grid-template-columns:1fr;gap:10px}.trackableGrid div{padding:15px 16px;border-radius:18px}}
+
+/* how-proof-handoff-1: clearer proof handoff and privacy boundaries */
+.handoffProof{display:grid;grid-template-columns:minmax(0,.82fr) minmax(320px,1.18fr);gap:20px;align-items:stretch;padding-top:4px}
+.handoffProofIntro{background:linear-gradient(135deg,#10231f,#123943);color:#fff;border:1px solid rgba(255,255,255,.10);border-radius:28px;padding:26px;box-shadow:0 18px 48px rgba(18,57,67,.14);overflow:hidden;position:relative}
+.handoffProofIntro:after{content:'';position:absolute;right:-50px;top:-54px;width:156px;height:156px;border-radius:50%;background:rgba(232,180,79,.18)}
+.handoffProofIntro .eyebrow{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.22);color:#e8f5e5;position:relative;z-index:1}
+.handoffProofIntro h2{color:#fff;margin:12px 0 10px;position:relative;z-index:1}.handoffProofIntro p{color:rgba(255,255,255,.76);font-weight:780;line-height:1.55;position:relative;z-index:1}
+.handoffProofGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.handoffProofGrid div{background:#fff;border:1px solid #e5eee1;border-radius:22px;padding:18px;box-shadow:0 12px 30px rgba(18,57,67,.06)}
+.handoffProofGrid div:nth-child(2){background:#fff8e6;border-color:#f0d79a}.handoffProofGrid div:nth-child(2) b{color:#704400}.handoffProofGrid div:nth-child(3){background:#f8fbf5;border-color:#d9ead7}
+.handoffProofGrid b{display:block;margin-bottom:7px;color:#10231f;font-size:13px;text-transform:uppercase;letter-spacing:.045em}.handoffProofGrid span{display:block;color:var(--muted);font-weight:850;line-height:1.42}
+@media(max-width:900px){.handoffProof{grid-template-columns:1fr}.handoffProofGrid{grid-template-columns:1fr 1fr}.handoffProofIntro{padding:24px;border-radius:26px}}
+@media(max-width:640px){.handoffProof{gap:12px;padding-top:0}.handoffProofIntro{padding:22px;border-radius:24px}.handoffProofIntro:after{display:none}.handoffProofIntro h2{font-size:28px;line-height:1.08}.handoffProofGrid{grid-template-columns:1fr;gap:10px}.handoffProofGrid div{padding:15px 16px;border-radius:18px}}
