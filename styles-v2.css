@@ -68,3 +68,74 @@ body.rr-v2{font-family:'Source Sans 3',Inter,system-ui,-apple-system,Segoe UI,sa
   body.rr-v2 .rr-device{margin-top:20px!important}.rr-v2 .rr-device-top{padding:10px!important}.rr-v2 .rr-status-card strong{font-size:12px!important}.rr-v2 .rr-route{font-size:20px!important}.rr-v2 .rr-status-card p{font-size:14.5px!important}
 }
 @media(max-width:380px){body.rr-v2 h1,body.rr-v2 .rr-hero h1{font-size:32px!important;max-width:300px!important}body.rr-v2 .lead{font-size:14.8px!important}body.rr-v2 .brand{font-size:15.5px!important}}
+
+/* revamp-v2-4: onboarding + app surface polish */
+body.rr-v2 .rr-onboard-hero{max-width:1120px;margin:0 auto;padding:72px 24px 38px;display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:44px;align-items:center}
+body.rr-v2 .rr-onboard-copy{display:grid;gap:20px}
+body.rr-v2 .rr-onboard-card{background:#fff;border:1px solid var(--rr-line);border-radius:12px;padding:24px;box-shadow:var(--rr-shadow)}
+body.rr-v2 .rr-onboard-card b{display:block;color:var(--rr-purple);font-size:13px;text-transform:uppercase;letter-spacing:.055em;margin-bottom:14px}
+body.rr-v2 .rr-onboard-card ul{list-style:none;margin:0;padding:0;display:grid;gap:12px}
+body.rr-v2 .rr-onboard-card li{position:relative;padding-left:28px;color:var(--rr-label);font-weight:600;line-height:1.36}
+body.rr-v2 .rr-onboard-card li:before{content:"";position:absolute;left:0;top:2px;width:18px;height:18px;border-radius:50%;background:rgba(21,190,83,.16);border:1px solid rgba(21,190,83,.35)}
+body.rr-v2 .rr-onboard-card li:after{content:"";position:absolute;left:6px;top:7px;width:6px;height:3px;border-left:2px solid var(--rr-green-text);border-bottom:2px solid var(--rr-green-text);transform:rotate(-45deg)}
+body.rr-v2 .rr-start-flow{padding-top:42px}
+body.rr-v2 .authShell,body.rr-v2 .modernAuth{background:linear-gradient(180deg,#fff,#f6f9fc)}
+body.rr-v2 .authFormPanel,body.rr-v2 .ownerAuthShell .authFormPanel{border-radius:14px!important;border:1px solid var(--rr-line)!important;box-shadow:var(--rr-shadow)!important;background:#fff!important}
+body.rr-v2 .formPanel,body.rr-v2 .cleanLookupForm,body.rr-v2 .cleanForwardPanel{border-radius:14px!important;border:1px solid var(--rr-line)!important;box-shadow:var(--rr-soft)!important;background:#fff!important}
+body.rr-v2 .cleanDashboard{max-width:1120px;margin:0 auto;padding:46px 24px 70px!important}
+body.rr-v2 .cleanDashHead{background:linear-gradient(135deg,#fff,#f6f9fc);border:1px solid var(--rr-line);border-radius:14px;padding:26px;box-shadow:var(--rr-soft);margin-bottom:22px}
+body.rr-v2 .cleanDashHead h1{font-size:46px!important;line-height:1.02!important;letter-spacing:-.05em!important}
+body.rr-v2 .cleanDashHead p{max-width:650px}
+body.rr-v2 .safetyStrip,body.rr-v2 .dashboardExpectations,body.rr-v2 .customerSupportPanel{display:none!important}
+body.rr-v2 .cleanAddGrid{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(320px,.72fr);gap:18px!important;align-items:start}
+body.rr-v2 .formIntro h2{font-size:30px!important;letter-spacing:-.035em!important}
+body.rr-v2 .customerTripCard{border-radius:14px!important;border:1px solid var(--rr-line)!important;box-shadow:var(--rr-soft)!important;padding:20px!important;background:#fff!important}
+body.rr-v2 .customerTripMeta div,body.rr-v2 .customerNextStep{border-radius:8px!important;background:#f8fbff!important;border-color:var(--rr-line)!important}
+body.rr-v2 .miniTimeline span{border-radius:6px!important;background:#f6f9fc!important;border-color:var(--rr-line)!important;color:var(--rr-slate)!important}
+body.rr-v2 .miniTimeline span.done{background:rgba(21,190,83,.12)!important;color:var(--rr-green-text)!important;border-color:rgba(21,190,83,.28)!important}
+body.rr-v2 .empty{border-radius:14px!important;background:#fff!important;border:1px dashed #b9b9f9!important;box-shadow:none!important}
+body.rr-v2 .modalCard{border-radius:14px!important;box-shadow:var(--rr-shadow)!important}
+@media(max-width:820px){
+  body.rr-v2 .rr-onboard-hero{display:block;padding:36px 20px 24px!important;max-width:440px}
+  body.rr-v2 .rr-onboard-copy{gap:16px}
+  body.rr-v2 .rr-onboard-card{margin-top:22px;padding:20px;border-radius:10px}
+  body.rr-v2 .rr-start-flow{padding-top:28px!important}
+  body.rr-v2 .cleanDashboard{padding:28px 20px 52px!important;max-width:440px}
+  body.rr-v2 .cleanDashHead{padding:20px;border-radius:12px;margin-bottom:16px}
+  body.rr-v2 .cleanDashHead h1{font-size:34px!important}
+  body.rr-v2 .cleanAddGrid{grid-template-columns:1fr!important;gap:14px!important}
+  body.rr-v2 .formPanel,body.rr-v2 .cleanLookupForm,body.rr-v2 .cleanForwardPanel{padding:20px!important;border-radius:12px!important}
+  body.rr-v2 .formIntro h2{font-size:26px!important}
+  body.rr-v2 .customerTripCard{padding:18px!important;border-radius:12px!important}
+}
+
+/* revamp-v2-5: tighter onboarding mobile proportions */
+@media(max-width:820px){
+  body.rr-v2 .rr-onboard-hero{padding-top:26px!important;padding-bottom:18px!important;background:linear-gradient(180deg,#f8fbea,#fff 72%)!important}
+  body.rr-v2 .rr-onboard-copy{gap:13px!important}
+  body.rr-v2 .rr-onboard-copy h1{font-size:32px!important;line-height:1.05!important;letter-spacing:-.045em!important;max-width:330px!important;margin:12px 0 4px!important}
+  body.rr-v2 .rr-onboard-copy .lead{font-size:15.5px!important;line-height:1.46!important;max-width:330px!important;margin:0!important}
+  body.rr-v2 .rr-onboard-copy .rr-actions{margin-top:12px!important}
+  body.rr-v2 .rr-onboard-card{margin-top:18px!important;padding:18px!important;border-radius:12px!important}
+  body.rr-v2 .rr-onboard-card b{font-size:11px!important;margin-bottom:12px!important}
+  body.rr-v2 .rr-onboard-card ul{gap:10px!important}
+  body.rr-v2 .rr-onboard-card li{font-size:14.5px!important;line-height:1.32!important;padding-left:28px!important}
+  body.rr-v2 .rr-section-head h2{font-size:30px!important;line-height:1.05!important}.rr-v2 .rr-section-head p{font-size:15px!important}
+}
+
+/* revamp-v2-6: clean auth pages */
+body.rr-v2 .rr-auth-page{max-width:1120px;margin:0 auto;padding:64px 24px 80px;display:grid;grid-template-columns:minmax(0,.86fr) minmax(380px,.72fr);gap:44px;align-items:start}
+body.rr-v2 .rr-auth-intro{display:grid;gap:18px;position:sticky;top:96px}
+body.rr-v2 .rr-auth-card{background:#fff;border:1px solid var(--rr-line);border-radius:14px;padding:26px;box-shadow:var(--rr-shadow)}
+body.rr-v2 .rr-auth-card form{display:grid;gap:15px}body.rr-v2 .rr-auth-card h2{font-size:34px!important;line-height:1.05!important}body.rr-v2 .rr-auth-card p{margin:0;font-size:15.5px}body.rr-v2 .rr-auth-card label{display:grid;gap:7px}body.rr-v2 .rr-auth-card input{width:100%}body.rr-v2 .rr-auth-card .full{width:100%;margin-top:4px}
+body.rr-v2 .rr-packet{border:1px solid var(--rr-line);background:#f8fbff;border-radius:10px;padding:14px;display:grid;gap:10px}body.rr-v2 .rr-packet>b{color:var(--rr-purple);font-size:12px;text-transform:uppercase;letter-spacing:.055em}.rr-v2 .checkRow{display:flex!important;gap:9px;align-items:flex-start;font-size:14px;line-height:1.35}.rr-v2 .checkRow input{width:auto!important;min-height:0!important;margin-top:3px}.rr-v2 .checkRow a{color:var(--rr-purple);text-decoration:underline;text-underline-offset:3px}
+@media(max-width:820px){body.rr-v2 .rr-auth-page{display:block;max-width:440px;padding:30px 20px 54px}body.rr-v2 .rr-auth-intro{position:static;gap:13px;margin-bottom:20px}body.rr-v2 .rr-auth-intro h1{font-size:32px!important;line-height:1.05!important;max-width:330px!important}body.rr-v2 .rr-auth-intro .lead{font-size:15.5px!important;line-height:1.46!important}body.rr-v2 .rr-auth-card{padding:20px;border-radius:12px}body.rr-v2 .rr-auth-card h2{font-size:28px!important}body.rr-v2 .rr-auth-card form{gap:13px}body.rr-v2 .rr-packet{padding:13px}}
+
+/* revamp-v2-7: force mobile nav auth button text visible */
+@media(max-width:820px){
+  body.rr-v2 .nav .links a.btn.ghost{display:inline-flex!important;color:#061b31!important;background:#fff!important;border:1px solid #b9b9f9!important;font-weight:600!important;visibility:visible!important;opacity:1!important;min-width:96px!important}
+  body.rr-v2 .nav .links a.btn.ghost[href="signup.html"]::after{content:"Create";font-size:12.5px;color:#061b31}
+  body.rr-v2 .nav .links a.btn.ghost[href="signup.html"]{font-size:0!important}
+  body.rr-v2 .nav .links a.btn.ghost[href="login.html"]::after{content:"Log in";font-size:12.5px;color:#061b31}
+  body.rr-v2 .nav .links a.btn.ghost[href="login.html"]{font-size:0!important}
+}

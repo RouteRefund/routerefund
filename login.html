@@ -5,13 +5,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Log in | RouteRefund</title>
   <meta name="robots" content="noindex,nofollow" />
-  <link rel="stylesheet" href="styles.css?v=revamp-v2-3" />
-  <link rel="stylesheet" href="styles-v2.css?v=revamp-v2-3" />
-  <link rel="icon" href="/favicon.ico?v=logo-a-1" sizes="any" />
-  <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png?v=logo-a-1" />
-  <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16.png?v=logo-a-1" />
-  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png?v=logo-a-1" />
-  <link rel="manifest" href="/site.webmanifest" />
-  <meta name="theme-color" content="#0f7b4c" />
+  <link rel="icon" type="image/png" href="/assets/favicon-32.png?v=logo-a-1" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css?v=revamp-v2-7" />
+  <link rel="stylesheet" href="styles-v2.css?v=revamp-v2-7" />
 </head>
-<body class="rr-v2" data-page="login"><main class="authShell"><section class="authBrandPanel"><a class="brand authBrand" href="index.html"><span class="logo"><img src="/assets/favicon-32.png?v=logo-a-1" alt="" /></span>RouteRefund</a><div><span class="eyebrow light">Welcome back</span><h1>Access your tracked trips.</h1><p>Log in to add flights, update notes, and view monitoring status.</p></div><ul class="checklist lightList"><li>Track booked flights</li><li>View saved trips</li><li>Update trip notes</li></ul></section><section class="authFormPanel"><form id="loginForm" class="panel authCard modernAuth"><h2>Log in</h2><p class="muted">Enter your account email and password.</p><label>Email<input id="email" type="email" autocomplete="email" placeholder="you@email.com" required></label><label>Password<input id="password" type="password" autocomplete="current-password" placeholder="Password" required></label><button class="btn primary full" type="submit">Log in</button><p class="mini center"><a href="reset-password.html">Forgot password?</a> · <a href="forgot-email.html">Forgot email?</a></p><p class="mini center">No account? <a href="signup.html">Create one</a></p></form></section></main><div id="toast" class="toast"></div><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="config.js"></script><script src="app.js?v=revamp-v2-3"></script></body></html>
+<body class="rr-v2" data-page="login">
+  <nav class="nav"><div class="navin wrap"><a class="brand" href="index.html"><span class="logo"><img src="/assets/favicon-32.png?v=logo-a-1" alt="" /></span>RouteRefund</a><div class="links"><a class="btn ghost" href="signup.html">Create account</a><button class="btn ghost mobileMenuBtn" data-action="mobile-menu">Menu</button></div></div></nav>
+  <main class="rr-auth-page">
+    <section class="rr-auth-intro"><span class="eyebrow">Welcome back</span><h1>Access your tracked trips.</h1><p class="lead">Log in to add flights, view lookup status, delete test trips, and manage your RouteRefund dashboard.</p></section>
+    <section class="rr-auth-card"><form id="loginForm"><h2>Log in</h2><p>Use the email and password for your RouteRefund customer account.</p><label>Email<input id="email" type="email" autocomplete="email" placeholder="you@email.com" required></label><label>Password<input id="password" type="password" autocomplete="current-password" placeholder="Password" required></label><button class="btn primary full" type="submit">Log in</button><p class="mini center"><a href="reset-password.html">Forgot password?</a> · <a href="forgot-email.html">Forgot email?</a></p><p class="mini center">No account? <a href="signup.html">Create one</a></p></form></section>
+  </main>
+  <div id="modal" class="modal"><div id="modalCard" class="modalCard"></div></div><div id="toast" class="toast"></div>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="config.js"></script><script src="app.js?v=revamp-v2-7"></script>
+</body>
+</html>
