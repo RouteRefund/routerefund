@@ -117,7 +117,7 @@ async function addTrip(e){
   lock('Saving trip...');
   const {error}=await supabaseClient.from('trips').insert(trip);
   if(error)return fail(error.message);
-  e.target.reset();syncLocatorHint();toast('Flight lookup started.');await renderTrips();unlock()
+  e.target.reset();syncLocatorHint();toast('Flight lookup started — this page will update automatically.');await renderTrips();scheduleCustomerLookupRefresh(true);unlock()
 }
 async function loadTrips(){const {data,error}=await supabaseClient.from('trips').select('*').or('status.is.null,status.neq.Archived').order('created_at',{ascending:false});return {rows:data||[],error}}
 function tripSavings(r){return r.current_price?Number(r.paid)-Number(r.current_price):0}
@@ -130,6 +130,23 @@ function customerTripStatus(r){
   return {label:'Monitoring active',step:'Watching quietly',body:'We are monitoring this booked flight and will only contact you if there is a verified, customer-approved next step.',tone:'monitoring'};
 }
 function hasVerifiedFlightDetails(r){return !!(r.route||r.travel_date||r.departure_time)}
+let customerLookupPollTimer=null;
+let customerLookupPollStarted=0;
+function scheduleCustomerLookupRefresh(hasPending=false){
+  if(!['dashboard','trip-detail'].includes(document.body.dataset.page))return;
+  if(hasPending){
+    if(!customerLookupPollTimer){
+      customerLookupPollStarted=Date.now();
+      customerLookupPollTimer=setInterval(async()=>{
+        if(Date.now()-customerLookupPollStarted>1000*60*5){clearInterval(customerLookupPollTimer);customerLookupPollTimer=null;return}
+        if(document.body.dataset.page==='dashboard')await renderTrips();
+        if(document.body.dataset.page==='trip-detail')await renderTripDetail();
+      },5000);
+    }
+  }else if(customerLookupPollTimer){
+    clearInterval(customerLookupPollTimer);customerLookupPollTimer=null;
+  }
+}
 function customerTripTitle(r){return `${escapeHtml(r.confirmation_no||'Trip')}${r.airline?` <span>${escapeHtml(r.airline)}</span>`:''}`}
 function customerTripDeleteButton(r){
   const label=[r.airline,r.confirmation_no].filter(Boolean).join(' ')||'this trip';
@@ -153,6 +170,8 @@ async function renderTrips(){
   const box=$('trips');if(!box)return;
   const {rows,error}=await loadTrips();
   if(error){box.innerHTML=`<div class="empty dashboardEmpty errorState"><h3>Trips could not be loaded</h3><p>${escapeHtml(error.message||'Please refresh and try again.')}</p><button class="btn primary" type="button" onclick="renderTrips()">Retry</button></div>`;return}
+  const hasPendingLookup=rows.some(r=>!hasVerifiedFlightDetails(r));
+  scheduleCustomerLookupRefresh(hasPendingLookup);
   box.innerHTML=rows.length?rows.map(r=>{
     const status=customerTripStatus(r);
     const tripStatus=r.status||'Monitoring';
@@ -186,6 +205,7 @@ async function renderTripDetail(){
   if(error||!r){box.innerHTML=`<div class="panel"><h2>Trip not found</h2><p>${escapeHtml(error?.message||'This trip could not be loaded.')}</p><a class="btn primary" href="trips.html">Back to My trips</a></div>`;return}
   const statuses=['Submitted','Details verified','Monitoring','Opportunity review','Resolved'];const unverified=!hasVerifiedFlightDetails(r);const active=(unverified||['Intake review','Received','Submitted'].includes(r.status))?0:['Savings found','Review needed'].includes(r.status)?3:['Closed','Archived'].includes(r.status)?4:2;
   const status=customerTripStatus(r);
+  scheduleCustomerLookupRefresh(unverified);
   const flightLine=hasVerifiedFlightDetails(r)?`${escapeHtml(r.airline||'Airline')} • ${escapeHtml(r.route||'Route')} • ${escapeHtml(r.travel_date||'Date')}${r.departure_time?` • ${escapeHtml(r.departure_time)}`:''}`:'Looking up flight details for this confirmation';
   box.innerHTML=`<div class="panel tripDetailCard simpleTripDetail"><div class="tripDetailHero"><div><span class="tripKicker">${escapeHtml(r.airline||'Flight')}</span><h2>Confirmation ${escapeHtml(r.confirmation_no||'')}</h2><p>${flightLine}</p></div><span class="tag ${escapeHtml(status.tone)}" aria-label="Status: ${escapeHtml(status.label)}">${escapeHtml(status.label)}</span></div><div class="tripDetailSummary"><div><b>Passenger</b><span>${escapeHtml(r.passenger_first||'')} ${escapeHtml(r.passenger_last||'')}</span></div><div><b>Airline</b><span>${escapeHtml(r.airline||'—')}</span></div><div><b>Route</b><span>${escapeHtml(r.route||'Pending lookup')}</span></div><div><b>Departure</b><span>${escapeHtml(r.travel_date||'Pending lookup')}${r.departure_time?` • ${escapeHtml(r.departure_time)}`:''}</span></div>${r.paid!=null?`<div><b>Price paid</b><span>${money(r.paid)}</span></div>`:''}</div><div class="detailTimeline" role="list" aria-label="Trip progress">${statuses.map((x,i)=>`<div class="${i<=active?'done':''}" role="listitem" ${i===active?'aria-current="step"':''}><b>${i+1}</b><span>${x}</span></div>`).join('')}</div><div class="customerNextStep detailNextStep"><b>${escapeHtml(status.step)}</b><span>${escapeHtml(status.body)}</span></div>${(unverified||['Intake review','Received','Submitted'].includes(r.status))?'<div class="savingsBox lookupBox"><h3>Secure lookup running</h3><p>RouteRefund is looking up this reservation. Route, date, time, and flight details will appear here after the reservation is found.</p></div>':''}${['Savings found','Review needed'].includes(r.status)?'<div class="savingsBox"><h3>RouteRefund review in progress</h3><p>Our team is reviewing a possible fare-change signal for this booking. We will contact you only if there is a verified, customer-approved next step.</p></div>':''}${r.notes?`<div class="customerNotePreview detailNotes"><b>Your updates</b><span>${safeLines(r.notes)}</span></div>`:''}<div class="actions tripActionsSimple">${unverified?'':`<button class="btn ghost" data-action="note" data-id="${escapeHtml(r.id)}" aria-label="Send an update about confirmation ${escapeHtml(r.confirmation_no||'this trip')}">Send update</button>`}${customerTripDeleteButton(r)}<a class="btn primary" href="trips.html">Back to dashboard</a></div></div>`
 }
