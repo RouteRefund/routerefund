@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>My trips | RouteRefund</title>
   <meta name="robots" content="noindex,nofollow" />
-  <link rel="stylesheet" href="styles.css?v=public-nav-menu-1" />
+  <link rel="stylesheet" href="styles.css?v=clean-flow-2" />
   <link rel="icon" href="/favicon.ico?v=logo-a-1" sizes="any" />
   <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png?v=logo-a-1" />
   <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16.png?v=logo-a-1" />
@@ -17,91 +17,25 @@
   <nav class="nav">
     <div class="wrap navin">
       <a class="brand" href="index.html"><span class="logo"><img src="/assets/favicon-32.png?v=logo-a-1" alt="" /></span>RouteRefund</a>
-      <div class="links">
-        <span id="welcome" class="hide-sm muted"></span>
-        <a class="btn ghost" href="account.html">Account</a><button class="btn ghost" data-action="logout">Log out</button>
-      </div>
+      <div class="links"><span id="welcome" class="hide-sm muted"></span><a class="btn ghost" href="account.html">Account</a><button class="btn ghost" data-action="logout">Log out</button></div>
     </div>
   </nav>
 
-  <main class="wrap">
-    <section class="section dashHead">
+  <main class="wrap cleanDashboard">
+    <section class="section dashHead cleanDashHead">
       <div>
         <span class="eyebrow">Customer dashboard</span>
-        <h1>Start tracking a booked flight.</h1>
-        <p class="lead small">Forward your confirmation email or enter the basics manually. RouteRefund monitors the same booked trip for eligible lower prices and helps prepare a safe savings option when a valid match appears.</p>
+        <h1>Track your booked flights.</h1>
+        <p class="lead small">Add a real airline reservation, let RouteRefund look it up when supported, and manage test or duplicate trips from this page.</p>
       </div>
+      <div class="cleanDashActions"><a class="btn ghost" href="forward-confirmation.html">Forwarding guide</a><a class="btn ghost" href="supported-airlines.html">Supported airlines</a></div>
     </section>
 
-    <section class="panel safetyStrip" aria-label="Trip submission safety reminders">
-      <div>
-        <b>Before you submit</b>
-        <span>Use a flight you already booked. Do not paste payment card numbers, passwords, or airline login details.</span>
-      </div>
-      <div>
-        <b>Customer approval stays required</b>
-        <span>RouteRefund monitors and prepares options; airline booking, cancellation, or rebooking steps require separate approval.</span>
-      </div>
-    </section>
-
-    <section class="customerFlowPanel" aria-label="What happens after you add a trip">
-      <div>
-        <b>1. Private intake review</b>
-        <span>We check the booking details for completeness and keep sensitive trip data inside your signed-in account.</span>
-      </div>
-      <div>
-        <b>2. Monitoring only</b>
-        <span>RouteRefund watches for comparable, eligible changes without exposing exact savings until a real option is verified.</span>
-      </div>
-      <div>
-        <b>3. You approve action</b>
-        <span>If there is a safe next step, we contact you first. Nothing is cancelled, rebooked, or billed automatically.</span>
-      </div>
-    </section>
-
-    <section class="panel dashboardExpectations" aria-labelledby="dashboard-expectations-title">
-      <div>
-        <span class="eyebrow">What to expect</span>
-        <h2 id="dashboard-expectations-title">Your dashboard shows progress, not pressure.</h2>
-        <p>After you add a booked flight, RouteRefund keeps the status plain: lookup, monitoring, review, or resolved. We avoid showing exact savings claims until the fare, fees, passenger match, and airline rules have been checked.</p>
-      </div>
-      <ul class="checklist compactList">
-        <li>Confirmation details stay inside your private customer account</li>
-        <li>Possible fare drops are reviewed before customer outreach</li>
-        <li>Any airline action still needs a separate customer-approved step</li>
-      </ul>
-    </section>
-
-    <section class="customerSupportPanel" aria-label="Dashboard support options">
-      <div>
-        <b>Not sure what to submit?</b>
-        <span>Use the airline confirmation email if you have it. It usually gives RouteRefund the cleanest starting point without asking for passwords, codes, or card details.</span>
-      </div>
-      <div class="customerSupportLinks">
-        <a href="forward-confirmation.html">Forwarding guide</a>
-        <a href="supported-airlines.html">Airline coverage</a>
-        <a href="faq.html">Safety FAQ</a>
-      </div>
-    </section>
-
-    <section class="grid two align-start addTripGrid">
-      <section class="panel formPanel forwardPanel">
-        <span class="eyebrow">Fastest option</span>
-        <h2>Forward your flight confirmation</h2>
-        <p>Send your airline booking email to:</p>
-        <a class="emailBox" href="mailto:trips@routerefund.com">trips@routerefund.com</a>
-        <ul class="checklist compactList">
-          <li>Usually includes airline, route, dates, cabin, and price</li>
-          <li>Reduces typing mistakes</li>
-          <li>We review it and add the trip to your dashboard</li>
-        </ul>
-        <p class="mini">Use this for the cleanest setup. If anything is missing, RouteRefund will follow up before any savings action is taken.</p>
-      </section>
-
-      <form id="tripForm" class="panel formPanel lookupForm">
-        <span class="eyebrow">Manual lookup</span>
-        <h2>Enter the basics</h2>
-        <div class="notice smallNotice"><b>Keep this simple.</b> Start with the same details the airline uses to find your reservation. RouteRefund will review the booking and fill in route, date, and timing details when we can verify them.</div>
+    <section class="grid two align-start addTripGrid cleanAddGrid">
+      <form id="tripForm" class="panel formPanel lookupForm cleanLookupForm">
+        <span class="eyebrow">Add a trip</span>
+        <h2>Find my flight</h2>
+        <p class="mini formIntro">Use the same details the airline asks for on its manage-trip page. For American Airlines, lookup can happen automatically after submission.</p>
         <label>Airline
           <select id="airline" required>
             <option value="">Choose airline</option>
@@ -116,44 +50,29 @@
             <option>Hawaiian Airlines</option>
             <option value="Other">Other / not listed</option>
           </select>
-          <span class="formHint">This tells RouteRefund which airline lookup page to try first.</span>
+          <span class="formHint">This routes the lookup to the right airline flow.</span>
         </label>
         <label>Confirmation / record locator
-          <input id="confirmationNo" placeholder="ABC123" maxlength="13" pattern="[A-Za-z0-9]{5,13}" autocomplete="off" required>
-          <span id="locatorHint" class="formHint">Enter the booking confirmation / record locator exactly as shown. Usually 6 characters, but we accept 5–13 letters/numbers.</span>
+          <input id="confirmationNo" placeholder="ABCDEF" maxlength="13" pattern="[A-Za-z0-9]{5,13}" autocomplete="off" required>
+          <span id="locatorHint" class="formHint">Enter the booking confirmation exactly as shown.</span>
         </label>
-        <div class="grid two compactFields">
-          <label>Passenger first name
-            <input id="passengerFirst" autocomplete="given-name" placeholder="Andrew" required>
-          </label>
-          <label>Passenger last name
-            <input id="passengerLast" autocomplete="family-name" placeholder="Smith" required>
-          </label>
-        </div>
-        <label>Date of birth
-          <input id="dateOfBirth" type="date" required>
-          <span class="formHint">Used only to help match the booking. Do not enter airline passwords or payment card details.</span>
-        </label>
-        <div class="lookupPromise" aria-label="Automatic trip lookup promise">
-          <b>Next: flight details appear here automatically</b>
-          <span>RouteRefund will use these basics to identify airline, route, date, time, and fare details. No extra fields needed from you.</span>
-        </div>
-        <label class="checkline">
-          <input id="changeConsent" type="checkbox" required>
-          I authorize RouteRefund to monitor this trip and prepare eligible savings options within my trip terms. RouteRefund will contact me before any airline booking, cancellation, or rebooking action unless I separately authorize that specific step.
-        </label>
+        <div class="grid two compactFields"><label>Passenger first name<input id="passengerFirst" autocomplete="given-name" placeholder="Andrew" required></label><label>Passenger last name<input id="passengerLast" autocomplete="family-name" placeholder="Smith" required></label></div>
+        <label>Date of birth<input id="dateOfBirth" type="date" required><span class="formHint">Used only to help match the booking. Never enter airline passwords, one-time codes, or payment card details.</span></label>
+        <label class="checkline"><input id="changeConsent" type="checkbox" required> I authorize RouteRefund to monitor this trip and contact me before any airline booking, cancellation, or rebooking action.</label>
         <button class="btn primary full" type="submit">Find my flight</button>
-        <p class="mini">After you submit, the trip appears in your dashboard as a booking lookup. We’ll fill in route, date, time, and fare details after verification.</p>
       </form>
+
+      <section class="panel cleanForwardPanel">
+        <span class="eyebrow">Alternative</span>
+        <h2>Forward the confirmation email</h2>
+        <p>If you have the airline confirmation, forward it instead of typing details by hand.</p>
+        <a class="emailBox" href="mailto:trips@routerefund.com">trips@routerefund.com</a>
+        <ul class="checklist compactList"><li>Do not include airline passwords</li><li>Do not include one-time codes</li><li>Do not include card numbers</li></ul>
+      </section>
     </section>
 
-    <section class="section">
-      <div class="row dashboardRow">
-        <div>
-          <span class="eyebrow">Your trips</span>
-          <h2>Tracking status</h2>
-        </div>
-      </div>
+    <section class="section cleanTripsSection">
+      <div class="row dashboardRow"><div><span class="eyebrow">Your trips</span><h2>Current tracking</h2><p class="mini">Use Delete trip to remove duplicates while testing. This only deletes the RouteRefund record, not the airline reservation.</p></div></div>
       <div id="trips"><div class="empty"><h3>Loading trips...</h3></div></div>
     </section>
   </main>
@@ -162,6 +81,6 @@
   <div id="modal" class="modal"><div id="modalCard" class="modalCard"></div></div>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="config.js"></script>
-  <script src="app.js?v=ops-secret-guard-1"></script>
+  <script src="app.js?v=clean-flow-2"></script>
 </body>
 </html>

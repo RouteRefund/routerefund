@@ -607,3 +607,26 @@ body[data-page="info"] .links a.primary{color:#fff}
 .heroForward b{display:block;color:#10231f;font-size:17px;line-height:1.28;overflow-wrap:anywhere}
 .heroForward a{display:inline-flex;margin-top:10px;color:#0b5d3b;font-weight:950;text-decoration:underline;text-underline-offset:3px}
 @media(max-width:640px){.heroForward{margin-top:16px;padding:15px;border-radius:18px}.heroForward b{font-size:15px}.heroForward a{font-size:14px}}
+
+/* RouteRefund clean-flow reset: reduces homepage bloat and makes app actions obvious. */
+.cleanHero{padding-top:76px;padding-bottom:34px;display:grid;grid-template-columns:minmax(0,1.06fr) minmax(320px,.72fr);gap:42px;align-items:center}
+.cleanHero h1{max-width:820px;letter-spacing:-.07em;line-height:.92}
+.cleanHeroCopy .lead{max-width:720px}
+.cleanHeroPanel{min-height:auto;padding:30px}
+.cleanSteps{list-style:none;padding:0;margin:18px 0 0;display:grid;gap:16px;counter-reset:step}
+.cleanSteps li{display:grid;grid-template-columns:34px 1fr;column-gap:14px;align-items:start;padding:14px;border:1px solid var(--line);border-radius:18px;background:rgba(255,255,255,.62)}
+.cleanSteps li:before{counter-increment:step;content:counter(step);display:grid;place-items:center;width:32px;height:32px;border-radius:50%;background:var(--green);color:#fff;font-weight:900}
+.cleanSteps b{display:block;color:var(--ink);font-size:1.02rem}.cleanSteps span{display:block;color:var(--muted);margin-top:4px;line-height:1.45}
+.cleanTrustBar{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:4px;margin-bottom:44px}
+.cleanTrustBar>div{background:#fff;border:1px solid var(--line);border-radius:20px;padding:18px 20px;box-shadow:0 14px 45px rgba(14,41,32,.06)}
+.cleanTrustBar b,.cleanChecklist b{display:block;text-transform:uppercase;letter-spacing:.08em;font-size:.78rem;color:var(--green-dark)}
+.cleanTrustBar span,.cleanChecklist span{display:block;color:var(--muted);font-weight:700;margin-top:6px;line-height:1.42}
+.cleanSplit{display:grid;grid-template-columns:.82fr 1.18fr;gap:28px;align-items:center}.cleanSplit.reverse{grid-template-columns:1fr 1fr}.cleanSplit.reverse .panel{order:1}.cleanSplit.reverse .cleanChecklist{order:2}
+.cleanSplit h2{margin-top:8px}.cleanChecklist{display:grid;gap:14px}.cleanChecklist>div{background:#fff;border:1px solid var(--line);border-radius:20px;padding:20px;box-shadow:0 14px 45px rgba(14,41,32,.06)}
+.cleanDarkPanel{background:linear-gradient(145deg,#072d2f,#0e5b42);color:#fff;border:0}.cleanDarkPanel h2,.cleanDarkPanel p{color:#fff}.cleanDarkPanel .eyebrow{background:rgba(255,255,255,.12);color:#d9ffea;border-color:rgba(255,255,255,.2)}
+.cleanFit{margin-top:20px}.cleanFaq .panel{padding:34px}.tripActionsSimple .btn.danger{background:#fff1f1;color:#8b1f1f;border-color:#ffd2d2}.tripActionsSimple .btn.danger:hover{background:#ffe4e4}
+.modalCard .btn.danger{background:#b42318;color:#fff;border-color:#b42318}.modalCard .btn.danger:hover{background:#8f1c14}
+@media(max-width:860px){.cleanHero,.cleanSplit,.cleanSplit.reverse{grid-template-columns:1fr;gap:20px;padding-top:42px}.cleanHero h1{font-size:clamp(2.8rem,14vw,4.6rem)}.cleanTrustBar{grid-template-columns:1fr;margin-bottom:22px}.cleanSplit.reverse .panel,.cleanSplit.reverse .cleanChecklist{order:initial}.cleanHeroPanel{padding:22px}.cleanSteps li{grid-template-columns:30px 1fr;padding:12px}.cleanSteps li:before{width:28px;height:28px}.cleanFaq .panel{padding:24px}}
+.cleanDashboard{padding-bottom:60px}.cleanDashHead{display:grid;grid-template-columns:1fr auto;gap:24px;align-items:end}.cleanDashHead h1{margin-bottom:10px}.cleanDashActions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}.cleanAddGrid{margin-top:12px}.cleanLookupForm,.cleanForwardPanel{height:auto}.formIntro{margin-bottom:18px}.cleanForwardPanel .emailBox{margin:14px 0 18px}.cleanTripsSection{padding-top:28px}.cleanTripsSection .dashboardRow{align-items:end}.cleanStartPage{padding-bottom:60px}.cleanStartHero{display:grid;grid-template-columns:1.05fr .65fr;gap:32px;align-items:center}.cleanStartHero h1{letter-spacing:-.06em;line-height:.96}.cleanStartOptions .panel{text-decoration:none;color:inherit;display:flex;flex-direction:column;gap:10px}.cleanStartOptions .panel .btn{align-self:flex-start;margin-top:auto}.cleanPrivacyPanel{max-width:980px;margin:0 auto 46px;padding:28px;background:#fffdf7;border-color:#f1d48a}.cleanPrivacyPanel h2{margin-top:0}.customerTripCard{position:relative}.customerTripCard .tripActionsSimple{margin-top:18px}.simpleTripDetail .tripActionsSimple{margin-top:24px}.tripActionsSimple{display:flex;gap:10px;flex-wrap:wrap}.tripActionsSimple .btn{min-height:42px}.empty{border:1px dashed var(--line);border-radius:22px;padding:28px;background:rgba(255,255,255,.72)}
+@media(max-width:860px){.cleanDashHead,.cleanStartHero{grid-template-columns:1fr}.cleanDashActions{justify-content:flex-start}.cleanStartOptions{grid-template-columns:1fr!important}.cleanStartHero h1{font-size:clamp(2.6rem,12vw,4.2rem)}.tripActionsSimple .btn,.tripActionsSimple a.btn{width:100%;justify-content:center}.cleanForwardPanel{order:-1}}
+.cleanSteps li b,.cleanSteps li span{grid-column:2}.cleanSteps li:before{grid-row:1 / span 2}
