@@ -764,3 +764,18 @@ body.rr-v2 .trackingSetupCards{margin-top:4px}
   body.rr-v2 .startChoiceCard .btn{width:100%;justify-self:stretch}
   body.rr-v2 .choicePill{font-size:11px;padding:6px 9px}
 }
+
+/* customer-action-room-1: customer-safe next-step coaching */
+body.rr-v2 .customerWaitingRoom{display:grid;grid-template-columns:minmax(0,.72fr) minmax(0,1fr);gap:14px;align-items:start;border:1px solid var(--rr-line);border-radius:14px;background:linear-gradient(135deg,#fff,#f8fbff);box-shadow:var(--rr-soft);padding:16px!important}
+body.rr-v2 .customerWaitingRoom.pending{border-color:#ffd995;background:linear-gradient(135deg,#fffaf0,#fff)}
+body.rr-v2 .customerWaitingRoom.ready{border-color:rgba(21,190,83,.24);background:linear-gradient(135deg,#fff,rgba(21,190,83,.055))}
+body.rr-v2 .customerWaitingRoom.review{border-color:#d8ddff;background:linear-gradient(135deg,#fff,#f8fbff)}
+body.rr-v2 .customerWaitingRoom.archived{background:#f8fafc}
+body.rr-v2 .customerWaitingRoom h3{margin:5px 0 6px!important;color:var(--rr-ink);font-size:22px!important;line-height:1.08!important;text-wrap:balance}
+body.rr-v2 .customerWaitingRoom p{margin:0!important;color:var(--rr-slate);font-size:14px;line-height:1.42;font-weight:650;text-wrap:pretty}
+body.rr-v2 .customerWaitingRoom ul{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+body.rr-v2 .customerWaitingRoom li{display:grid;gap:3px;border:1px solid rgba(15,23,42,.08);border-radius:11px;background:rgba(255,255,255,.78);padding:10px 11px!important}
+body.rr-v2 .customerWaitingRoom li b{color:var(--rr-ink);font-size:13.5px;line-height:1.2}
+body.rr-v2 .customerWaitingRoom li span{color:var(--rr-slate);font-size:12.5px;line-height:1.35;font-weight:650}
+body.rr-v2 .detailWaitingRoom{margin:0!important}
+@media(max-width:760px){body.rr-v2 .customerWaitingRoom{grid-template-columns:1fr!important;padding:14px!important;border-radius:12px!important}body.rr-v2 .customerWaitingRoom h3{font-size:20px!important}body.rr-v2 .customerWaitingRoom ul{gap:7px}}
