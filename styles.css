@@ -677,3 +677,10 @@ body[data-page="info"] .links a.primary{color:#fff}
 @media(max-width:700px){
   .preLoginSafety{background:linear-gradient(145deg,#10231f,#123943)!important;color:#fff!important;border:0!important;box-shadow:0 18px 42px rgba(16,35,31,.18)!important}.preLoginSafety h2{color:#fff!important}.preLoginSafety .checklist li{background:rgba(255,255,255,.10)!important;border:1px solid rgba(255,255,255,.18)!important;color:#fff!important}.preLoginSafety .checklist li:before{background:#e8f5e5!important;color:#0f7b4c!important}
 }
+
+/* fare-signal-stack-1: partner backup fare check scaffolding */
+.backupFareCard{display:grid;grid-template-columns:minmax(0,1fr);gap:12px;align-items:center;margin:12px 0 6px;padding:14px 16px;border:1px solid #d6dcff;border-radius:18px;background:linear-gradient(135deg,#f8fbff,#fff)}
+.backupFareCard.pending{border-color:#f1d18a;background:linear-gradient(135deg,#fff8e6,#fff)}
+.backupFareCard span{display:block;margin-bottom:4px;color:#533afd;font-size:12px;font-weight:950;text-transform:uppercase;letter-spacing:.055em}
+.backupFareCard.pending span{color:#704400}.backupFareCard b{display:block;color:#10231f;font-size:17px;letter-spacing:-.02em}.backupFareCard p{margin:5px 0 0;color:var(--muted);font-weight:800;line-height:1.42}.backupFareCard ol{margin:12px 0 0;padding-left:20px;color:#384156;font-weight:780;line-height:1.45}
+@media(max-width:640px){.backupFareCard{padding:16px;border-radius:20px}.backupFareCard b{font-size:16px}.backupFareCard p,.backupFareCard li{font-size:14px}}
