@@ -579,3 +579,16 @@ body.rr-v2 .accountPacketV2 li b,body.rr-v2 .accountPacketV2 li span{line-height
 @media(max-width:380px){
   body.rr-v2 .nav[aria-label="Customer navigation"] .brand{font-size:0!important;max-width:34px!important}
 }
+
+/* revamp-v2-25: customer-facing fare tracking explanation */
+body.rr-v2 .priceTrackingCard{display:grid;grid-template-columns:190px minmax(0,1fr);gap:12px;align-items:start;border:1px solid #d8ddff;border-radius:10px;background:linear-gradient(135deg,#fff,#f8fbff);padding:14px!important}
+body.rr-v2 .priceTrackingCard b{color:var(--rr-purple);font-size:14px;line-height:1.25;text-wrap:balance}
+body.rr-v2 .priceTrackingCard span{color:var(--rr-label);font-size:14.5px;line-height:1.42;font-weight:600;overflow-wrap:anywhere}
+body.rr-v2 .priceTrackingCard.ready{border-color:rgba(21,190,83,.30);background:linear-gradient(135deg,#fff,rgba(21,190,83,.08))}
+body.rr-v2 .priceTrackingCard.ready b{color:var(--rr-green-text)}
+body.rr-v2 .priceTrackingCard.pending{border-color:#ffd995;background:linear-gradient(135deg,#fff,#fff7e6)}
+body.rr-v2 .priceTrackingCard.quiet{border-color:#e2e8f0;background:#f8fafc}
+@media(max-width:820px){
+  body.rr-v2 .priceTrackingCard{grid-template-columns:1fr!important;padding:13px!important;gap:6px}
+  body.rr-v2 .priceTrackingCard span{font-size:14px;line-height:1.4}
+}
