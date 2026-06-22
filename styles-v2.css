@@ -670,3 +670,22 @@ body.rr-v2 .customerTrackingChecklist p{margin:0;color:var(--rr-slate);font-size
 .opsAutomationGrid p{font-size:13px;line-height:1.38;color:#5d6380;font-weight:650}
 @media(max-width:900px){body.rr-v2 .customerTrackingChecklist,.opsAutomationGrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:640px){body.rr-v2 .customerTrackingChecklist,.opsAutomationGrid{grid-template-columns:1fr}.opsAutomationGuardrails{padding:18px!important;border-radius:14px}.opsAutomationGrid div,body.rr-v2 .customerTrackingChecklist div{padding:15px!important}}
+
+/* fare-signal-stack-6: customer monitoring plan summary */
+body.rr-v2 .customerSignalCoachShell{display:block}
+body.rr-v2 .customerSignalCoach{display:grid;grid-template-columns:minmax(0,.72fr) minmax(420px,1fr);gap:18px;align-items:stretch;border:1px solid rgba(83,58,253,.18);border-radius:16px;background:radial-gradient(circle at 0 0,rgba(83,58,253,.10),transparent 36%),linear-gradient(135deg,#fff,#f8fbff);box-shadow:var(--rr-soft);padding:22px!important}
+body.rr-v2 .customerSignalCoach .coachHead{display:grid;align-content:start;gap:9px}
+body.rr-v2 .customerSignalCoach h2{font-size:30px!important;line-height:1.04!important;margin:0!important}
+body.rr-v2 .customerSignalCoach p{margin:0;color:var(--rr-slate);font-size:15px;line-height:1.45;font-weight:600;text-wrap:pretty}
+body.rr-v2 .coachCards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+body.rr-v2 .coachCard{border:1px solid var(--rr-line);border-radius:13px;background:#fff;padding:14px;display:grid;gap:7px;min-width:0}
+body.rr-v2 .coachCard span{display:inline-grid;place-items:center;width:28px;height:28px;border-radius:50%;background:#eef2ff;color:var(--rr-purple);font-weight:900;font-size:12px}
+body.rr-v2 .coachCard b{color:var(--rr-ink);font-size:15px;line-height:1.2;text-wrap:balance}
+body.rr-v2 .coachCard p{font-size:13.5px;line-height:1.38;color:var(--rr-slate)}
+body.rr-v2 .coachCard.active{border-color:#ffd995;background:#fffaf0}
+body.rr-v2 .coachCard.ready{border-color:rgba(21,190,83,.28);background:linear-gradient(180deg,#fff,rgba(21,190,83,.06))}
+body.rr-v2 .coachCard.review{border-color:#d8ddff;background:#f8fbff}
+body.rr-v2 .coachCard.active span{background:#fff7e6;color:#9a5b00}
+body.rr-v2 .coachCard.ready span{background:rgba(21,190,83,.14);color:var(--rr-green-text)}
+@media(max-width:920px){body.rr-v2 .customerSignalCoach{grid-template-columns:1fr}.rr-v2 .coachCards{grid-template-columns:1fr 1fr}}
+@media(max-width:640px){body.rr-v2 .customerSignalCoach{padding:18px!important;border-radius:14px}.rr-v2 .coachCards{grid-template-columns:1fr!important}.rr-v2 .customerSignalCoach h2{font-size:25px!important}.rr-v2 .coachCard{padding:13px!important}}

@@ -207,6 +207,21 @@ function renderCustomerDashboardHealth(rows=[]){
   const refreshLine=`${customerRefreshLabel()} ${nextPoll}`;
   panel.innerHTML=`<section class="dashboardHealthCard" aria-label="RouteRefund monitoring health"><div><span class="eyebrow">Watchlist health</span><h2>${escapeHtml(headline)}</h2><p>${escapeHtml(body)}</p><div class="dashboardRefreshRow"><p class="dashboardRefreshNote"><span aria-hidden="true">↻</span>${escapeHtml(refreshLine)}</p><button class="btn ghost smallRefreshBtn" type="button" data-action="refresh-trips">Refresh now</button></div></div><div class="dashboardHealthStats" aria-label="Trip status summary"><div><b>${lookup}</b><span>Lookup running</span></div><div><b>${monitoring}</b><span>Monitoring</span></div><div><b>${review}</b><span>In review</span></div><div><b>${fareReady}</b><span>Fare-alert ready</span></div></div></section>`;
 }
+function renderCustomerSignalCoach(rows=[]){
+  const panel=$('customerSignalCoach');
+  if(!panel)return;
+  const active=(rows||[]).filter(r=>!['Closed','Archived'].includes(r.status||''));
+  const lookup=active.filter(r=>!hasVerifiedFlightDetails(r)).length;
+  const ready=active.filter(r=>hasVerifiedFlightDetails(r)&&!['Savings found','Review needed'].includes(r.status||'')).length;
+  const review=active.filter(r=>['Savings found','Review needed'].includes(r.status||'')).length;
+  const empty=!active.length;
+  const cards=[
+    {step:'1',title:lookup?`${lookup} lookup${lookup===1?'':'s'} running`:'Reservation lookup',body:lookup?'RouteRefund is checking the booking details first so route, date, and fare rules are not guessed. Pending trips auto-refresh for the first few minutes.':'New trips start here after you add a locator or forward the airline confirmation.',tone:lookup?'active':'quiet'},
+    {step:'2',title:ready?`${ready} trip${ready===1?'':'s'} fare-alert ready`:'Owner-only fare alerts',body:ready?'Verified route/date trips can be watched with Google Flights alert emails and quota-safe backup checks behind the scenes.':'Fare tracking starts only after RouteRefund verifies the itinerary.',tone:ready?'ready':'quiet'},
+    {step:'3',title:review?`${review} opportunity under review`:'Reviewed next step',body:review?'A possible fare signal is under partner review. Exact savings stay private until eligibility is confirmed and you approve any airline action.':'If a useful signal appears, RouteRefund reviews evidence before contacting you.',tone:review?'review':'quiet'}
+  ];
+  panel.innerHTML=`<div class="customerSignalCoach ${empty?'emptyCoach':''}"><div class="coachHead"><span class="eyebrow">Monitoring plan</span><h2>${empty?'What happens after your first trip is added':'How your watchlist is being handled'}</h2><p>${empty?'RouteRefund follows a lookup-first workflow inspired by flight trackers and price alerts, but keeps exact savings and airline actions behind partner review.':'This summary explains the background workflow without exposing unverified savings or asking you to set up alerts yourself.'}</p></div><div class="coachCards">${cards.map(c=>`<div class="coachCard ${c.tone}"><span>${escapeHtml(c.step)}</span><b>${escapeHtml(c.title)}</b><p>${escapeHtml(c.body)}</p></div>`).join('')}</div></div>`;
+}
 
 async function renderTrips(){
   const box=$('trips');if(!box)return;
@@ -215,6 +230,7 @@ async function renderTrips(){
   lastCustomerTripsRefresh=new Date();
   if(error){box.innerHTML=`<div class="empty dashboardEmpty errorState"><h3>Trips could not be loaded</h3><p>${escapeHtml(error.message||'Please refresh and try again.')}</p><button class="btn primary" type="button" data-action="refresh-trips">Retry</button></div>`;box.setAttribute('aria-busy','false');return}
   renderCustomerDashboardHealth(rows);
+  renderCustomerSignalCoach(rows);
   const hasPendingLookup=rows.some(r=>!hasVerifiedFlightDetails(r));
   scheduleCustomerLookupRefresh(hasPendingLookup);
   box.innerHTML=rows.length?rows.map(r=>{
