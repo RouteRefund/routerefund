@@ -530,3 +530,18 @@ body.rr-v2 .appPageHeader:focus-within{border-color:#d6dcff!important;box-shadow
   body.rr-v2 .btn,body.rr-v2 .customerTripCard,body.rr-v2 .detailTimeline div{transition:none!important}
   body.rr-v2 .btn:hover,body.rr-v2 .customerTripCard:hover,body.rr-v2 .detailTimeline div[aria-current="step"]{transform:none!important}
 }
+
+/* revamp-v2-22: customer account/detail boundary clarity */
+body.rr-v2 .accountSafetyChecklist{align-items:start}
+body.rr-v2 .accountSafetyChecklist ul{grid-column:1/-1;list-style:none;margin:2px 0 0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+body.rr-v2 .accountSafetyChecklist li{position:relative;padding:10px 11px 10px 30px;border:1px solid rgba(21,190,83,.22);border-radius:10px;background:#fff;color:var(--rr-label);font-size:13.5px;font-weight:700;line-height:1.32}
+body.rr-v2 .accountSafetyChecklist li:before{content:"";position:absolute;left:12px;top:15px;width:7px;height:7px;border-radius:50%;background:var(--rr-green)}
+body.rr-v2 .detailGuardrail{display:grid;grid-template-columns:170px minmax(0,1fr);gap:12px;align-items:start;padding:14px;border:1px solid rgba(83,58,253,.18);border-radius:10px;background:linear-gradient(135deg,#fff,#f8fbff)}
+body.rr-v2 .detailGuardrail b{color:var(--rr-purple);line-height:1.25;text-wrap:balance}
+body.rr-v2 .detailGuardrail span{color:var(--rr-label);font-size:14.5px;line-height:1.42;font-weight:600;overflow-wrap:anywhere}
+@media(max-width:820px){
+  body.rr-v2 .accountSafetyChecklist ul{grid-template-columns:1fr;gap:7px}
+  body.rr-v2 .accountSafetyChecklist li{font-size:13px;padding:10px 11px 10px 29px}
+  body.rr-v2 .detailGuardrail{grid-template-columns:1fr;padding:13px!important;gap:6px}
+  body.rr-v2 .detailGuardrail span{font-size:14px;line-height:1.4}
+}
