@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css?v=revamp-v2-10" />
-  <link rel="stylesheet" href="styles-v2.css?v=fare-signal-stack-4" />
+  <link rel="stylesheet" href="styles-v2.css?v=fare-signal-stack-5" />
 </head>
 <body class="rr-v2" data-page="start">
   <a class="skipLink" href="#main">Skip to main content</a>
@@ -55,16 +55,21 @@
           <div><b>Backup fare checks</b><span>Paid/API checks stay partner-controlled and quota-safe; they are not run just because a page loads.</span></div>
           <div><b>Human review gate</b><span>Exact savings and airline next steps stay private until evidence is reviewed and you approve any action.</span></div>
         </div>
+        <div class="customerTrackingChecklist" aria-label="What customers see after adding a trip">
+          <div><span>1</span><b>Lookup running</b><p>Your dashboard shows that RouteRefund is checking the reservation details. You do not need to refresh constantly; pending trips auto-refresh for the first few minutes.</p></div>
+          <div><span>2</span><b>Monitoring active</b><p>After route and date are verified, RouteRefund can attach fare-alert signals internally without exposing unreviewed savings.</p></div>
+          <div><span>3</span><b>Reviewed next step</b><p>If a useful fare signal appears, RouteRefund reviews eligibility first and contacts you before any airline booking action.</p></div>
+        </div>
       </div>
     </section>
 
     <section class="rr-section">
-      <div class="rr-cta"><div><h2>Prefer forwarding the airline email?</h2><p>Forwarded confirmation parsing is being built as a fallback, but the fastest current path is adding the trip in your dashboard.</p></div><a class="btn primary big" href="forward-confirmation.html">Forward confirmation</a></div>
+      <div class="rr-cta"><div><h2>Prefer forwarding the airline email?</h2><p>Forward the original airline confirmation when you want RouteRefund to review the booking details from the source email instead of typed fields.</p></div><a class="btn primary big" href="forward-confirmation.html">Forward confirmation</a></div>
     </section>
   </main>
 
   <footer class="siteFooter"><div class="siteFooterInner"><div><a class="brand" href="index.html"><span class="logo"><img src="/assets/favicon-32.png?v=logo-a-1" alt="" /></span>RouteRefund</a><p>Flight savings monitoring after you book.</p></div><nav><a href="how-it-works.html">How it works</a><a href="supported-airlines.html">Airlines</a><a href="trust-center.html">Trust</a><a href="faq.html">FAQ</a><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a></nav></div></footer>
   <div id="modal" class="modal"><div id="modalCard" class="modalCard"></div></div><div id="toast" class="toast"></div>
-  <script src="config.js"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="app.js?v=fare-signal-stack-4"></script>
+  <script src="config.js"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="app.js?v=fare-signal-stack-5"></script>
 </body>
 </html>

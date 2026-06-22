@@ -654,3 +654,19 @@ body.rr-v2 .trackingSetupCards .rr-card:nth-child(3){border-color:rgba(21,190,83
   body.rr-v2 .monitoringPlanGrid div{padding:15px!important;border-radius:12px}
   body.rr-v2 .trackingPlanMini{padding:11px!important}
 }
+
+/* fare-signal-stack-5: start-flow checklist and ops automation guardrails */
+body.rr-v2 .customerTrackingChecklist{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:16px}
+body.rr-v2 .customerTrackingChecklist div{display:grid;gap:7px;border:1px solid #d8ddff;border-radius:14px;background:linear-gradient(180deg,#fff,#f8fbff);padding:18px;min-width:0}
+body.rr-v2 .customerTrackingChecklist span{display:inline-grid;place-items:center;width:28px;height:28px;border-radius:50%;background:var(--rr-purple);color:#fff;font-weight:800;font-size:13px}
+body.rr-v2 .customerTrackingChecklist b{color:var(--rr-ink);font-size:17px;line-height:1.2}
+body.rr-v2 .customerTrackingChecklist p{margin:0;color:var(--rr-slate);font-size:14.5px;line-height:1.42;font-weight:600;text-wrap:pretty}
+.opsAutomationGuardrails{margin:18px 0;border:1px solid rgba(83,58,253,.18);border-radius:18px;background:radial-gradient(circle at 100% 0,rgba(83,58,253,.10),transparent 34%),linear-gradient(135deg,#fff,#f8fbff);box-shadow:0 14px 32px rgba(20,30,60,.08);padding:22px!important}
+.opsAutomationGuardrails h2{margin:8px 0!important}.opsAutomationGuardrails p{margin:0;color:var(--muted,#5f6b7a)}
+.opsAutomationGrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:16px}
+.opsAutomationGrid div{border:1px solid rgba(15,123,76,.16);border-radius:14px;background:#fff;padding:14px;display:grid;gap:6px;min-width:0}
+.opsAutomationGrid span{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:50%;background:rgba(15,123,76,.12);color:#0f7b4c;font-weight:900;font-size:12px}
+.opsAutomationGrid b{color:#18213a;font-size:14px;line-height:1.2;text-wrap:balance}
+.opsAutomationGrid p{font-size:13px;line-height:1.38;color:#5d6380;font-weight:650}
+@media(max-width:900px){body.rr-v2 .customerTrackingChecklist,.opsAutomationGrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:640px){body.rr-v2 .customerTrackingChecklist,.opsAutomationGrid{grid-template-columns:1fr}.opsAutomationGuardrails{padding:18px!important;border-radius:14px}.opsAutomationGrid div,body.rr-v2 .customerTrackingChecklist div{padding:15px!important}}

@@ -409,6 +409,15 @@ function renderOpsSignalCenter(rows=[]){
   const backupReady=active.filter(r=>r.route&&r.travel_date).length;
   return `<section class="opsSignalCenter" aria-label="Monitoring signal center"><div><span class="eyebrow">Monitoring signals</span><h2>Fare-signal setup queue</h2><p>Use free alert emails first, keep SerpAPI as a quota-safe backup, and do not expose exact savings until partner review verifies eligibility.</p></div><div class="opsSignalGrid"><div><b>${googleReady}</b><span>Google alert ready</span></div><div><b>${googleLogged}</b><span>Alerts logged</span></div><div><b>${backupReady}</b><span>Backup-check ready</span></div><div><b>${lookupPending}</b><span>Lookup pending</span></div></div></section>`;
 }
+function renderOpsAutomationGuardrails(){
+  const cards=[
+    ['Airline lookup worker','Customer-entered airline/locator/name details should queue supported manage-trip lookup first, then fall back to partner review if blocked or unsupported.'],
+    ['Forwarded confirmation matcher','Use forwarded airline emails to fill missing route/date/fare basics. Never store inbox credentials, one-time codes, or card details in notes.'],
+    ['Live flight enrichment','ADS-B and aviation weather are context only for already-identified trips. They do not retrieve reservations or prove savings.'],
+    ['Fare signal policy','Google Flights alert emails come first; SerpAPI backup stays quota-safe and partner-triggered after route/date/cabin are verified.']
+  ];
+  return `<section class="opsAutomationGuardrails" aria-label="Automation and safety guardrails"><div><span class="eyebrow">Automation guardrails</span><h2>Keep the queue useful without unsafe actions.</h2><p>These reminders preserve the existing lookup, enrichment, forwarded-email, and fare-alert workflow while partners work the dashboard.</p></div><div class="opsAutomationGrid">${cards.map(([title,body],i)=>`<div><span>${i+1}</span><b>${escapeHtml(title)}</b><p>${escapeHtml(body)}</p></div>`).join('')}</div></section>`;
+}
 async function saveOwnerGoogleAlert(id,trackingUrl='',note=''){
   const cleanUrl=String(trackingUrl||'').trim();
   const cleanNote=String(note||'').trim();
@@ -431,7 +440,7 @@ async function renderOwner(){
   const sortedRows=[...(rows||[])].sort((a,b)=>ownerPriority(a)-ownerPriority(b)||String(a.travel_date||'').localeCompare(String(b.travel_date||''))||String(b.created_at||'').localeCompare(String(a.created_at||'')));
   if($('kpis'))$('kpis').innerHTML=`<div class="hot"><b>${dueTotal}</b><span>Due checks</span></div><div><b>${found}</b><span>Review queue</span></div><div><b>${monitoring}</b><span>Monitoring</span></div><div><b>${total}</b><span>Active trips</span></div><div><b>${money(openSavings)}</b><span>Potential savings</span></div>`;
   const queueIntro=`<div class="opsQueueIntro"><div><h2>Operations queue</h2><p>Work due checks first, then evidence review, then scheduled monitoring. Archiving only removes a resolved trip from the active ops queue.</p></div><span>${dueTotal?`${dueTotal} check${dueTotal===1?'':'s'} due now`:'No checks due'}</span></div><div class="opsWorkflow" aria-label="RouteRefund operations workflow"><div><b>1. Check</b><span>Compare same airline, route, date, cabin, and terms.</span></div><div><b>2. Review</b><span>Confirm evidence and eligibility before customer outreach.</span></div><div><b>3. Follow up</b><span>Record the customer action, invoice status, and final note.</span></div><div><b>4. Archive</b><span>Move resolved work out of the active queue without deleting trips.</span></div></div>`;
-  box.innerHTML=ownerControls()+queueIntro+renderOpsSignalCenter(rows||[])+(sortedRows.length?sortedRows.map(ownerTripCard).join(''):`<div class="empty"><h3>No customer trips yet</h3><p>New customer bookings will appear here when monitoring starts.</p></div>`)+`<div id="ownerNoMatches" class="empty opsNoMatches" hidden><h3>No trips match this view</h3><p>Try another queue tab or search term.</p></div>`;
+  box.innerHTML=ownerControls()+queueIntro+renderOpsSignalCenter(rows||[])+renderOpsAutomationGuardrails()+(sortedRows.length?sortedRows.map(ownerTripCard).join(''):`<div class="empty"><h3>No customer trips yet</h3><p>New customer bookings will appear here when monitoring starts.</p></div>`)+`<div id="ownerNoMatches" class="empty opsNoMatches" hidden><h3>No trips match this view</h3><p>Try another queue tab or search term.</p></div>`;
   applyOwnerFilter('All')
 }
 
