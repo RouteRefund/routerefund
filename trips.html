@@ -6,7 +6,7 @@
   <title>My trips | RouteRefund</title>
   <meta name="robots" content="noindex,nofollow" />
   <link rel="stylesheet" href="styles.css?v=revamp-v2-10" />
-  <link rel="stylesheet" href="styles-v2.css?v=revamp-v2-18" />
+  <link rel="stylesheet" href="styles-v2.css?v=revamp-v2-19" />
   <link rel="icon" href="/favicon.ico?v=logo-a-1" sizes="any" />
   <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png?v=logo-a-1" />
   <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16.png?v=logo-a-1" />
@@ -28,7 +28,7 @@
       <div>
         <span class="eyebrow">Customer dashboard</span>
         <h1>Your flight watchlist.</h1>
-        <p class="lead small">Add booked reservations, let RouteRefund review supported airline details, and keep every monitored trip in one private dashboard.</p>
+        <p class="lead small">Add booked reservations, let RouteRefund review supported airline details, and keep monitored trips in one private customer dashboard.</p>
       </div>
       <div class="cleanDashActions"><a class="btn ghost" href="forward-confirmation.html">Forwarding guide</a><a class="btn ghost" href="supported-airlines.html">Supported airlines</a></div>
     </section>
@@ -37,7 +37,7 @@
       <form id="tripForm" class="panel formPanel lookupForm cleanLookupForm">
         <span class="eyebrow">Add a trip</span>
         <h2>Find my flight</h2>
-        <p class="mini formIntro">Use the same details the airline asks for on its manage-trip page. For supported airlines, review can start after submission without airline passwords, payment details, or one-time codes.</p>
+        <p class="mini formIntro">Use the same trip-identifying details the airline asks for on its manage-trip page. RouteRefund never needs airline passwords, payment details, or one-time codes.</p>
         <label for="airline">Airline
           <select id="airline" aria-describedby="airlineHint" required>
             <option value="">Choose airline</option>
@@ -60,7 +60,7 @@
         </label>
         <div class="grid two compactFields"><label for="passengerFirst">Passenger first name<input id="passengerFirst" autocomplete="given-name" placeholder="Andrew" required></label><label for="passengerLast">Passenger last name<input id="passengerLast" autocomplete="family-name" placeholder="Smith" required></label></div>
         <label for="dateOfBirth">Date of birth<input id="dateOfBirth" type="date" aria-describedby="dobHint" required><span id="dobHint" class="formHint">Used only to help match the booking. Never enter airline passwords, one-time codes, or payment card details.</span></label>
-        <label class="checkline" for="changeConsent"><input id="changeConsent" type="checkbox" required> I authorize RouteRefund to monitor this trip and contact me before any airline booking, cancellation, or rebooking action.</label>
+        <label class="checkline" for="changeConsent"><input id="changeConsent" type="checkbox" required> I authorize RouteRefund to monitor this trip and contact me for approval before any airline booking, cancellation, or rebooking action.</label>
         <button class="btn primary full" type="submit">Start flight lookup</button>
       </form>
 
@@ -75,7 +75,7 @@
 
     <section class="section cleanTripsSection">
       <div class="row dashboardRow"><div><span class="eyebrow">Your trips</span><h2>Current tracking</h2><p class="mini">Remove trip deletes the RouteRefund record only. It never changes, cancels, or contacts the airline.</p></div></div>
-      <div id="trips" aria-live="polite" aria-busy="true"><div class="empty"><h3>Loading trips...</h3></div></div>
+      <div id="trips" aria-live="polite" aria-busy="true"><div class="empty loadingState" role="status"><h3>Loading trips...</h3></div></div>
     </section>
   </main>
 

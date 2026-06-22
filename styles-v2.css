@@ -476,3 +476,20 @@ body.rr-v2 .customerTripCard .actions,body.rr-v2 .tripDetailCard .actions,body.r
   body.rr-v2 .lookupSummary.compactLookup{padding:13px!important}
   body.rr-v2 .accountPacketV2 h3,body.rr-v2 .savingsBox h3{font-size:24px!important;line-height:1.08!important}
 }
+
+/* revamp-v2-19: customer app copy/accessibility rhythm */
+body.rr-v2 .loadingState{display:grid!important;gap:8px!important;align-items:center!important;min-height:112px!important;color:var(--rr-slate)}
+body.rr-v2 .loadingState h2,body.rr-v2 .loadingState h3{margin:0!important;color:var(--rr-ink)!important}
+body.rr-v2 .cleanLookupForm .formIntro{max-width:760px;text-wrap:pretty}
+body.rr-v2 .checkline{cursor:pointer}
+body.rr-v2 .checkline:hover{border-color:#d8ddff!important;background:#fbfcff!important}
+body.rr-v2 .appPageHeader .lead,body.rr-v2 .cleanDashHead .lead{text-wrap:pretty}
+body.rr-v2 .dashboardEmpty .actions{margin-top:16px!important}
+body.rr-v2 .dashboardEmpty p{max-width:720px}
+@media(max-width:820px){
+  body.rr-v2 .loadingState{min-height:96px!important;padding:18px!important}
+  body.rr-v2 .checkline{font-size:13px!important;line-height:1.38!important}
+  body.rr-v2 .cleanDashActions{gap:8px!important}
+  body.rr-v2 .dashboardEmpty h3{font-size:26px!important;line-height:1.08!important}
+  body.rr-v2 .dashboardEmpty p{font-size:15px!important;line-height:1.45!important}
+}
