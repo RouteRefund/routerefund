@@ -198,9 +198,10 @@ function renderCustomerDashboardHealth(rows=[]){
   const review=active.filter(r=>['Savings found','Review needed'].includes(r.status||'')).length;
   const monitoring=active.length-lookup-review;
   const fareReady=active.filter(r=>hasVerifiedFlightDetails(r)&&!['Savings found','Review needed'].includes(r.status||'')).length;
+  const nextPoll=lookup?'Auto-refreshing every few seconds while lookup is pending.':'Refresh the page any time for the latest RouteRefund status.';
   const headline=lookup?'Looking up flight details':review?'RouteRefund review active':active.length?'Monitoring is active':'No active trips yet';
   const body=lookup?'New reservations update automatically while RouteRefund checks the booking. No airline password, inbox login, payment card, or one-time code is needed.':review?'A possible fare signal is under partner review. Exact savings stay private until RouteRefund verifies eligibility and contacts you for approval.':active.length?'RouteRefund is watching verified route/date signals and partner-only fare alerts. You will only hear from us when there is a verified next step.':'Add a booked flight or forward the confirmation email to start private monitoring.';
-  panel.innerHTML=`<section class="dashboardHealthCard" aria-label="RouteRefund monitoring health"><div><span class="eyebrow">Watchlist health</span><h2>${escapeHtml(headline)}</h2><p>${escapeHtml(body)}</p></div><div class="dashboardHealthStats" aria-label="Trip status summary"><div><b>${lookup}</b><span>Lookup running</span></div><div><b>${monitoring}</b><span>Monitoring</span></div><div><b>${review}</b><span>In review</span></div><div><b>${fareReady}</b><span>Fare-alert ready</span></div></div></section>`;
+  panel.innerHTML=`<section class="dashboardHealthCard" aria-label="RouteRefund monitoring health"><div><span class="eyebrow">Watchlist health</span><h2>${escapeHtml(headline)}</h2><p>${escapeHtml(body)}</p><p class="dashboardRefreshNote"><span aria-hidden="true">↻</span>${escapeHtml(nextPoll)}</p></div><div class="dashboardHealthStats" aria-label="Trip status summary"><div><b>${lookup}</b><span>Lookup running</span></div><div><b>${monitoring}</b><span>Monitoring</span></div><div><b>${review}</b><span>In review</span></div><div><b>${fareReady}</b><span>Fare-alert ready</span></div></div></section>`;
 }
 
 async function renderTrips(){
@@ -395,6 +396,14 @@ function renderBackupFareSignalCard(r,compact=false){
   const steps=compact?'':`<ol><li>Prefer Google Flights alert email signals first.</li><li>Run paid/API backup only when useful and quota-safe.</li><li>Record source, observed fare, cabin/rules match, and evidence location.</li></ol>`;
   return `<section class="backupFareCard ${ready?'ready':'pending'}"><div><span>Backup fare checks</span><b>${escapeHtml(status)}</b><p>${escapeHtml(body)}</p>${steps}</div></section>`;
 }
+function renderOpsSignalCenter(rows=[]){
+  const active=(rows||[]).filter(r=>ownerStatusLabel(r.status)!=='Archived');
+  const googleLogged=active.filter(r=>/Google Flights alert/i.test(String(r.owner_notes||''))).length;
+  const googleReady=active.filter(r=>r.route&&r.travel_date&&!/Google Flights alert/i.test(String(r.owner_notes||''))).length;
+  const lookupPending=active.filter(r=>!hasVerifiedFlightDetails(r)).length;
+  const backupReady=active.filter(r=>r.route&&r.travel_date).length;
+  return `<section class="opsSignalCenter" aria-label="Monitoring signal center"><div><span class="eyebrow">Monitoring signals</span><h2>Fare-signal setup queue</h2><p>Use free alert emails first, keep SerpAPI as a quota-safe backup, and do not expose exact savings until partner review verifies eligibility.</p></div><div class="opsSignalGrid"><div><b>${googleReady}</b><span>Google alert ready</span></div><div><b>${googleLogged}</b><span>Alerts logged</span></div><div><b>${backupReady}</b><span>Backup-check ready</span></div><div><b>${lookupPending}</b><span>Lookup pending</span></div></div></section>`;
+}
 async function saveOwnerGoogleAlert(id,trackingUrl='',note=''){
   const cleanUrl=String(trackingUrl||'').trim();
   const cleanNote=String(note||'').trim();
@@ -417,7 +426,7 @@ async function renderOwner(){
   const sortedRows=[...(rows||[])].sort((a,b)=>ownerPriority(a)-ownerPriority(b)||String(a.travel_date||'').localeCompare(String(b.travel_date||''))||String(b.created_at||'').localeCompare(String(a.created_at||'')));
   if($('kpis'))$('kpis').innerHTML=`<div class="hot"><b>${dueTotal}</b><span>Due checks</span></div><div><b>${found}</b><span>Review queue</span></div><div><b>${monitoring}</b><span>Monitoring</span></div><div><b>${total}</b><span>Active trips</span></div><div><b>${money(openSavings)}</b><span>Potential savings</span></div>`;
   const queueIntro=`<div class="opsQueueIntro"><div><h2>Operations queue</h2><p>Work due checks first, then evidence review, then scheduled monitoring. Archiving only removes a resolved trip from the active ops queue.</p></div><span>${dueTotal?`${dueTotal} check${dueTotal===1?'':'s'} due now`:'No checks due'}</span></div><div class="opsWorkflow" aria-label="RouteRefund operations workflow"><div><b>1. Check</b><span>Compare same airline, route, date, cabin, and terms.</span></div><div><b>2. Review</b><span>Confirm evidence and eligibility before customer outreach.</span></div><div><b>3. Follow up</b><span>Record the customer action, invoice status, and final note.</span></div><div><b>4. Archive</b><span>Move resolved work out of the active queue without deleting trips.</span></div></div>`;
-  box.innerHTML=ownerControls()+queueIntro+(sortedRows.length?sortedRows.map(ownerTripCard).join(''):`<div class="empty"><h3>No customer trips yet</h3><p>New customer bookings will appear here when monitoring starts.</p></div>`)+`<div id="ownerNoMatches" class="empty opsNoMatches" hidden><h3>No trips match this view</h3><p>Try another queue tab or search term.</p></div>`;
+  box.innerHTML=ownerControls()+queueIntro+renderOpsSignalCenter(rows||[])+(sortedRows.length?sortedRows.map(ownerTripCard).join(''):`<div class="empty"><h3>No customer trips yet</h3><p>New customer bookings will appear here when monitoring starts.</p></div>`)+`<div id="ownerNoMatches" class="empty opsNoMatches" hidden><h3>No trips match this view</h3><p>Try another queue tab or search term.</p></div>`;
   applyOwnerFilter('All')
 }
 

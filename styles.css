@@ -684,3 +684,9 @@ body[data-page="info"] .links a.primary{color:#fff}
 .backupFareCard span{display:block;margin-bottom:4px;color:#533afd;font-size:12px;font-weight:950;text-transform:uppercase;letter-spacing:.055em}
 .backupFareCard.pending span{color:#704400}.backupFareCard b{display:block;color:#10231f;font-size:17px;letter-spacing:-.02em}.backupFareCard p{margin:5px 0 0;color:var(--muted);font-weight:800;line-height:1.42}.backupFareCard ol{margin:12px 0 0;padding-left:20px;color:#384156;font-weight:780;line-height:1.45}
 @media(max-width:640px){.backupFareCard{padding:16px;border-radius:20px}.backupFareCard b{font-size:16px}.backupFareCard p,.backupFareCard li{font-size:14px}}
+
+/* fare-signal-stack-2: partner signal center */
+.opsSignalCenter{display:grid;grid-template-columns:minmax(0,1fr) minmax(360px,.72fr);gap:18px;align-items:stretch;margin:0 0 18px;padding:20px 22px;border:1px solid #d6dcff;border-radius:24px;background:radial-gradient(circle at 100% 0,rgba(83,58,253,.12),transparent 35%),linear-gradient(135deg,#fff,#f8fbff);box-shadow:0 12px 30px rgba(18,57,67,.06)}
+.opsSignalCenter h2{margin:10px 0 6px;font-size:26px;color:#10231f}.opsSignalCenter p{margin:0;color:var(--muted);font-weight:800;line-height:1.45}.opsSignalGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.opsSignalGrid div{border:1px solid var(--line);border-radius:18px;background:#fff;padding:14px}.opsSignalGrid b{display:block;color:#533afd;font-size:28px;line-height:1}.opsSignalGrid span{display:block;margin-top:5px;color:var(--muted);font-size:12px;font-weight:950;text-transform:uppercase;letter-spacing:.055em;line-height:1.2}
+@media(max-width:760px){.opsSignalCenter{grid-template-columns:1fr;padding:18px;border-radius:22px}.opsSignalGrid{grid-template-columns:1fr 1fr}.opsSignalCenter h2{font-size:23px}}
+@media(max-width:420px){.opsSignalGrid{grid-template-columns:1fr}}
