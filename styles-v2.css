@@ -399,7 +399,8 @@ body.rr-v2 .modalCard .mobileMenuPromise{margin-top:14px;padding:13px 14px;borde
 body.rr-v2 .modalCard .mobileMenuPromise b{color:var(--rr-green-text);font-size:12px;text-transform:uppercase;letter-spacing:.055em}
 body.rr-v2 .modalCard .mobileMenuPromise span{color:var(--rr-label);font-size:14px;line-height:1.42;font-weight:600}
 body.rr-v2 .modalCard .mobileMenuClose{margin-top:12px;width:100%!important;color:var(--rr-ink)!important;background:#fff!important}
-body.rr-v2 .accountTrustGrid div:nth-child(3) span{color:var(--rr-green-text)}
+body.rr-v2 .accountTrustGrid .statusOk{color:var(--rr-green-text)!important}
+body.rr-v2 .accountTrustGrid .statusAttention{color:#9a5b00!important}
 @media(max-width:820px){
   body.rr-v2 .modalCard h2{font-size:26px!important;line-height:1.06!important}
   body.rr-v2 .modalCard p{font-size:15px!important;line-height:1.45!important}
