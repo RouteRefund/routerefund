@@ -462,6 +462,24 @@ function renderOpsSignalCenter(rows=[]){
   const backupReady=active.filter(r=>r.route&&r.travel_date).length;
   return `<section class="opsSignalCenter" aria-label="Monitoring signal center"><div><span class="eyebrow">Monitoring signals</span><h2>Fare-signal setup queue</h2><p>Use free alert emails first, keep SerpAPI as a quota-safe backup, and do not expose exact savings until partner review verifies eligibility.</p></div><div class="opsSignalGrid"><div><b>${googleReady}</b><span>Google alert ready</span></div><div><b>${googleLogged}</b><span>Alerts logged</span></div><div><b>${backupReady}</b><span>Backup-check ready</span></div><div><b>${lookupPending}</b><span>Lookup pending</span></div></div></section>`;
 }
+function renderOpsSlaBoard(rows=[]){
+  const active=(rows||[]).filter(r=>ownerStatusLabel(r.status)!=='Archived');
+  const now=Date.now();
+  const day=1000*60*60*24;
+  const dueNow=active.filter(r=>r.due_checks?.some(c=>new Date(c.check_due_at).getTime()<=now)).length;
+  const dueSoon=active.filter(r=>r.due_checks?.some(c=>{const t=new Date(c.check_due_at).getTime();return t>now&&t<=now+day})).length;
+  const review=active.filter(r=>ownerStatusLabel(r.status)==='Review needed').length;
+  const alertSetup=active.filter(r=>r.route&&r.travel_date&&!/Google Flights alert/i.test(String(r.owner_notes||''))).length;
+  const lookup=active.filter(r=>!hasVerifiedFlightDetails(r)).length;
+  const cards=[
+    {label:'Due now',value:dueNow,body:'Run the same-itinerary fare check and document source, cabin, rules, and outcome.',tone:dueNow?'hot':'quiet'},
+    {label:'Next 24h',value:dueSoon,body:'Prepare routine checks without using paid backup APIs unless the trip is verified and quota-safe.',tone:dueSoon?'ready':'quiet'},
+    {label:'Evidence review',value:review,body:'Verify eligibility and proof before any customer outreach or airline booking action.',tone:review?'review':'quiet'},
+    {label:'Alert setup',value:alertSetup,body:'Create Google Flights tracking from the separate tracking mailbox after route/date are verified.',tone:alertSetup?'ready':'quiet'},
+    {label:'Lookup pending',value:lookup,body:'Let supported lookup and forwarded-confirmation fallback fill itinerary basics before fare monitoring.',tone:lookup?'pending':'quiet'}
+  ];
+  return `<section class="opsSlaBoard" aria-label="Partner queue playbook"><div class="opsSlaHead"><span class="eyebrow">Queue playbook</span><h2>What needs attention first</h2><p>Inspired by price-watch and claim-status workflows: show partners the next safe operational action without exposing unverified savings or running paid fare checks from the browser.</p></div><div class="opsSlaGrid">${cards.map(c=>`<div class="${escapeHtml(c.tone)}"><b>${escapeHtml(c.label)}</b><strong>${escapeHtml(c.value)}</strong><p>${escapeHtml(c.body)}</p></div>`).join('')}</div></section>`;
+}
 function renderOpsAutomationGuardrails(){
   const cards=[
     ['Airline lookup worker','Customer-entered airline/locator/name details should queue supported manage-trip lookup first, then fall back to partner review if blocked or unsupported.'],
@@ -493,7 +511,7 @@ async function renderOwner(){
   const sortedRows=[...(rows||[])].sort((a,b)=>ownerPriority(a)-ownerPriority(b)||String(a.travel_date||'').localeCompare(String(b.travel_date||''))||String(b.created_at||'').localeCompare(String(a.created_at||'')));
   if($('kpis'))$('kpis').innerHTML=`<div class="hot"><b>${dueTotal}</b><span>Due checks</span></div><div><b>${found}</b><span>Review queue</span></div><div><b>${monitoring}</b><span>Monitoring</span></div><div><b>${total}</b><span>Active trips</span></div><div><b>${money(openSavings)}</b><span>Potential savings</span></div>`;
   const queueIntro=`<div class="opsQueueIntro"><div><h2>Operations queue</h2><p>Work due checks first, then evidence review, then scheduled monitoring. Archiving only removes a resolved trip from the active ops queue.</p></div><span>${dueTotal?`${dueTotal} check${dueTotal===1?'':'s'} due now`:'No checks due'}</span></div><div class="opsWorkflow" aria-label="RouteRefund operations workflow"><div><b>1. Check</b><span>Compare same airline, route, date, cabin, and terms.</span></div><div><b>2. Review</b><span>Confirm evidence and eligibility before customer outreach.</span></div><div><b>3. Follow up</b><span>Record the customer action, invoice status, and final note.</span></div><div><b>4. Archive</b><span>Move resolved work out of the active queue without deleting trips.</span></div></div>`;
-  box.innerHTML=ownerControls()+queueIntro+renderOpsSignalCenter(rows||[])+renderOpsAutomationGuardrails()+(sortedRows.length?sortedRows.map(ownerTripCard).join(''):`<div class="empty"><h3>No customer trips yet</h3><p>New customer bookings will appear here when monitoring starts.</p></div>`)+`<div id="ownerNoMatches" class="empty opsNoMatches" hidden><h3>No trips match this view</h3><p>Try another queue tab or search term.</p></div>`;
+  box.innerHTML=ownerControls()+queueIntro+renderOpsSlaBoard(rows||[])+renderOpsSignalCenter(rows||[])+renderOpsAutomationGuardrails()+(sortedRows.length?sortedRows.map(ownerTripCard).join(''):`<div class="empty"><h3>No customer trips yet</h3><p>New customer bookings will appear here when monitoring starts.</p></div>`)+`<div id="ownerNoMatches" class="empty opsNoMatches" hidden><h3>No trips match this view</h3><p>Try another queue tab or search term.</p></div>`;
   applyOwnerFilter('All')
 }
 
