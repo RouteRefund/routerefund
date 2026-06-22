@@ -560,3 +560,22 @@ body.rr-v2 .cleanDashHead .lead,body.rr-v2 .appPageHeader .lead{max-width:680px!
 @media(max-width:380px){
   body.rr-v2 .nav[aria-label="Customer navigation"] .links .btn{min-width:62px!important;max-width:82px!important;padding-left:8px!important;padding-right:8px!important}
 }
+
+/* revamp-v2-24: customer app tap targets and narrow-nav polish */
+body.rr-v2 .nav[aria-label="Customer navigation"] .brand{min-width:0}
+body.rr-v2 .nav[aria-label="Customer navigation"] .brand .logo{flex:0 0 auto}
+body.rr-v2 .nav[aria-label="Customer navigation"] .links{min-width:0}
+body.rr-v2 .customerTripCard .actions,body.rr-v2 .tripDetailCard .actions,body.rr-v2 .accountPanelV2 .actions{border-top:1px solid var(--rr-line);padding-top:14px!important;margin-top:4px!important}
+body.rr-v2 .customerTripCard .btn:focus-visible,body.rr-v2 .tripDetailCard .btn:focus-visible,body.rr-v2 .accountPanelV2 .btn:focus-visible{box-shadow:0 0 0 4px rgba(83,58,253,.10)}
+body.rr-v2 .tripDetailHero p,body.rr-v2 .accountHeroCard p{overflow-wrap:anywhere;text-wrap:pretty}
+body.rr-v2 .accountPacketV2 li b,body.rr-v2 .accountPacketV2 li span{line-height:1.25}
+@media(max-width:820px){
+  body.rr-v2 .nav[aria-label="Customer navigation"] .brand{font-size:16px!important;max-width:42vw!important;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  body.rr-v2 .nav[aria-label="Customer navigation"] .brand .logo{width:30px!important;height:30px!important}
+  body.rr-v2 .customerTripCard .actions,body.rr-v2 .tripDetailCard .actions,body.rr-v2 .accountPanelV2 .actions{padding-top:12px!important;gap:8px!important}
+  body.rr-v2 .customerTripCard .btn,body.rr-v2 .tripDetailCard .btn,body.rr-v2 .accountPanelV2 .btn{min-height:48px!important}
+  body.rr-v2 .accountPacketV2 ul{gap:8px!important}
+}
+@media(max-width:380px){
+  body.rr-v2 .nav[aria-label="Customer navigation"] .brand{font-size:0!important;max-width:34px!important}
+}
