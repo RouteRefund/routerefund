@@ -181,12 +181,25 @@ function customerPriceTrackingCard(r,detail=false){
   const body=detail?'RouteRefund may set Google Flights price alerts from a separate tracking mailbox and use backup fare checks when appropriate. Alert signals stay internal until a partner verifies eligibility and contacts you for approval.':'RouteRefund watches verified route/date signals internally and only contacts you after review.';
   return `<div class="priceTrackingCard ready" aria-label="Price tracking status"><b>Fare tracking ready${route?` for ${escapeHtml(route)}`:''}</b><span>${escapeHtml(body)}</span></div>`;
 }
+function renderCustomerDashboardHealth(rows=[]){
+  const panel=$('dashboardHealth');
+  if(!panel)return;
+  const active=(rows||[]).filter(r=>!['Closed','Archived'].includes(r.status||''));
+  const lookup=active.filter(r=>!hasVerifiedFlightDetails(r)).length;
+  const review=active.filter(r=>['Savings found','Review needed'].includes(r.status||'')).length;
+  const monitoring=active.length-lookup-review;
+  const fareReady=active.filter(r=>hasVerifiedFlightDetails(r)&&!['Savings found','Review needed'].includes(r.status||'')).length;
+  const headline=lookup?'Looking up flight details':review?'RouteRefund review active':active.length?'Monitoring is active':'No active trips yet';
+  const body=lookup?'New reservations update automatically while RouteRefund checks the booking. No airline password, inbox login, payment card, or one-time code is needed.':review?'A possible fare signal is under partner review. Exact savings stay private until RouteRefund verifies eligibility and contacts you for approval.':active.length?'RouteRefund is watching verified route/date signals and partner-only fare alerts. You will only hear from us when there is a verified next step.':'Add a booked flight or forward the confirmation email to start private monitoring.';
+  panel.innerHTML=`<section class="dashboardHealthCard" aria-label="RouteRefund monitoring health"><div><span class="eyebrow">Watchlist health</span><h2>${escapeHtml(headline)}</h2><p>${escapeHtml(body)}</p></div><div class="dashboardHealthStats" aria-label="Trip status summary"><div><b>${lookup}</b><span>Lookup running</span></div><div><b>${monitoring}</b><span>Monitoring</span></div><div><b>${review}</b><span>In review</span></div><div><b>${fareReady}</b><span>Fare-alert ready</span></div></div></section>`;
+}
 
 async function renderTrips(){
   const box=$('trips');if(!box)return;
   box.setAttribute('aria-busy','true');
   const {rows,error}=await loadTrips();
   if(error){box.innerHTML=`<div class="empty dashboardEmpty errorState"><h3>Trips could not be loaded</h3><p>${escapeHtml(error.message||'Please refresh and try again.')}</p><button class="btn primary" type="button" onclick="renderTrips()">Retry</button></div>`;box.setAttribute('aria-busy','false');return}
+  renderCustomerDashboardHealth(rows);
   const hasPendingLookup=rows.some(r=>!hasVerifiedFlightDetails(r));
   scheduleCustomerLookupRefresh(hasPendingLookup);
   box.innerHTML=rows.length?rows.map(r=>{
