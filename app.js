@@ -124,6 +124,9 @@ async function addTrip(e){
 }
 async function loadTrips(){const {data,error}=await supabaseClient.from('trips').select('*').or('status.is.null,status.neq.Archived').order('created_at',{ascending:false});return {rows:data||[],error}}
 function tripSavings(r){return r.current_price?Number(r.paid)-Number(r.current_price):0}
+function shortTime(value=new Date()){try{return new Date(value).toLocaleTimeString([], {hour:'numeric',minute:'2-digit'})}catch{return 'just now'}}
+let lastCustomerTripsRefresh=null;
+function customerRefreshLabel(){return lastCustomerTripsRefresh?`Last refreshed ${shortTime(lastCustomerTripsRefresh)}.`:'Refreshing trip status now.'}
 function customerTripStatus(r){
   const raw=r.status||'';
   const unverified=!hasVerifiedFlightDetails(r);
@@ -198,17 +201,19 @@ function renderCustomerDashboardHealth(rows=[]){
   const review=active.filter(r=>['Savings found','Review needed'].includes(r.status||'')).length;
   const monitoring=active.length-lookup-review;
   const fareReady=active.filter(r=>hasVerifiedFlightDetails(r)&&!['Savings found','Review needed'].includes(r.status||'')).length;
-  const nextPoll=lookup?'Auto-refreshing every few seconds while lookup is pending.':'Refresh the page any time for the latest RouteRefund status.';
+  const nextPoll=lookup?'Auto-refreshing every few seconds while lookup is pending.':'Refresh any time for the latest RouteRefund status.';
   const headline=lookup?'Looking up flight details':review?'RouteRefund review active':active.length?'Monitoring is active':'No active trips yet';
   const body=lookup?'New reservations update automatically while RouteRefund checks the booking. No airline password, inbox login, payment card, or one-time code is needed.':review?'A possible fare signal is under partner review. Exact savings stay private until RouteRefund verifies eligibility and contacts you for approval.':active.length?'RouteRefund is watching verified route/date signals and partner-only fare alerts. You will only hear from us when there is a verified next step.':'Add a booked flight or forward the confirmation email to start private monitoring.';
-  panel.innerHTML=`<section class="dashboardHealthCard" aria-label="RouteRefund monitoring health"><div><span class="eyebrow">Watchlist health</span><h2>${escapeHtml(headline)}</h2><p>${escapeHtml(body)}</p><p class="dashboardRefreshNote"><span aria-hidden="true">↻</span>${escapeHtml(nextPoll)}</p></div><div class="dashboardHealthStats" aria-label="Trip status summary"><div><b>${lookup}</b><span>Lookup running</span></div><div><b>${monitoring}</b><span>Monitoring</span></div><div><b>${review}</b><span>In review</span></div><div><b>${fareReady}</b><span>Fare-alert ready</span></div></div></section>`;
+  const refreshLine=`${customerRefreshLabel()} ${nextPoll}`;
+  panel.innerHTML=`<section class="dashboardHealthCard" aria-label="RouteRefund monitoring health"><div><span class="eyebrow">Watchlist health</span><h2>${escapeHtml(headline)}</h2><p>${escapeHtml(body)}</p><div class="dashboardRefreshRow"><p class="dashboardRefreshNote"><span aria-hidden="true">↻</span>${escapeHtml(refreshLine)}</p><button class="btn ghost smallRefreshBtn" type="button" data-action="refresh-trips">Refresh now</button></div></div><div class="dashboardHealthStats" aria-label="Trip status summary"><div><b>${lookup}</b><span>Lookup running</span></div><div><b>${monitoring}</b><span>Monitoring</span></div><div><b>${review}</b><span>In review</span></div><div><b>${fareReady}</b><span>Fare-alert ready</span></div></div></section>`;
 }
 
 async function renderTrips(){
   const box=$('trips');if(!box)return;
   box.setAttribute('aria-busy','true');
   const {rows,error}=await loadTrips();
-  if(error){box.innerHTML=`<div class="empty dashboardEmpty errorState"><h3>Trips could not be loaded</h3><p>${escapeHtml(error.message||'Please refresh and try again.')}</p><button class="btn primary" type="button" onclick="renderTrips()">Retry</button></div>`;box.setAttribute('aria-busy','false');return}
+  lastCustomerTripsRefresh=new Date();
+  if(error){box.innerHTML=`<div class="empty dashboardEmpty errorState"><h3>Trips could not be loaded</h3><p>${escapeHtml(error.message||'Please refresh and try again.')}</p><button class="btn primary" type="button" data-action="refresh-trips">Retry</button></div>`;box.setAttribute('aria-busy','false');return}
   renderCustomerDashboardHealth(rows);
   const hasPendingLookup=rows.some(r=>!hasVerifiedFlightDetails(r));
   scheduleCustomerLookupRefresh(hasPendingLookup);
@@ -501,6 +506,13 @@ document.addEventListener('click',async e=>{
   }
   if(action==='confirm-delete-trip'){b.disabled=true;b.textContent='Removing...';const ok=await deleteTrip(id);if(!ok){b.disabled=false;b.textContent='Remove from RouteRefund';return}closeModal();return}
   if(action==='close-modal')return closeModal();
+  if(action==='refresh-trips'){
+    b.disabled=true;
+    const original=b.textContent;
+    b.textContent='Refreshing...';
+    try{await renderTrips();toast('Trip status refreshed')}finally{b.disabled=false;b.textContent=original||'Refresh now'}
+    return
+  }
   if(action==='note')return modal(`<h2>Add a trip update</h2><p>Use this to add schedule preferences, refund constraints, or context for RouteRefund. Existing notes stay attached to the trip. Do not include payment card numbers, passwords, or verification codes.</p><label>New note<textarea id="noteText" placeholder="Example: I prefer travel credit if a cash refund is not possible."></textarea></label><button class="btn primary" data-action="save-note" data-id="${escapeHtml(id)}">Add note to trip</button>`);
   if(action==='save-note'){const saved=await appendCustomerNote(id,$('noteText').value);if(saved)closeModal();return}
   if(action==='owner-filter')return applyOwnerFilter(b.dataset.status||'All');
