@@ -28,7 +28,7 @@
       <div>
         <span class="eyebrow">Customer dashboard</span>
         <h1>Your monitored trips.</h1>
-        <p id="dashboardIntro" class="lead small">Add booked reservations, let RouteRefund review supported airline details, and keep each trip in one private customer dashboard.</p>
+        <p id="dashboardIntro" class="lead small">Add a booked flight. RouteRefund watches it here.</p>
       </div>
       <div class="cleanDashActions"><a class="btn ghost" href="forward-confirmation.html">Forwarding guide</a><a class="btn ghost" href="supported-airlines.html">Supported airlines</a></div>
     </section>
@@ -37,7 +37,7 @@
       <form id="tripForm" class="panel formPanel lookupForm cleanLookupForm" aria-describedby="dashboardIntro">
         <span class="eyebrow">Add a trip</span>
         <h2>Add booked flight</h2>
-        <p class="mini formIntro">Use the same trip-identifying details the airline asks for on its manage-trip page. RouteRefund reviews the booking before monitoring starts and never needs airline passwords, payment details, or one-time codes.</p>
+        <p class="mini formIntro">Enter the details the airline uses to find your booking. Never enter passwords, codes, or card numbers.</p>
         <label for="airline">Airline
           <select id="airline" aria-describedby="airlineHint" required>
             <option value="">Choose airline</option>
@@ -52,27 +52,27 @@
             <option>Hawaiian Airlines</option>
             <option value="Other">Other / not listed</option>
           </select>
-          <span id="airlineHint" class="formHint">This routes the lookup to the right airline flow.</span>
+          <span id="airlineHint" class="formHint">Routes the lookup.</span>
         </label>
         <label for="confirmationNo">Confirmation / record locator
           <input id="confirmationNo" placeholder="ABCDEF" maxlength="13" pattern="[A-Za-z0-9]{5,13}" autocomplete="off" autocapitalize="characters" spellcheck="false" inputmode="text" aria-describedby="locatorHint" required>
-          <span id="locatorHint" class="formHint">Enter the booking confirmation exactly as shown.</span>
+          <span id="locatorHint" class="formHint">Exactly as shown.</span>
         </label>
         <div class="grid two compactFields"><label for="passengerFirst">Passenger first name<input id="passengerFirst" autocomplete="given-name" placeholder="First name" required></label><label for="passengerLast">Passenger last name<input id="passengerLast" autocomplete="family-name" placeholder="Last name" required></label></div>
-        <label for="dateOfBirth">Date of birth<input id="dateOfBirth" type="date" aria-describedby="dobHint" required><span id="dobHint" class="formHint">Used only to help match the booking. Never enter airline passwords, one-time codes, or payment card details.</span></label>
+        <label for="dateOfBirth">Date of birth<input id="dateOfBirth" type="date" aria-describedby="dobHint" required><span id="dobHint" class="formHint">Used to match the booking.</span></label>
         <label class="checkline" for="changeConsent"><input id="changeConsent" type="checkbox" required> I authorize RouteRefund to monitor this trip and contact me for approval before any airline booking, cancellation, or rebooking action.</label>
-        <button class="btn primary full" type="submit">Start monitoring request</button>
+        <button class="btn primary full" type="submit">Start monitoring</button>
       </form>
 
       <section class="panel cleanForwardPanel">
         <span class="eyebrow">Alternative</span>
         <h2>Forward the confirmation email</h2>
-        <p>If you have the airline confirmation email, forwarding it is often more accurate than typing details by hand.</p>
+        <p>Forwarding is usually more accurate.</p>
         <a class="emailBox" href="mailto:trips@routerefund.com" aria-label="Email trips at RouteRefund">trips@routerefund.com</a>
         <ul class="checklist compactList"><li>Do not include airline passwords</li><li>Do not include one-time codes</li><li>Do not include card numbers</li></ul>
         <div class="trackingPlanMini" aria-label="Monitoring plan after lookup">
           <b>After lookup</b>
-          <span>RouteRefund can attach owner-only Google Flights alerts for the verified route/date and use quota-safe backup checks only when useful.</span>
+          <span>Verified trips can move into monitoring.</span>
         </div>
       </section>
     </section>
@@ -81,7 +81,7 @@
     <section id="customerSignalCoach" class="customerSignalCoachShell" aria-label="How RouteRefund monitors your trips"></section>
 
     <section class="section cleanTripsSection">
-      <div class="row dashboardRow"><div><span class="eyebrow">Your trips</span><h2>Current tracking</h2><p class="mini">Remove trip deletes the RouteRefund record only. It never changes, cancels, or contacts the airline.</p></div></div>
+      <div class="row dashboardRow"><div><span class="eyebrow">Your trips</span><h2>Current tracking</h2><p class="mini">Remove trip deletes only the RouteRefund record.</p></div></div>
       <div id="trips" aria-live="polite" aria-busy="true"><div class="empty loadingState" role="status"><h3>Loading trips…</h3></div></div>
     </section>
   </main>
