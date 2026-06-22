@@ -510,6 +510,21 @@ body.rr-v2 .cleanForwardPanel .compactList li{font-size:14px}
   body.rr-v2 .emailBox{min-height:50px;font-size:15px}
   body.rr-v2 .cleanForwardPanel .compactList{gap:8px!important}
 }
+/* revamp-v2-21: customer app form clarity and mobile tap resilience */
+body.rr-v2 .cleanLookupForm input::placeholder{color:#8a97aa;opacity:1}
+body.rr-v2 #confirmationNo{text-transform:uppercase;letter-spacing:.08em;font-weight:700}
+body.rr-v2 .compactFields label{min-width:0}
+body.rr-v2 .cleanLookupForm [required]:user-invalid{border-color:#ffb4b4;box-shadow:0 0 0 4px rgba(180,35,24,.08)}
+body.rr-v2 .btn:disabled,body.rr-v2 .btn[aria-disabled="true"]{cursor:not-allowed;opacity:.68;transform:none!important;box-shadow:none!important}
+body.rr-v2 .appPageHeader:focus-within{border-color:#d6dcff!important;box-shadow:var(--rr-shadow)!important}
+@media(max-width:520px){
+  body.rr-v2 .compactFields{display:grid!important;grid-template-columns:1fr!important;gap:12px!important}
+  body.rr-v2 #confirmationNo{letter-spacing:.06em}
+}
+@media(max-width:380px){
+  body.rr-v2 .cleanDashActions .btn{font-size:14px!important}
+  body.rr-v2 .appPageHeader{padding:16px!important}
+}
 @media(prefers-reduced-motion:reduce){
   body.rr-v2 .btn,body.rr-v2 .customerTripCard,body.rr-v2 .detailTimeline div{transition:none!important}
   body.rr-v2 .btn:hover,body.rr-v2 .customerTripCard:hover,body.rr-v2 .detailTimeline div[aria-current="step"]{transform:none!important}

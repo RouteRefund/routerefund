@@ -6,7 +6,7 @@
   <title>My trips | RouteRefund</title>
   <meta name="robots" content="noindex,nofollow" />
   <link rel="stylesheet" href="styles.css?v=revamp-v2-10" />
-  <link rel="stylesheet" href="styles-v2.css?v=revamp-v2-20" />
+  <link rel="stylesheet" href="styles-v2.css?v=revamp-v2-21" />
   <link rel="icon" href="/favicon.ico?v=logo-a-1" sizes="any" />
   <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png?v=logo-a-1" />
   <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16.png?v=logo-a-1" />
@@ -28,13 +28,13 @@
       <div>
         <span class="eyebrow">Customer dashboard</span>
         <h1>Your flight watchlist.</h1>
-        <p class="lead small">Add booked reservations, let RouteRefund review supported airline details, and keep each monitored trip in one private customer dashboard.</p>
+        <p id="dashboardIntro" class="lead small">Add booked reservations, let RouteRefund review supported airline details, and keep each monitored trip in one private customer dashboard.</p>
       </div>
       <div class="cleanDashActions"><a class="btn ghost" href="forward-confirmation.html">Forwarding guide</a><a class="btn ghost" href="supported-airlines.html">Supported airlines</a></div>
     </section>
 
     <section class="grid two align-start addTripGrid cleanAddGrid">
-      <form id="tripForm" class="panel formPanel lookupForm cleanLookupForm">
+      <form id="tripForm" class="panel formPanel lookupForm cleanLookupForm" aria-describedby="dashboardIntro">
         <span class="eyebrow">Add a trip</span>
         <h2>Add booked flight</h2>
         <p class="mini formIntro">Use the same trip-identifying details the airline asks for on its manage-trip page. RouteRefund reviews the booking before monitoring starts and never needs airline passwords, payment details, or one-time codes.</p>
@@ -55,10 +55,10 @@
           <span id="airlineHint" class="formHint">This routes the lookup to the right airline flow.</span>
         </label>
         <label for="confirmationNo">Confirmation / record locator
-          <input id="confirmationNo" placeholder="ABCDEF" maxlength="13" pattern="[A-Za-z0-9]{5,13}" autocomplete="off" aria-describedby="locatorHint" required>
+          <input id="confirmationNo" placeholder="ABCDEF" maxlength="13" pattern="[A-Za-z0-9]{5,13}" autocomplete="off" autocapitalize="characters" spellcheck="false" inputmode="text" aria-describedby="locatorHint" required>
           <span id="locatorHint" class="formHint">Enter the booking confirmation exactly as shown.</span>
         </label>
-        <div class="grid two compactFields"><label for="passengerFirst">Passenger first name<input id="passengerFirst" autocomplete="given-name" placeholder="Andrew" required></label><label for="passengerLast">Passenger last name<input id="passengerLast" autocomplete="family-name" placeholder="Smith" required></label></div>
+        <div class="grid two compactFields"><label for="passengerFirst">Passenger first name<input id="passengerFirst" autocomplete="given-name" placeholder="First name" required></label><label for="passengerLast">Passenger last name<input id="passengerLast" autocomplete="family-name" placeholder="Last name" required></label></div>
         <label for="dateOfBirth">Date of birth<input id="dateOfBirth" type="date" aria-describedby="dobHint" required><span id="dobHint" class="formHint">Used only to help match the booking. Never enter airline passwords, one-time codes, or payment card details.</span></label>
         <label class="checkline" for="changeConsent"><input id="changeConsent" type="checkbox" required> I authorize RouteRefund to monitor this trip and contact me for approval before any airline booking, cancellation, or rebooking action.</label>
         <button class="btn primary full" type="submit">Start monitoring request</button>
