@@ -126,7 +126,9 @@ async function loadTrips(){const {data,error}=await supabaseClient.from('trips')
 function tripSavings(r){return r.current_price?Number(r.paid)-Number(r.current_price):0}
 function shortTime(value=new Date()){try{return new Date(value).toLocaleTimeString([], {hour:'numeric',minute:'2-digit'})}catch{return 'just now'}}
 let lastCustomerTripsRefresh=null;
+let customerLookupPollExpired=false;
 function customerRefreshLabel(){return lastCustomerTripsRefresh?`Last refreshed ${shortTime(lastCustomerTripsRefresh)}.`:'Refreshing trip status now.'}
+function customerConnectionHint(){return navigator.onLine===false?'Browser appears offline — reconnect, then tap Refresh now.':''}
 function customerTripStatus(r){
   const raw=r.status||'';
   const unverified=!hasVerifiedFlightDetails(r);
@@ -142,15 +144,21 @@ function scheduleCustomerLookupRefresh(hasPending=false){
   if(!['dashboard','trip-detail'].includes(document.body.dataset.page))return;
   if(hasPending){
     if(!customerLookupPollTimer){
+      customerLookupPollExpired=false;
       customerLookupPollStarted=Date.now();
       customerLookupPollTimer=setInterval(async()=>{
-        if(Date.now()-customerLookupPollStarted>1000*60*5){clearInterval(customerLookupPollTimer);customerLookupPollTimer=null;return}
+        if(Date.now()-customerLookupPollStarted>1000*60*5){
+          clearInterval(customerLookupPollTimer);customerLookupPollTimer=null;customerLookupPollExpired=true;
+          if(document.body.dataset.page==='dashboard')await renderTrips();
+          if(document.body.dataset.page==='trip-detail')await renderTripDetail();
+          return
+        }
         if(document.body.dataset.page==='dashboard')await renderTrips();
         if(document.body.dataset.page==='trip-detail')await renderTripDetail();
       },5000);
     }
   }else if(customerLookupPollTimer){
-    clearInterval(customerLookupPollTimer);customerLookupPollTimer=null;
+    clearInterval(customerLookupPollTimer);customerLookupPollTimer=null;customerLookupPollExpired=false;
   }
 }
 function customerTripTitle(r){return `${escapeHtml(r.confirmation_no||'Trip')}${r.airline?` <span>${escapeHtml(r.airline)}</span>`:''}`}
@@ -193,6 +201,17 @@ function customerMonitoringMethods(r){
   ];
   return `<div class="monitoringMethods ${verified?'ready':'pending'}" aria-label="Monitoring method checklist">${items.map((x,i)=>`<div><b>${i+1}. ${escapeHtml(x.k)}</b><span>${escapeHtml(x.v)}</span></div>`).join('')}</div>`;
 }
+function customerReadinessScore(r){
+  const checks=[
+    {label:'Locator saved',ok:Boolean(r.confirmation_no)},
+    {label:'Passenger match details',ok:Boolean(r.passenger_first&&r.passenger_last)},
+    {label:'Itinerary verified',ok:hasVerifiedFlightDetails(r)},
+    {label:'Fare-alert eligible',ok:Boolean(hasVerifiedFlightDetails(r)&&!['Closed','Archived'].includes(r.status||''))}
+  ];
+  const done=checks.filter(x=>x.ok).length;
+  const headline=done===checks.length?'Ready for price signals':hasVerifiedFlightDetails(r)?'Monitoring setup in progress':'Reservation lookup in progress';
+  return `<div class="readinessCard" aria-label="Monitoring readiness"><div><b>${escapeHtml(headline)}</b><span>${done} of ${checks.length} setup checks complete</span></div><ol>${checks.map(x=>`<li class="${x.ok?'done':'pending'}"><span aria-hidden="true">${x.ok?'✓':'•'}</span>${escapeHtml(x.label)}</li>`).join('')}</ol></div>`;
+}
 function customerStatusFeed(r){
   const verified=hasVerifiedFlightDetails(r);
   const review=['Savings found','Review needed'].includes(r.status||'');
@@ -214,11 +233,15 @@ function renderCustomerDashboardHealth(rows=[]){
   const review=active.filter(r=>['Savings found','Review needed'].includes(r.status||'')).length;
   const monitoring=active.length-lookup-review;
   const fareReady=active.filter(r=>hasVerifiedFlightDetails(r)&&!['Savings found','Review needed'].includes(r.status||'')).length;
-  const nextPoll=lookup?'Auto-refreshing every few seconds while lookup is pending.':'Refresh any time for the latest RouteRefund status.';
+  const connection=customerConnectionHint();
+  const nextPoll=connection|| (lookup?(customerLookupPollExpired?'Auto-refresh paused after a few minutes to save your browser. Tap Refresh now any time; RouteRefund keeps working in the background.':'Auto-refreshing every few seconds while lookup is pending.'):'Refresh any time for the latest RouteRefund status.');
   const headline=lookup?'Looking up flight details':review?'RouteRefund review active':active.length?'Monitoring is active':'No active trips yet';
   const body=lookup?'New reservations update automatically while RouteRefund checks the booking. No airline password, inbox login, payment card, or one-time code is needed.':review?'A possible fare signal is under partner review. Exact savings stay private until RouteRefund verifies eligibility and contacts you for approval.':active.length?'RouteRefund is watching verified route/date signals and partner-only fare alerts. You will only hear from us when there is a verified next step.':'Add a booked flight or forward the confirmation email to start private monitoring.';
   const refreshLine=`${customerRefreshLabel()} ${nextPoll}`;
   panel.innerHTML=`<section class="dashboardHealthCard" aria-label="RouteRefund monitoring health"><div><span class="eyebrow">Watchlist health</span><h2>${escapeHtml(headline)}</h2><p>${escapeHtml(body)}</p><div class="dashboardRefreshRow"><p class="dashboardRefreshNote"><span aria-hidden="true">↻</span>${escapeHtml(refreshLine)}</p><button class="btn ghost smallRefreshBtn" type="button" data-action="refresh-trips">Refresh now</button></div></div><div class="dashboardHealthStats" aria-label="Trip status summary"><div><b>${lookup}</b><span>Lookup running</span></div><div><b>${monitoring}</b><span>Monitoring</span></div><div><b>${review}</b><span>In review</span></div><div><b>${fareReady}</b><span>Fare-alert ready</span></div></div></section>`;
+}
+function customerLoadingState(){
+  return `<div class="empty loadingState customerSkeleton" role="status" aria-live="polite"><h3>Loading trips…</h3><p>Checking your private RouteRefund watchlist.</p><div aria-hidden="true"><span></span><span></span><span></span></div></div>`;
 }
 function renderCustomerSignalCoach(rows=[]){
   const panel=$('customerSignalCoach');
@@ -239,6 +262,7 @@ function renderCustomerSignalCoach(rows=[]){
 async function renderTrips(){
   const box=$('trips');if(!box)return;
   box.setAttribute('aria-busy','true');
+  if(!lastCustomerTripsRefresh)box.innerHTML=customerLoadingState();
   const {rows,error}=await loadTrips();
   lastCustomerTripsRefresh=new Date();
   if(error){box.innerHTML=`<div class="empty dashboardEmpty errorState"><h3>Trips could not be loaded</h3><p>${escapeHtml(error.message||'Please refresh and try again.')}</p><button class="btn primary" type="button" data-action="refresh-trips">Retry</button></div>`;box.setAttribute('aria-busy','false');return}
@@ -252,7 +276,7 @@ async function renderTrips(){
     const intake=!hasVerifiedFlightDetails(r);
     const titleId=`trip-title-${escapeHtml(r.id)}`;
     const detailLabel=[r.airline,r.confirmation_no].filter(Boolean).join(' ')||'this trip';
-    return `<article class="trip customerTripCard simpleTripCard ${intake?'lookupOnlyCard':''}" aria-labelledby="${titleId}"><div class="tripCardTop"><div><span class="tripKicker">${escapeHtml(r.airline||'Flight')}</span><h3 id="${titleId}">${customerTripTitle(r)}</h3><p>Passenger: ${escapeHtml(r.passenger_first||'')} ${escapeHtml(r.passenger_last||'')}</p></div><span class="tag ${escapeHtml(status.tone)}" aria-label="Status: ${escapeHtml(status.label)}">${escapeHtml(status.label)}</span></div>${customerTripMeta(r)}${customerTripProgress(r,tripStatus)}${customerPriceTrackingCard(r)}${customerMonitoringMethods(r)}<div class="customerNextStep"><b>${escapeHtml(status.step)}</b><span>${escapeHtml(status.body)}</span></div>${r.notes?`<div class="customerNotePreview"><b>Your latest update</b><span>${safeLines(r.notes).split('<br>').slice(-2).join('<br>')}</span></div>`:''}<div class="actions tripActionsSimple"><a class="btn primary" href="trip-detail.html?id=${encodeURIComponent(r.id)}" aria-label="View details for ${escapeHtml(detailLabel)}">View details</a>${intake?'':`<button class="btn ghost" type="button" data-action="note" data-id="${escapeHtml(r.id)}" aria-label="Send an update about ${escapeHtml(detailLabel)}">Send update</button>`}${customerTripDeleteButton(r)}</div></article>`
+    return `<article class="trip customerTripCard simpleTripCard ${intake?'lookupOnlyCard':''}" aria-labelledby="${titleId}"><div class="tripCardTop"><div><span class="tripKicker">${escapeHtml(r.airline||'Flight')}</span><h3 id="${titleId}">${customerTripTitle(r)}</h3><p>Passenger: ${escapeHtml(r.passenger_first||'')} ${escapeHtml(r.passenger_last||'')}</p></div><span class="tag ${escapeHtml(status.tone)}" aria-label="Status: ${escapeHtml(status.label)}">${escapeHtml(status.label)}</span></div>${customerTripMeta(r)}${customerTripProgress(r,tripStatus)}${customerPriceTrackingCard(r)}${customerReadinessScore(r)}${customerMonitoringMethods(r)}<div class="customerNextStep"><b>${escapeHtml(status.step)}</b><span>${escapeHtml(status.body)}</span></div>${r.notes?`<div class="customerNotePreview"><b>Your latest update</b><span>${safeLines(r.notes).split('<br>').slice(-2).join('<br>')}</span></div>`:''}<div class="actions tripActionsSimple"><a class="btn primary" href="trip-detail.html?id=${encodeURIComponent(r.id)}" aria-label="View details for ${escapeHtml(detailLabel)}">View details</a>${intake?'':`<button class="btn ghost" type="button" data-action="note" data-id="${escapeHtml(r.id)}" aria-label="Send an update about ${escapeHtml(detailLabel)}">Send update</button>`}${customerTripDeleteButton(r)}</div></article>`
   }).join(''):`<div class="empty dashboardEmpty"><span class="eyebrow">Ready when you are</span><h3>Add your first booked flight</h3><p>Use the form above or forward the airline confirmation email. RouteRefund will never ask for airline passwords, email passwords, or payment card numbers.</p><div class="actions tripActionsSimple"><a class="btn primary" href="#tripForm">Add flight details</a><a class="btn ghost" href="forward-confirmation.html">Forward confirmation</a></div></div>`
   box.setAttribute('aria-busy','false');
 }
@@ -284,7 +308,7 @@ async function renderTripDetail(){
   const status=customerTripStatus(r);
   scheduleCustomerLookupRefresh(unverified);
   const flightLine=hasVerifiedFlightDetails(r)?`${escapeHtml(r.airline||'Airline')} • ${escapeHtml(r.route||'Route')} • ${escapeHtml(r.travel_date||'Date')}${r.departure_time?` • ${escapeHtml(r.departure_time)}`:''}`:'Looking up flight details for this confirmation';
-  box.innerHTML=`<div class="panel tripDetailCard simpleTripDetail"><div class="tripDetailHero"><div><span class="tripKicker">${escapeHtml(r.airline||'Flight')}</span><h2>Confirmation ${escapeHtml(r.confirmation_no||'')}</h2><p>${flightLine}</p></div><span class="tag ${escapeHtml(status.tone)}" aria-label="Status: ${escapeHtml(status.label)}">${escapeHtml(status.label)}</span></div><div class="tripDetailSummary"><div><b>Passenger</b><span>${escapeHtml(r.passenger_first||'')} ${escapeHtml(r.passenger_last||'')}</span></div><div><b>Airline</b><span>${escapeHtml(r.airline||'—')}</span></div><div><b>Route</b><span>${escapeHtml(r.route||'Pending lookup')}</span></div><div><b>Departure</b><span>${escapeHtml(r.travel_date||'Pending lookup')}${r.departure_time?` • ${escapeHtml(r.departure_time)}`:''}</span></div>${r.paid!=null?`<div><b>Price paid</b><span>${money(r.paid)}</span></div>`:''}</div><div class="detailTimeline" role="list" aria-label="Trip progress">${statuses.map((x,i)=>`<div class="${i<=active?'done':''}" role="listitem" ${i===active?'aria-current="step"':''}><b>${i+1}</b><span>${x}</span></div>`).join('')}</div>${customerStatusFeed(r)}${customerPriceTrackingCard(r,true)}<div class="customerNextStep detailNextStep"><b>${escapeHtml(status.step)}</b><span>${escapeHtml(status.body)}</span></div>${(unverified||['Intake review','Received','Submitted'].includes(r.status))?'<div class="savingsBox lookupBox"><h3>Secure lookup running</h3><p>RouteRefund is looking up this reservation. Route, date, time, and flight details will appear here after the reservation is found.</p></div>':''}${['Savings found','Review needed'].includes(r.status)?'<div class="savingsBox"><h3>RouteRefund review in progress</h3><p>Our team is reviewing a possible fare-change signal for this booking. We will contact you only if there is a verified, customer-approved next step.</p></div>':''}<div class="detailGuardrail"><b>Reservation boundary</b><span>This customer timeline is informational. RouteRefund will not change, cancel, rebook, or contact the airline from this page without your approval.</span></div>${r.notes?`<div class="customerNotePreview detailNotes"><b>Your updates</b><span>${safeLines(r.notes)}</span></div>`:''}<div class="actions tripActionsSimple"><a class="btn primary" href="trips.html">Back to dashboard</a>${unverified?'':`<button class="btn ghost" type="button" data-action="note" data-id="${escapeHtml(r.id)}" aria-label="Send an update about confirmation ${escapeHtml(r.confirmation_no||'this trip')}">Send update</button>`}${customerTripDeleteButton(r)}</div></div>`
+  box.innerHTML=`<div class="panel tripDetailCard simpleTripDetail"><div class="tripDetailHero"><div><span class="tripKicker">${escapeHtml(r.airline||'Flight')}</span><h2>Confirmation ${escapeHtml(r.confirmation_no||'')}</h2><p>${flightLine}</p></div><span class="tag ${escapeHtml(status.tone)}" aria-label="Status: ${escapeHtml(status.label)}">${escapeHtml(status.label)}</span></div><div class="tripDetailSummary"><div><b>Passenger</b><span>${escapeHtml(r.passenger_first||'')} ${escapeHtml(r.passenger_last||'')}</span></div><div><b>Airline</b><span>${escapeHtml(r.airline||'—')}</span></div><div><b>Route</b><span>${escapeHtml(r.route||'Pending lookup')}</span></div><div><b>Departure</b><span>${escapeHtml(r.travel_date||'Pending lookup')}${r.departure_time?` • ${escapeHtml(r.departure_time)}`:''}</span></div>${r.paid!=null?`<div><b>Price paid</b><span>${money(r.paid)}</span></div>`:''}</div><div class="detailTimeline" role="list" aria-label="Trip progress">${statuses.map((x,i)=>`<div class="${i<=active?'done':''}" role="listitem" ${i===active?'aria-current="step"':''}><b>${i+1}</b><span>${x}</span></div>`).join('')}</div>${customerStatusFeed(r)}${customerPriceTrackingCard(r,true)}${customerReadinessScore(r)}<div class="customerNextStep detailNextStep"><b>${escapeHtml(status.step)}</b><span>${escapeHtml(status.body)}</span></div>${(unverified||['Intake review','Received','Submitted'].includes(r.status))?'<div class="savingsBox lookupBox"><h3>Secure lookup running</h3><p>RouteRefund is looking up this reservation. Route, date, time, and flight details will appear here after the reservation is found.</p></div>':''}${['Savings found','Review needed'].includes(r.status)?'<div class="savingsBox"><h3>RouteRefund review in progress</h3><p>Our team is reviewing a possible fare-change signal for this booking. We will contact you only if there is a verified, customer-approved next step.</p></div>':''}<div class="detailGuardrail"><b>Reservation boundary</b><span>This customer timeline is informational. RouteRefund will not change, cancel, rebook, or contact the airline from this page without your approval.</span></div>${r.notes?`<div class="customerNotePreview detailNotes"><b>Your updates</b><span>${safeLines(r.notes)}</span></div>`:''}<div class="actions tripActionsSimple"><a class="btn primary" href="trips.html">Back to dashboard</a>${unverified?'':`<button class="btn ghost" type="button" data-action="note" data-id="${escapeHtml(r.id)}" aria-label="Send an update about confirmation ${escapeHtml(r.confirmation_no||'this trip')}">Send update</button>`}${customerTripDeleteButton(r)}</div></div>`
   box.setAttribute('aria-busy','false');
 }
 

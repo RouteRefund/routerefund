@@ -481,6 +481,11 @@ body.rr-v2 .customerTripCard .actions,body.rr-v2 .tripDetailCard .actions,body.r
 /* revamp-v2-19: customer app copy/accessibility rhythm */
 body.rr-v2 .loadingState{display:grid!important;gap:8px!important;align-items:center!important;min-height:112px!important;color:var(--rr-slate)}
 body.rr-v2 .loadingState h2,body.rr-v2 .loadingState h3{margin:0!important;color:var(--rr-ink)!important}
+body.rr-v2 .customerSkeleton p{margin:0!important;color:var(--rr-slate);font-weight:650}
+body.rr-v2 .customerSkeleton>div{display:grid;gap:8px;margin-top:4px}
+body.rr-v2 .customerSkeleton>div span{display:block;height:12px;border-radius:999px;background:linear-gradient(90deg,#eef2ff,#f8fbff,#eef2ff);background-size:220% 100%;animation:rrSkeleton 1.35s linear infinite}
+body.rr-v2 .customerSkeleton>div span:nth-child(2){width:82%}body.rr-v2 .customerSkeleton>div span:nth-child(3){width:64%}
+@keyframes rrSkeleton{to{background-position:-220% 0}}
 body.rr-v2 .cleanLookupForm .formIntro{max-width:760px;text-wrap:pretty}
 body.rr-v2 .checkline{cursor:pointer}
 body.rr-v2 .checkline:hover{border-color:#d8ddff!important;background:#fbfcff!important}
@@ -588,10 +593,21 @@ body.rr-v2 .priceTrackingCard.ready{border-color:rgba(21,190,83,.30);background:
 body.rr-v2 .priceTrackingCard.ready b{color:var(--rr-green-text)}
 body.rr-v2 .priceTrackingCard.pending{border-color:#ffd995;background:linear-gradient(135deg,#fff,#fff7e6)}
 body.rr-v2 .priceTrackingCard.quiet{border-color:#e2e8f0;background:#f8fafc}
+body.rr-v2 .readinessCard{display:grid;grid-template-columns:190px minmax(0,1fr);gap:12px;align-items:start;border:1px solid var(--rr-line);border-radius:10px;background:#fff;padding:14px!important}
+body.rr-v2 .readinessCard b{display:block;color:var(--rr-ink);font-size:14px;line-height:1.2;margin-bottom:3px}
+body.rr-v2 .readinessCard span{color:var(--rr-slate);font-size:13px;font-weight:750}
+body.rr-v2 .readinessCard ol{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+body.rr-v2 .readinessCard li{display:flex;align-items:center;gap:6px;border:1px solid #e2e8f0;border-radius:999px;padding:7px 9px;color:var(--rr-slate);font-size:12.5px;font-weight:800;line-height:1.15;min-width:0}
+body.rr-v2 .readinessCard li span{display:inline-grid;place-items:center;flex:0 0 18px;width:18px;height:18px;border-radius:50%;background:#f1f5f9;color:#64748b;font-size:12px}
+body.rr-v2 .readinessCard li.done{border-color:rgba(21,190,83,.24);background:rgba(21,190,83,.06);color:var(--rr-green-text)}
+body.rr-v2 .readinessCard li.done span{background:var(--rr-green);color:#fff}
 @media(max-width:820px){
   body.rr-v2 .priceTrackingCard{grid-template-columns:1fr!important;padding:13px!important;gap:6px}
   body.rr-v2 .priceTrackingCard span{font-size:14px;line-height:1.4}
+  body.rr-v2 .readinessCard{grid-template-columns:1fr!important;padding:13px!important;gap:9px}
+  body.rr-v2 .readinessCard ol{grid-template-columns:1fr 1fr!important}
 }
+@media(max-width:420px){body.rr-v2 .readinessCard ol{grid-template-columns:1fr!important}body.rr-v2 .readinessCard li{border-radius:10px}}
 
 /* revamp-v2-26: customer watchlist health summary */
 body.rr-v2 .dashboardHealthShell{display:block}
