@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css?v=revamp-v2-10" />
-  <link rel="stylesheet" href="styles-v2.css?v=revamp-v2-17" />
+  <link rel="stylesheet" href="styles-v2.css?v=fare-signal-stack-4" />
 </head>
 <body class="rr-v2" data-page="start">
   <a class="skipLink" href="#main">Skip to main content</a>
@@ -38,10 +38,22 @@
     <section class="rr-section rr-start-flow">
       <div class="rr-section-inner">
         <div class="rr-section-head"><span class="eyebrow">What happens next</span><h2>Submit once. The system takes the first pass.</h2><p>RouteRefund should feel simple: the customer gives the minimum trip details, automation tries to find the reservation, and fallback review catches the rest.</p></div>
-        <div class="rr-grid-3">
+        <div class="rr-grid-3 trackingSetupCards">
           <div class="rr-card"><b>Step 1</b><h3>Add details</h3><p>Airline, confirmation, name, and DOB are used to start a secure lookup.</p></div>
           <div class="rr-card"><b>Step 2</b><h3>Lookup runs</h3><p>Supported airline reservations can fill route, date, and flight details automatically.</p></div>
-          <div class="rr-card"><b>Step 3</b><h3>You stay in control</h3><p>Remove duplicate trips, add updates, and approve any real next step before action.</p></div>
+          <div class="rr-card"><b>Step 3</b><h3>Monitoring starts</h3><p>Verified route/date details can feed owner-only Google Flights alerts and backup checks without exposing unverified savings.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="rr-section rr-monitoring-plan" aria-label="RouteRefund monitoring plan">
+      <div class="rr-section-inner">
+        <div class="rr-section-head"><span class="eyebrow">Monitoring signals</span><h2>How RouteRefund watches after the reservation is found.</h2><p>Price-alert services are useful after a real route/date is verified. RouteRefund keeps those signals internal until a partner confirms eligibility and contacts you for approval.</p></div>
+        <div class="monitoringPlanGrid">
+          <div><b>Reservation lookup first</b><span>RouteRefund does not guess itinerary details from a confirmation code alone.</span></div>
+          <div><b>Google Flights alerts</b><span>Where supported, alerts use a RouteRefund tracking mailbox rather than your personal inbox.</span></div>
+          <div><b>Backup fare checks</b><span>Paid/API checks stay partner-controlled and quota-safe; they are not run just because a page loads.</span></div>
+          <div><b>Human review gate</b><span>Exact savings and airline next steps stay private until evidence is reviewed and you approve any action.</span></div>
         </div>
       </div>
     </section>
@@ -53,6 +65,6 @@
 
   <footer class="siteFooter"><div class="siteFooterInner"><div><a class="brand" href="index.html"><span class="logo"><img src="/assets/favicon-32.png?v=logo-a-1" alt="" /></span>RouteRefund</a><p>Flight savings monitoring after you book.</p></div><nav><a href="how-it-works.html">How it works</a><a href="supported-airlines.html">Airlines</a><a href="trust-center.html">Trust</a><a href="faq.html">FAQ</a><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a></nav></div></footer>
   <div id="modal" class="modal"><div id="modalCard" class="modalCard"></div></div><div id="toast" class="toast"></div>
-  <script src="config.js"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="app.js?v=a11y-toast-1"></script>
+  <script src="config.js"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="app.js?v=fare-signal-stack-4"></script>
 </body>
 </html>

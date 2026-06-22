@@ -637,3 +637,20 @@ body.rr-v2 .smallRefreshBtn[disabled]{opacity:.68;cursor:progress}
   body.rr-v2 .dashboardRefreshRow{display:grid;grid-template-columns:1fr;gap:8px;margin-top:10px}
   body.rr-v2 .smallRefreshBtn{width:100%;justify-content:center}
 }
+
+/* fare-signal-stack-4: customer-facing monitoring plan explanation */
+body.rr-v2 .trackingPlanMini{display:grid;gap:5px;margin-top:4px;border:1px solid #d8ddff;border-radius:10px;background:linear-gradient(135deg,#fff,#f8fbff);padding:12px!important}
+body.rr-v2 .trackingPlanMini b{color:var(--rr-purple);font-size:13px;text-transform:uppercase;letter-spacing:.055em}
+body.rr-v2 .trackingPlanMini span{color:var(--rr-label);font-size:14px;line-height:1.4;font-weight:650}
+body.rr-v2 .rr-monitoring-plan{padding-top:0!important}
+body.rr-v2 .monitoringPlanGrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+body.rr-v2 .monitoringPlanGrid div{border:1px solid var(--rr-line);border-radius:14px;background:#fff;box-shadow:var(--rr-soft);padding:18px;min-width:0}
+body.rr-v2 .monitoringPlanGrid b{display:block;color:var(--rr-ink);font-size:16px;line-height:1.2;margin-bottom:8px}
+body.rr-v2 .monitoringPlanGrid span{display:block;color:var(--rr-slate);font-size:14.5px;line-height:1.45;font-weight:600;text-wrap:pretty}
+body.rr-v2 .trackingSetupCards .rr-card:nth-child(3){border-color:rgba(21,190,83,.28);background:linear-gradient(180deg,#fff,rgba(21,190,83,.06))}
+@media(max-width:900px){body.rr-v2 .monitoringPlanGrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:640px){
+  body.rr-v2 .monitoringPlanGrid{grid-template-columns:1fr;gap:10px}
+  body.rr-v2 .monitoringPlanGrid div{padding:15px!important;border-radius:12px}
+  body.rr-v2 .trackingPlanMini{padding:11px!important}
+}
