@@ -14,18 +14,18 @@
 </head>
 <body class="rr-v2" data-page="account">
   <a class="skipLink" href="#main">Skip to main content</a>
-  <nav class="nav">
+  <nav class="nav" aria-label="Customer navigation">
     <div class="wrap navin">
       <a class="brand" href="trips.html"><span class="logo"><img src="/assets/favicon-32.png?v=logo-a-1" alt="" /></span>RouteRefund</a>
-      <div class="links"><span id="accountWelcome" class="hide-sm muted"></span><a class="btn ghost" href="trips.html">My trips</a><button class="btn ghost" data-action="logout">Log out</button></div>
+      <div class="links"><span id="accountWelcome" class="hide-sm muted"></span><a class="btn ghost" href="trips.html">My trips</a><button class="btn ghost" type="button" data-action="logout">Log out</button></div>
     </div>
   </nav>
   <main id="main" class="wrap pageMain">
     <section class="section appPageHeader" aria-labelledby="accountTitle"><span class="eyebrow">Account</span><h1 id="accountTitle">Account settings</h1><p class="lead small">Review the customer profile details and consent records RouteRefund uses to monitor submitted trips while keeping airline access separate.</p></section>
-    <section id="accountPanel" class="panel loadingState" role="status" aria-live="polite" aria-busy="true"><h2>Loading account...</h2></section>
+    <section id="accountPanel" class="panel loadingState" role="status" aria-live="polite" aria-busy="true"><h2>Loading account…</h2></section>
   </main>
   <div id="toast" class="toast"></div>
-  <div id="modal" class="modal"><div id="modalCard" class="modalCard"></div></div>
+  <div id="modal" class="modal" aria-hidden="true"><div id="modalCard" class="modalCard"></div></div>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="config.js"></script>
   <script src="app.js?v=a11y-toast-1"></script>

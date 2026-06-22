@@ -223,6 +223,7 @@ function closeModal(){
   const m=$('modal');
   if(!m)return;
   m.classList.remove('open');
+  m.setAttribute('aria-hidden','true');
   $('modalCard')?.removeAttribute('tabindex');
   if(lastModalTrigger&&document.contains(lastModalTrigger))lastModalTrigger.focus();
   lastModalTrigger=null;
@@ -239,6 +240,7 @@ function modal(html){
     if(!title.id)title.id='modalTitle';
     m.setAttribute('aria-labelledby',title.id);
   }else m.removeAttribute('aria-labelledby');
+  m.setAttribute('aria-hidden','false');
   m.classList.add('open');
   const focusable=card.querySelector('button,[href],input,select,textarea,[tabindex]:not([tabindex="-1"])');
   if(!focusable)card.setAttribute('tabindex','-1');
