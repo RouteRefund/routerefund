@@ -264,6 +264,14 @@ body[data-page="owner"] main.wrap{padding-bottom:70px}.ownerToolbar{display:grid
 .opsQueueState{margin:-6px 0 16px;color:var(--muted);font-size:13px;font-weight:900;text-transform:uppercase;letter-spacing:.045em}
 @media(max-width:640px){.opsQueueState{margin:2px 0 14px;font-size:12px;line-height:1.35}}
 
+/* partner-google-alerts-1: owner-only Google Flights tracking workflow */
+.googleAlertCard{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:16px;align-items:center;margin:18px 0 22px;padding:18px 20px;border:1px solid #d9ead7;border-radius:24px;background:linear-gradient(135deg,#f8fbf5,#fff);box-shadow:0 12px 30px rgba(18,57,67,.06)}
+.googleAlertCard.compact{grid-template-columns:minmax(0,1fr) auto;margin:12px 0 6px;padding:14px 16px;border-radius:18px;box-shadow:none}
+.googleAlertCard.pending{border-color:#f1d18a;background:linear-gradient(135deg,#fff8e6,#fff)}
+.googleAlertCard span{display:block;margin-bottom:4px;color:#0f7b4c;font-size:12px;font-weight:950;text-transform:uppercase;letter-spacing:.055em}
+.googleAlertCard.pending span{color:#704400}.googleAlertCard b{display:block;color:#10231f;font-size:18px;letter-spacing:-.02em}.googleAlertCard p{margin:5px 0 0;color:var(--muted);font-weight:800;line-height:1.42}.googleAlertCard ol{margin:12px 0 0;padding-left:20px;color:#384156;font-weight:780;line-height:1.45}.googleAlertCard .btn{justify-content:center;min-width:176px}
+@media(max-width:640px){.googleAlertCard,.googleAlertCard.compact{grid-template-columns:1fr;padding:16px;border-radius:20px}.googleAlertCard .btn{width:100%;min-width:0}.googleAlertCard b{font-size:17px}.googleAlertCard p,.googleAlertCard li{font-size:14px}}
+
 /* delete-trip-7: keyboard-visible dialogs */
 .modal.open{align-items:start;overflow:auto}.modalCard:focus{outline:3px solid rgba(15,123,76,.45);outline-offset:4px}.modalCard button:focus-visible,.modalCard a:focus-visible,.modalCard input:focus-visible,.modalCard textarea:focus-visible,.modalCard select:focus-visible{outline:3px solid rgba(15,123,76,.45);outline-offset:3px}@media(max-width:640px){.modal{padding:16px}.modal.open{place-items:end center}.modalCard{max-height:88vh;overflow:auto;border-radius:24px 24px 18px 18px}}
 
