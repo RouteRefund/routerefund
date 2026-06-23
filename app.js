@@ -120,7 +120,7 @@ async function addTrip(e){
   lock('Saving trip...');
   const {error}=await supabaseClient.from('trips').insert(trip);
   if(error)return fail(error.message);
-  e.target.reset();syncLocatorHint();toast('Flight lookup started — this page will update automatically.');await renderTrips();scheduleCustomerLookupRefresh(true);unlock()
+  e.target.reset();syncLocatorHint();toast('Lookup started.');await renderTrips();scheduleCustomerLookupRefresh(true);unlock()
 }
 async function loadTrips(){const {data,error}=await supabaseClient.from('trips').select('*').or('status.is.null,status.neq.Archived').order('created_at',{ascending:false});return {rows:data||[],error}}
 function tripSavings(r){return r.current_price?Number(r.paid)-Number(r.current_price):0}
@@ -132,10 +132,10 @@ function customerConnectionHint(){return navigator.onLine===false?'Browser appea
 function customerTripStatus(r){
   const raw=r.status||'';
   const unverified=!hasVerifiedFlightDetails(r);
-  if(unverified||['Intake review','Received','Submitted'].includes(raw))return {label:'Lookup running',step:'No action needed',body:'Your confirmation is saved. RouteRefund is checking the reservation details and will move it into monitoring once the flight is verified.',tone:'intake'};
-  if(['Savings found','Review needed'].includes(raw))return {label:'Opportunity review',step:'RouteRefund reviewing',body:'We are checking eligibility and customer safety before sharing any next step. You will not be asked to approve anything until the opportunity is verified.',tone:'review'};
-  if(['Closed','Archived'].includes(raw))return {label:'Resolved',step:'Resolved',body:'This RouteRefund record is no longer actively monitored. Deleting it here does not contact or change the airline reservation.',tone:'closed'};
-  return {label:'Monitoring active',step:'Watching quietly',body:'We are monitoring this booked flight and will only contact you if there is a verified, customer-approved next step.',tone:'monitoring'};
+  if(unverified||['Intake review','Received','Submitted'].includes(raw))return {label:'Lookup running',step:'No action needed',body:'We’re verifying the reservation. Monitoring starts after the flight is found.',tone:'intake'};
+  if(['Savings found','Review needed'].includes(raw))return {label:'Opportunity review',step:'RouteRefund reviewing',body:'A possible opportunity is under review. We’ll contact you only if it checks out.',tone:'review'};
+  if(['Closed','Archived'].includes(raw))return {label:'Resolved',step:'Resolved',body:'This RouteRefund record is no longer being watched.',tone:'closed'};
+  return {label:'Monitoring active',step:'Watching quietly',body:'We’re watching this flight. You’ll hear from us only if there’s a verified next step.',tone:'monitoring'};
 }
 function hasVerifiedFlightDetails(r){return !!(r.route||r.travel_date||r.departure_time)}
 let customerLookupPollTimer=null;
@@ -259,9 +259,9 @@ function renderCustomerDashboardHealth(rows=[]){
   const monitoring=active.length-lookup-review;
   const fareReady=active.filter(r=>hasVerifiedFlightDetails(r)&&!['Savings found','Review needed'].includes(r.status||'')).length;
   const connection=customerConnectionHint();
-  const nextPoll=connection|| (lookup?(customerLookupPollExpired?'Auto-refresh paused after a few minutes to save your browser. Tap Refresh now any time; RouteRefund keeps working in the background.':'Auto-refreshing every few seconds while lookup is pending.'):'Refresh any time for the latest RouteRefund status.');
+  const nextPoll=connection|| (lookup?(customerLookupPollExpired?'Auto-refresh paused. RouteRefund keeps working.':'Auto-refreshing while lookup runs.'):'Refresh for latest status.');
   const headline=lookup?'Looking up flight details':review?'RouteRefund review active':active.length?'Monitoring is active':'No active trips yet';
-  const body=lookup?'New reservations update automatically while RouteRefund checks the booking. No airline password, inbox login, payment card, or one-time code is needed.':review?'A possible fare signal is under partner review. Exact savings stay private until RouteRefund verifies eligibility and contacts you for approval.':active.length?'RouteRefund is watching verified route/date signals and partner-only fare alerts. You will only hear from us when there is a verified next step.':'Add a booked flight or forward the confirmation email to start private monitoring.';
+  const body=lookup?'New trips update automatically while lookup runs. No passwords or codes needed.':review?'A possible signal is under review. We’ll contact you if it checks out.':active.length?'RouteRefund is watching verified signals. We’ll only contact you for a reviewed next step.':'Add a booked flight or forward the confirmation email to start private monitoring.';
   const refreshLine=`${customerRefreshLabel()} ${nextPoll}`;
   panel.innerHTML=`<section class="dashboardHealthCard" aria-label="RouteRefund monitoring health"><div><span class="eyebrow">Watchlist health</span><h2>${escapeHtml(headline)}</h2><p>${escapeHtml(body)}</p><div class="dashboardRefreshRow"><p class="dashboardRefreshNote"><span aria-hidden="true">↻</span>${escapeHtml(refreshLine)}</p><button class="btn ghost smallRefreshBtn" type="button" data-action="refresh-trips">Refresh now</button></div></div><div class="dashboardHealthStats" aria-label="Trip status summary"><div><b>${lookup}</b><span>Lookup running</span></div><div><b>${monitoring}</b><span>Monitoring</span></div><div><b>${review}</b><span>In review</span></div><div><b>${fareReady}</b><span>Fare-alert ready</span></div></div></section>`;
 }
@@ -277,9 +277,9 @@ function renderCustomerSignalCoach(rows=[]){
   const review=active.filter(r=>['Savings found','Review needed'].includes(r.status||'')).length;
   const empty=!active.length;
   const cards=[
-    {step:'1',title:lookup?`${lookup} lookup${lookup===1?'':'s'} running`:'Reservation lookup',body:lookup?'RouteRefund is checking the booking details first so route, date, and fare rules are not guessed. Pending trips auto-refresh for the first few minutes.':'New trips start here after you add a locator or forward the airline confirmation.',tone:lookup?'active':'quiet'},
-    {step:'2',title:ready?`${ready} trip${ready===1?'':'s'} fare-alert ready`:'Owner-only fare alerts',body:ready?'Verified route/date trips can be watched with Google Flights alert emails and quota-safe backup checks behind the scenes.':'Fare tracking starts only after RouteRefund verifies the itinerary.',tone:ready?'ready':'quiet'},
-    {step:'3',title:review?`${review} opportunity under review`:'Reviewed next step',body:review?'A possible fare signal is under partner review. Exact savings stay private until eligibility is confirmed and you approve any airline action.':'If a useful signal appears, RouteRefund reviews evidence before contacting you.',tone:review?'review':'quiet'}
+    {step:'1',title:lookup?`${lookup} lookup${lookup===1?'':'s'} running`:'Reservation lookup',body:lookup?'RouteRefund is checking booking details. Pending trips auto-refresh briefly.':'New trips start here after you add a locator or forward the email.',tone:lookup?'active':'quiet'},
+    {step:'2',title:ready?`${ready} trip${ready===1?'':'s'} fare-alert ready`:'Owner-only fare alerts',body:ready?'Verified trips can use alerts and backup checks behind the scenes.':'Fare tracking starts after itinerary verification.',tone:ready?'ready':'quiet'},
+    {step:'3',title:review?`${review} opportunity under review`:'Reviewed next step',body:review?'A possible signal is under review. Savings stay private until verified.':'Useful signals are reviewed before outreach.',tone:review?'review':'quiet'}
   ];
   panel.innerHTML=`<div class="customerSignalCoach ${empty?'emptyCoach':''}"><div class="coachHead"><span class="eyebrow">Monitoring plan</span><h2>${empty?'What happens after your first trip is added':'How your watchlist is being handled'}</h2><p>${empty?'RouteRefund follows a lookup-first workflow inspired by flight trackers and price alerts, but keeps exact savings and airline actions behind partner review.':'This summary explains the background workflow without exposing unverified savings or asking you to set up alerts yourself.'}</p></div><div class="coachCards">${cards.map(c=>`<div class="coachCard ${c.tone}"><span>${escapeHtml(c.step)}</span><b>${escapeHtml(c.title)}</b><p>${escapeHtml(c.body)}</p></div>`).join('')}</div></div>`;
 }
