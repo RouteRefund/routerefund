@@ -665,9 +665,19 @@ function syncPublicNav(){
     '<button class="btn ghost mobileMenuBtn" data-action="mobile-menu" aria-label="Open RouteRefund menu">Menu</button>'
   ].join('')
 }
+function syncMobileStickyCta(){
+  const page=document.body.dataset.page;
+  if(!['home','info'].includes(page)||document.querySelector('.mobileStickyCta'))return;
+  document.body.classList.add('hasMobileStickyCta');
+  const bar=document.createElement('div');
+  bar.className='mobileStickyCta';
+  bar.innerHTML='<a class="btn primary" href="add-trip.html">Start tracking</a><a class="btn ghost" href="login.html">Log in</a>';
+  document.body.appendChild(bar);
+}
 
 window.addEventListener('DOMContentLoaded',async()=>{
   syncPublicNav();
+  syncMobileStickyCta();
   if(!supabaseClient)return toast('Missing Supabase config');
   ['click','keydown','touchstart','scroll'].forEach(ev=>document.addEventListener(ev,touchActivity,{passive:true}));
   if($('modal'))$('modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal()});
