@@ -1,0 +1,14 @@
+User-agent: *
+Allow: /
+Disallow: /partner-ops-login.html
+Disallow: /partner-ops-dashboard.html
+Disallow: /partner-ops-trip.html
+Disallow: /owner.html
+Disallow: /owner-login.html
+Disallow: /owner-trip.html
+Disallow: /dashboard.html
+Disallow: /trips.html
+Disallow: /trip-detail.html
+Disallow: /account.html
+
+Sitemap: https://routerefund.com/sitemap.xml
