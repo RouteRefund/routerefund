@@ -826,3 +826,9 @@ body.rr-v2 .mobileStickyCta{display:none}
   body.rr-v2 .mobileStickyCta .btn{min-height:46px;border-radius:12px;font-size:15px;padding:0 14px}
   body.rr-v2 .mobileStickyCta .ghost{background:#fff!important;color:var(--rr-purple)!important}
 }
+
+/* submit-promise-1: make post-submit tracking chain obvious */
+body.rr-v2 .submitPromise{display:grid;gap:7px;border:1px solid rgba(21,190,83,.24);border-radius:12px;background:linear-gradient(135deg,rgba(21,190,83,.075),#fff);padding:13px 14px;margin-top:2px}
+body.rr-v2 .submitPromise b{color:var(--rr-green-text);font-size:12px;text-transform:uppercase;letter-spacing:.07em}
+body.rr-v2 .submitPromise span{color:var(--rr-label);font-size:13.5px;line-height:1.32;font-weight:650}
+@media(max-width:820px){body.rr-v2 .submitPromise{padding:12px;border-radius:11px}body.rr-v2 .submitPromise span{font-size:13px}}

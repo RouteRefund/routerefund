@@ -6,7 +6,7 @@
   <title>My trips | RouteRefund</title>
   <meta name="robots" content="noindex,nofollow" />
   <link rel="stylesheet" href="styles.css?v=revamp-v2-10" />
-  <link rel="stylesheet" href="styles-v2.css?v=customer-action-room-1" />
+  <link rel="stylesheet" href="styles-v2.css?v=submit-promise-1" />
   <link rel="icon" href="/favicon.ico?v=logo-a-1" sizes="any" />
   <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png?v=logo-a-1" />
   <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16.png?v=logo-a-1" />
@@ -62,13 +62,19 @@
         <label for="dateOfBirth">Date of birth<input id="dateOfBirth" type="date" aria-describedby="dobHint" required><span id="dobHint" class="formHint">Used to match the booking.</span></label>
         <label class="checkline" for="changeConsent"><input id="changeConsent" type="checkbox" required> I authorize RouteRefund to monitor this trip and contact me for approval before any airline booking, cancellation, or rebooking action.</label>
         <button class="btn primary full" type="submit">Start monitoring</button>
+        <div class="submitPromise" aria-label="What happens after you submit">
+          <b>After you submit</b>
+          <span>1. Reservation lookup starts right away.</span>
+          <span>2. Verified trips move into monitoring.</span>
+          <span>3. Any savings opportunity is reviewed before we contact you.</span>
+        </div>
       </form>
 
       <section class="panel cleanForwardPanel">
         <span class="eyebrow">Alternative</span>
         <h2>Forward the confirmation email</h2>
         <p>Forwarding is usually more accurate.</p>
-        <a class="emailBox" href="mailto:trips@routerefund.com" aria-label="Email trips at RouteRefund">trips@routerefund.com</a>
+        <a class="emailBox" href="mailto:trips@routerefund.com?subject=RouteRefund%20trip%20confirmation&body=Forward%20your%20original%20airline%20confirmation%20here.%0A%0ARemove%20passwords%2C%20one-time%20codes%2C%20and%20card%20numbers%20before%20sending." aria-label="Email trips at RouteRefund">trips@routerefund.com</a>
         <ul class="checklist compactList"><li>Do not include airline passwords</li><li>Do not include one-time codes</li><li>Do not include card numbers</li></ul>
         <div class="trackingPlanMini" aria-label="Monitoring plan after lookup">
           <b>After lookup</b>
