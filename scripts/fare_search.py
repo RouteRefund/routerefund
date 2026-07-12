@@ -12,10 +12,11 @@ import json
 import os
 import re
 import sys
+import urllib.error
 import urllib.parse
 import urllib.request
 from dataclasses import dataclass
-from datetime import datetime, timedelta, timezone
+from datetime import date, datetime, timedelta, timezone
 from decimal import Decimal
 
 import psycopg2
@@ -46,8 +47,8 @@ class Trip:
     airline: str | None
     confirmation_no: str
     route: str | None
-    travel_date: str | None
-    paid: Decimal
+    travel_date: date | str | None
+    paid: Decimal | None
     current_price: Decimal | None
     status: str | None
     passenger_first: str | None
@@ -64,6 +65,8 @@ def parse_route(route: str | None) -> tuple[str, str] | None:
 
 
 def trip_query(cur) -> list[Trip]:
+    # Pull due trips even when incomplete so the worker can record an audit row
+    # and reschedule instead of failing loudly or burning fare-search quota.
     cur.execute(
         """
         select id, airline, confirmation_no, route, travel_date, paid, current_price,
@@ -79,7 +82,25 @@ def trip_query(cur) -> list[Trip]:
     return [Trip(*row) for row in cur.fetchall()]
 
 
+def trip_not_ready_reason(trip: Trip) -> str | None:
+    if not parse_route(trip.route):
+        return "Missing route in IATA format like DFW-GRR"
+    if not trip.travel_date:
+        return "Missing departure date"
+    travel_date = trip.travel_date
+    if isinstance(travel_date, str):
+        travel_date = date.fromisoformat(travel_date)
+    if travel_date < date.today():
+        return "Travel date is in the past; archive or update the trip before fare monitoring"
+    if trip.paid is None or trip.paid <= 0:
+        return "Missing customer-paid fare baseline; enter the original paid amount before automated savings checks"
+    return None
+
+
 def serpapi_search(trip: Trip) -> dict:
+    not_ready = trip_not_ready_reason(trip)
+    if not_ready:
+        return {"ok": False, "reason": not_ready}
     route = parse_route(trip.route)
     if not route:
         return {"ok": False, "reason": "Missing route in IATA format like DFW-GRR"}
@@ -102,8 +123,18 @@ def serpapi_search(trip: Trip) -> dict:
         "api_key": SERPAPI_API_KEY,
     }
     url = "https://serpapi.com/search?" + urllib.parse.urlencode(params)
-    with urllib.request.urlopen(url, timeout=60) as resp:
-        data = json.loads(resp.read().decode())
+    req = urllib.request.Request(url, headers={"User-Agent": "RouteRefund/1.0 fare-monitor"})
+    try:
+        with urllib.request.urlopen(req, timeout=60) as resp:
+            data = json.loads(resp.read().decode())
+    except urllib.error.HTTPError as exc:
+        body = exc.read().decode("utf-8", "ignore")[:500]
+        try:
+            parsed = json.loads(body)
+            reason = parsed.get("error") or body
+        except Exception:
+            reason = body or str(exc)
+        return {"ok": False, "reason": f"SerpAPI HTTP {exc.code}: {reason}"}
 
     if data.get("error"):
         return {"ok": False, "reason": data["error"], "raw": data}
